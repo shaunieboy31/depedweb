@@ -17,7 +17,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "DepEd IMUS City - Schools Division Office",
-  description: "Official website of the Department of Education, Schools Division Office of Imus City",
+  description:
+    "Official website of the Department of Education, Schools Division Office of Imus City",
 };
 
 export default function RootLayout({
@@ -32,9 +33,7 @@ export default function RootLayout({
       >
         <Navbar />
         <Header />
-        <main className="min-h-screen">
-          {children}
-        </main>
+        <main className="min-h-screen max-w-7xl mx-auto px-6">{children}</main>
         <Footer />
       </body>
     </html>
