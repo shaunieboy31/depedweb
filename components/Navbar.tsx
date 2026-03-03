@@ -1,14 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import { usePathname } from "next/navigation";
-import { ChevronDown, Search, Volume2 } from "lucide-react";
+import { ChevronDown, Search, Volume2 } from "@/components/icons";
 
 export default function Navbar() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const pathname = usePathname();
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const menuItems = [
     {
@@ -72,14 +73,14 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <nav className="bg-[#f7f7f7] border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex items-center justify-between h-14">
           {/* Left - Brand */}
           <div className="flex items-center">
             <Link
               href="/"
-              className="text-gray-700 font-semibold text-lg px-6 py-3.5 bg-gray-50"
+              className="text-gray-700 font-semibold text-lg px-6 py-3.5 bg-[#f7f7f7]"
             >
               GOVPH
             </Link>
@@ -100,10 +101,22 @@ export default function Navbar() {
                   <li
                     key={item.label}
                     className={`relative ${idx > 0 ? "border-l border-gray-100" : ""}`}
-                    onMouseEnter={() =>
-                      item.dropdown && setOpenDropdown(item.label)
-                    }
-                    onMouseLeave={() => setOpenDropdown(null)}
+                    onMouseEnter={() => {
+                      if (item.dropdown) {
+                        if (closeTimer.current) {
+                          clearTimeout(closeTimer.current as any);
+                          closeTimer.current = null;
+                        }
+                        setOpenDropdown(item.label);
+                      }
+                    }}
+                    onMouseLeave={() => {
+                      if (item.dropdown) {
+                        closeTimer.current = setTimeout(() => {
+                          setOpenDropdown(null);
+                        }, 150);
+                      }
+                    }}
                   >
                     <Link
                       href={item.href}
@@ -122,7 +135,20 @@ export default function Navbar() {
                     {item.dropdown &&
                       item.submenu &&
                       openDropdown === item.label && (
-                        <div className="absolute left-0 mt-1 w-56 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                        <div
+                          className="absolute left-0 mt-1 w-56 bg-white border border-gray-200 rounded-md shadow-lg z-50"
+                          onMouseEnter={() => {
+                            if (closeTimer.current) {
+                              clearTimeout(closeTimer.current as any);
+                              closeTimer.current = null;
+                            }
+                          }}
+                          onMouseLeave={() => {
+                            closeTimer.current = setTimeout(() => {
+                              setOpenDropdown(null);
+                            }, 150);
+                          }}
+                        >
                           {item.submenu.map((subitem) => (
                             <Link
                               key={subitem.label}
