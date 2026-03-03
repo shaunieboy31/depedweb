@@ -126,7 +126,7 @@ export default function History() {
           />
           <div className="relative z-10 px-4 py-8">
             <div className="max-w-4xl mx-auto space-y-4">
-              <div className="bg-indigo-600/30 text-white rounded-lg p-6 shadow backdrop-blur-sm border border-indigo-500/20">
+              <div className="bg-indigo-600/30 text-white rounded-lg p-6 shadow backdrop-blur-sm border border-indigo-500/20  transform transition hover:-translate-y-1">
                 <p className="text-lg leading-relaxed">
                   The Department of Education was established through the
                   Education Decree of 1863 as the Superior Commission of Primary
@@ -140,7 +140,7 @@ export default function History() {
                 </p>
               </div>
 
-              <div className="bg-pink-600/30 text-white rounded-lg p-6 shadow backdrop-blur-sm border border-pink-500/20">
+              <div className="bg-pink-600/30 text-white rounded-lg p-6 shadow backdrop-blur-sm border border-pink-500/20  transform transition hover:-translate-y-1">
                 <p className="text-lg leading-relaxed">
                   The Department of Education (DepEd) formulates, implements,
                   and coordinates policies, plans, programs and projects in the
