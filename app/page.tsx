@@ -1,35 +1,151 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import Image from "next/image";
 
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
 
+  // About cards configuration (convert paragraphs into colored cards)
+  const aboutSections = [
+    {
+      title: "Overview",
+      content: (
+        <>
+          <p className="leading-relaxed mb-4">
+            The City Schools Division of Imus was established pursuant to Deped
+            Order No. 50 s. 2002, when the City Government of Imus was created
+            with the promulgation of RA 10161.
+          </p>
+          <p className="leading-relaxed mb-4">
+            A memorandum of Agreement (MOA) was signed by the Secretary of the
+            Department of Education, Bro. Armin A. Luistro FSC and the City
+            Mayor of Imus, Hon. Emmanuel L. Maliksi, who then worked
+            collaboratively for the realization of this goal. Likewise, Dr.
+            Lualhati O. Cadavedo was appointed as its first OIC Division
+            Superintendent on January 12, 2013.
+          </p>
+          <p className="leading-relaxed">
+            Three Districts were created to ensure the effective and efficient
+            delivery of Education services to it’s clientele.
+          </p>
+        </>
+      ),
+    },
+    {
+      title: "Vision",
+      content: (
+        <>
+          <p className="leading-relaxed mb-4">
+            We dream of Filipinos who passionately love their country and whose
+            values and competencies enable them to realize their full potential
+            and contribute meaningfully to building the nation.
+          </p>
+          <p className="leading-relaxed">
+            As a learner-centered public institution, the Department of
+            Education continuously improves itself to better serve its
+            stakeholders.
+          </p>
+        </>
+      ),
+    },
+    {
+      title: "Mission",
+      content: (
+        <>
+          <p className="leading-relaxed mb-4">
+            To protect and promote the right of every Filipino to quality,
+            equitable, culture-based, and complete basic education where:
+          </p>
+          <ul className="space-y-2 ml-6 list-disc">
+            <li>
+              Students learn in a child-friendly, gender-sensitive, safe, and
+              motivating environment
+            </li>
+            <li>
+              Teachers facilitate learning and constantly nurture every learner
+            </li>
+            <li>
+              Administrators and staff, as stewards of the institution, ensure
+              an enabling and supportive environment for effective learning to
+              happen
+            </li>
+            <li>
+              Family, community, and other stakeholders are actively engaged and
+              share responsibility for developing life-long learners
+            </li>
+          </ul>
+        </>
+      ),
+    },
+    {
+      title: "Mandate",
+      content: (
+        <p className="leading-relaxed">
+          The Department of Education was established through the Education
+          Decree of 1863 as the Superior Commission of Primary Instruction under
+          a Chairman. The Education agency underwent many reorganization efforts
+          in the 20th century in order to better define its purpose vis a vis
+          the changing administrations and charters. The present day Department
+          of Education was eventually mandated through Republic Act 9155,
+          otherwise known as the Governance of Basic Education act of 2001 which
+          establishes the mandate of this agency.
+        </p>
+      ),
+    },
+    {
+      title: "Quality Policy",
+      content: (
+        <p className="leading-relaxed">
+          Schools Division Office of Imus City commits to delivering quality
+          services responsive to the needs of its clientele in accordance with
+          mandated standards, principles of transparent, ethical and accountable
+          governance, and continous improvement process towards the holistic
+          development of "BIDAng" Imusenyo.
+        </p>
+      ),
+    },
+  ];
+  const cardColors = [
+    { bg: "bg-blue-50", border: "border-blue-200" },
+    { bg: "bg-green-50", border: "border-green-200" },
+    { bg: "bg-yellow-50", border: "border-yellow-200" },
+    { bg: "bg-indigo-50", border: "border-indigo-200" },
+    { bg: "bg-pink-50", border: "border-pink-200" },
+  ];
+  const cardClass = (idx: number) => {
+    const c = cardColors[idx % cardColors.length];
+    return `${c.bg} ${c.border}`;
+  };
+  const [openIndexes, setOpenIndexes] = useState<number[]>([0, 3, 4]);
+  const [playingVideo, setPlayingVideo] = useState<string | null>(null);
+
   const slides = [
     {
       id: 1,
-      title: 'EARLY REGISTRATION',
-      subtitle: 'for SY 2021-2022',
-      date: 'March 26 to April 30, 2021',
-      description: 'Open to all incoming Kindergarten, Grades 1, 7, and 11 learners',
-      image: '/carousel-1.jpg',
+      title: "EARLY REGISTRATION",
+      subtitle: "for SY 2021-2022",
+      date: "March 26 to April 30, 2021",
+      description:
+        "Open to all incoming Kindergarten, Grades 1, 7, and 11 learners",
+      image: "/carousel-1.jpg",
     },
     {
       id: 2,
-      title: 'WELCOME TO DepEd',
-      subtitle: 'Imus City Schools Division',
-      date: 'Academic Year 2024-2025',
-      description: 'Quality Education for All',
-      image: '/carousel-2.jpg',
+      title: "WELCOME TO DepEd",
+      subtitle: "Imus City Schools Division",
+      date: "Academic Year 2024-2025",
+      description: "Quality Education for All",
+      image: "/carousel-2.jpg",
     },
     {
       id: 3,
-      title: 'EXCELLENCE IN EDUCATION',
-      subtitle: 'Building Future Leaders',
-      date: 'Learn More',
-      description: 'Join us in our mission for educational excellence',
-      image: '/carousel-3.jpg',
+      title: "EXCELLENCE IN EDUCATION",
+      subtitle: "Building Future Leaders",
+      date: "Learn More",
+      description: "Join us in our mission for educational excellence",
+      image: "/carousel-3.jpg",
     },
   ];
 
@@ -59,18 +175,24 @@ export default function Home() {
             <div
               key={slide.id}
               className={`absolute inset-0 transition-opacity duration-1000 flex items-center justify-center px-4 md:px-16 ${
-                index === currentSlide ? 'opacity-100' : 'opacity-0'
+                index === currentSlide ? "opacity-100" : "opacity-0"
               }`}
             >
               {/* Blue Border Frame */}
               <div className="w-full max-w-5xl bg-white border-8 border-blue-600 rounded-lg shadow-2xl p-12 md:p-16">
                 <div className="space-y-6">
                   <div className="text-center">
-                    <h2 className="text-4xl md:text-5xl font-bold text-red-600 mb-4">{slide.title}</h2>
-                    <h3 className="text-2xl md:text-3xl font-semibold text-gray-900 mb-4">{slide.subtitle}</h3>
-                    <p className="text-2xl md:text-3xl font-bold text-yellow-600 mb-6">{slide.date}</p>
+                    <h2 className="text-4xl md:text-5xl font-bold text-red-600 mb-4">
+                      {slide.title}
+                    </h2>
+                    <h3 className="text-2xl md:text-3xl font-semibold text-gray-900 mb-4">
+                      {slide.subtitle}
+                    </h3>
+                    <p className="text-2xl md:text-3xl font-bold text-yellow-600 mb-6">
+                      {slide.date}
+                    </p>
                   </div>
-                  
+
                   <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-8 rounded-lg">
                     <p className="text-lg md:text-xl text-gray-800 text-center leading-relaxed">
                       {slide.description}
@@ -81,7 +203,9 @@ export default function Home() {
                   <div className="bg-blue-600 rounded-lg p-6 text-white">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
                       <div>
-                        <p className="font-bold text-yellow-300 mb-2">Landline</p>
+                        <p className="font-bold text-yellow-300 mb-2">
+                          Landline
+                        </p>
                         <p className="text-sm">(046) 419-8450 local 204</p>
                         <p className="text-sm">local 227</p>
                       </div>
@@ -125,7 +249,9 @@ export default function Home() {
                 key={index}
                 onClick={() => setCurrentSlide(index)}
                 className={`w-4 h-4 rounded-full transition-colors ${
-                  index === currentSlide ? 'bg-blue-600' : 'bg-gray-400 hover:bg-gray-500'
+                  index === currentSlide
+                    ? "bg-blue-600"
+                    : "bg-gray-400 hover:bg-gray-500"
                 }`}
                 aria-label={`Go to slide ${index + 1}`}
               />
@@ -134,38 +260,59 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Programs Section */}
-      <section className="py-12 bg-white">
+      {/* News & Updates Section */}
+      <section className="py-12 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-2xl md:text-3xl font-bold text-white bg-blue-600 px-6 py-3 inline-block mb-8">FEATURED PROGRAMS</h2>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-gray-900">News & Updates</h2>
+            <a
+              href="#"
+              className="text-blue-600 hover:underline text-sm font-medium"
+            >
+              View all
+            </a>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
-                title: "Talakayan at Panayam para sa Angat at Tapat na Aksyong Napapanaho",
-                description: "Layong mas makapaghatid ng de-kalidad na serbisyong alinsunod sa mandato ng Departamento, isasagawa ng Schools Division Office of Imus City...",
-                link: "#"
+                id: 1,
+                date: "Feb 28, 2026",
+                title: "Division Announces Early Registration Schedule",
+                excerpt:
+                  "The Schools Division Office of Imus City announces early registration dates for incoming learners for SY 2024-2025.",
               },
               {
-                title: "Imus National High School (INHS)",
-                description: "As a fruitful result, INHS was named by the Region as Best Brigada Eskwela Implementer (Mega School Category) in two consecutive years and was awarded as a National Implementer in Puerto Princesa, Palawan (2017) and Dipolog, Zamboanga del Norte (2018).",
-                link: "#"
+                id: 2,
+                date: "Jan 15, 2026",
+                title: "Learner Support Program Expanded",
+                excerpt:
+                  "New support initiatives were launched to assist learners with distance and blended learning modalities.",
               },
               {
-                title: "Inspiring Messages From Mr. Homer N. Mendoza",
-                description: "\"Leadership is the ability to translate vision into reality\"",
-                link: "#"
-              }
-            ].map((program, index) => (
-              <div key={index} className="bg-white rounded-lg border border-gray-300 overflow-hidden hover:shadow-lg transition-shadow">
-                <div className="w-full h-48 bg-gradient-to-b from-gray-300 to-gray-400"></div>
-                <div className="p-6">
-                  <a href={program.link} className="text-lg font-semibold text-blue-600 hover:text-blue-800 mb-3 block hover:underline">{program.title}</a>
-                  <p className="text-gray-700 text-sm leading-relaxed">{program.description}</p>
-                  <a href="#" className="text-blue-600 hover:text-blue-800 font-medium mt-4 inline-block text-sm">
-                    read more...
-                  </a>
-                </div>
-              </div>
+                id: 3,
+                date: "Dec 10, 2025",
+                title: "Division Awards Exemplary Teachers",
+                excerpt:
+                  "Outstanding teachers from elementary and secondary levels were recognized during the division awards ceremony.",
+              },
+            ].map((n) => (
+              <article
+                key={n.id}
+                className="bg-white border border-gray-100 rounded-lg p-4 hover:shadow-md transition-shadow"
+              >
+                <p className="text-sm text-gray-500 mb-2">{n.date}</p>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  {n.title}
+                </h3>
+                <p className="text-sm text-gray-700 mb-4">{n.excerpt}</p>
+                <a
+                  href="#"
+                  className="text-blue-600 font-medium hover:underline text-sm"
+                >
+                  Read more
+                </a>
+              </article>
             ))}
           </div>
         </div>
@@ -177,73 +324,61 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             {/* Left Column - About Content */}
             <div className="lg:col-span-2">
-              <h2 className="text-3xl font-bold text-gray-900 mb-8">Schools Division Office of Imus City</h2>
-              
+              <h2 className="text-3xl font-bold text-gray-900 mb-8">
+                Schools Division Office of Imus City
+              </h2>
+
               <div className="space-y-8 text-gray-700">
-                {/* History */}
-                <div>
-                  <p className="leading-relaxed mb-4">
-                    The City Schools Division of Imus was established pursuant to Deped Order No. 50 s. 2002, when the City Government of Imus was created with the promulgation of RA 10161.
-                  </p>
-                  <p className="leading-relaxed mb-4">
-                    A memorandum of Agreement (MOA) was signed by the Secretary of the Department of Education, Bro. Armin A. Luistro FSC and the City Mayor of Imus, Hon. Emmanuel L. Maliksi, who then worked collaboratively for the realization of this goal. Likewise, Dr. Lualhati O. Cadavedo was appointed as its first OIC Division Superintendent on January 12, 2013.
-                  </p>
-                  <p className="leading-relaxed">
-                    Three Districts were created to ensure the effective and efficient delivery of Education services to its clientele.
-                  </p>
-                </div>
+                <div className="space-y-4">
+                  {aboutSections.map((sec, idx) => {
+                    const nonDropdown = [0, 3, 4];
+                    const classes = `border rounded-lg overflow-hidden ${cardClass(idx)}`;
+                    if (nonDropdown.includes(idx)) {
+                      return (
+                        <div key={idx} className={classes}>
+                          <div className="px-4 py-3 bg-gray-50">
+                            <span className="text-lg font-semibold">
+                              {sec.title}
+                            </span>
+                          </div>
+                          <div className="px-4 py-4 text-sm leading-relaxed">
+                            {sec.content}
+                          </div>
+                        </div>
+                      );
+                    }
 
-                {/* Vision */}
-                <div>
-                  <h3 className="text-2xl font-semibold text-blue-600 mb-4">VISION</h3>
-                  <p className="leading-relaxed mb-4">
-                    We dream of Filipinos who passionately love their country and whose values and competencies enable them to realize their full potential and contribute meaningfully to building the nation.
-                  </p>
-                  <p className="leading-relaxed">
-                    As a learner-centered public institution, the Department of Education continuously improves itself to better serve its stakeholders.
-                  </p>
-                </div>
-
-                {/* Mission */}
-                <div>
-                  <h3 className="text-2xl font-semibold text-blue-600 mb-4">MISSION</h3>
-                  <p className="leading-relaxed mb-4">
-                    To protect and promote the right of every Filipino to quality, equitable, culture-based, and complete basic education where:
-                  </p>
-                  <ul className="space-y-2 ml-6 mb-4">
-                    <li className="flex items-start gap-3">
-                      <span className="text-blue-600 font-bold">•</span>
-                      <span>Students learn in a child-friendly, gender-sensitive, safe, and motivating environment</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-blue-600 font-bold">•</span>
-                      <span>Teachers facilitate learning and constantly nurture every learner</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-blue-600 font-bold">•</span>
-                      <span>Administrators and staff, as stewards of the institution, ensure an enabling and supportive environment for effective learning to happen</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-blue-600 font-bold">•</span>
-                      <span>Family, community, and other stakeholders are actively engaged and share responsibility for developing life-long learners</span>
-                    </li>
-                  </ul>
-                </div>
-
-                {/* Mandate */}
-                <div>
-                  <h3 className="text-2xl font-semibold text-blue-600 mb-4">MANDATE</h3>
-                  <p className="leading-relaxed">
-                    The Department of Education was established through the Education Decree of 1863 as the Superior Commission of Primary Instruction under a Chairman. The Education agency underwent many reorganization efforts in the 20th century in order to better define its purpose vis a vis the changing administrations and charters. The present day Department of Education was eventually mandated through Republic Act 9155, otherwise known as the Governance of Basic Education act of 2001 which establishes the mandate of this agency.
-                  </p>
-                </div>
-
-                {/* Quality Policy */}
-                <div>
-                  <h3 className="text-2xl font-semibold text-blue-600 mb-4">QUALITY POLICY</h3>
-                  <p className="leading-relaxed">
-                    Schools Division Office of Imus City Commits to delivering quality services responsive to the needs of its clientele in accordance with mandated standards, principles of transparent, ethical and accountable governance, and continuous improvement process towards the holistic development of "BIDAng" Imusenyo.
-                  </p>
+                    return (
+                      <div key={idx} className={classes}>
+                        <button
+                          aria-expanded={openIndexes.includes(idx)}
+                          onClick={() =>
+                            setOpenIndexes((prev) =>
+                              prev.includes(idx)
+                                ? prev.filter((i) => i !== idx)
+                                : [...prev, idx],
+                            )
+                          }
+                          className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100"
+                        >
+                          <span className="text-lg font-semibold">
+                            {sec.title}
+                          </span>
+                          <span className="text-gray-600">
+                            {openIndexes.includes(idx) ? "−" : "+"}
+                          </span>
+                        </button>
+                        <div className="px-4 py-2">
+                          <p className="text-sm text-gray-600">{sec.summary}</p>
+                        </div>
+                        {openIndexes.includes(idx) && (
+                          <div className="px-4 py-4 text-sm leading-relaxed">
+                            {sec.content}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -253,40 +388,98 @@ export default function Home() {
               <div className="space-y-8">
                 {/* Video Box 1 - Imus Hymn */}
                 <div>
-                  <h3 className="text-2xl font-bold text-blue-600 mb-4">IMUS HYMN</h3>
-                  <a href="#" className="block">
-                    <div className="bg-gray-300 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow cursor-pointer h-48 flex items-center justify-center group">
-                      <div className="absolute flex items-center justify-center">
-                        <div className="bg-red-600 rounded-full p-4 group-hover:scale-110 transition-transform">
-                          <svg className="w-8 h-8 text-white fill-current ml-1" viewBox="0 0 24 24">
-                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                          </svg>
+                  <h3 className="text-2xl font-bold text-blue-600 mb-4">
+                    IMUS HYMN
+                  </h3>
+                  {playingVideo === "aDD7lM0iO5Q" ? (
+                    <div className="relative rounded-lg overflow-hidden shadow-lg h-48">
+                      <iframe
+                        src={`https://www.youtube-nocookie.com/embed/aDD7lM0iO5Q?autoplay=1&rel=0&modestbranding=1`}
+                        title="Imus Hymn"
+                        allow="autoplay; encrypted-media; picture-in-picture"
+                        allowFullScreen
+                        className="w-full h-full"
+                      />
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setPlayingVideo("aDD7lM0iO5Q")}
+                      aria-label="Play Imus Hymn"
+                      className="block w-full text-left"
+                    >
+                      <div className="relative rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow cursor-pointer h-48">
+                        <img
+                          src={`https://img.youtube.com/vi/aDD7lM0iO5Q/hqdefault.jpg`}
+                          alt="Imus Hymn thumbnail"
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="bg-red-600 rounded-full p-4 transition-transform">
+                            <svg
+                              className="w-8 h-8 text-white fill-current ml-1"
+                              viewBox="0 0 24 24"
+                            >
+                              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                            </svg>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </a>
+                    </button>
+                  )}
                   <p className="text-sm text-gray-700 mt-3">
-                    <span className="font-semibold">Composed & Lyrics by:</span> Engr. Aurello P. Bautista<br/>
-                    <span className="font-semibold">Sung by:</span> Christian M. Bautista
+                    <span className="font-semibold">Composed & Lyrics by:</span>{" "}
+                    Engr. Aurello P. Bautista
+                    <br />
+                    <span className="font-semibold">Sung by:</span> Christian M.
+                    Bautista
                   </p>
                 </div>
 
                 {/* Video Box 2 - National Anthem */}
                 <div>
-                  <h3 className="text-2xl font-bold text-blue-600 mb-4">NATIONAL ANTHEM V5</h3>
-                  <a href="#" className="block">
-                    <div className="bg-gray-300 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow cursor-pointer h-48 flex items-center justify-center group">
-                      <div className="absolute flex items-center justify-center">
-                        <div className="bg-red-600 rounded-full p-4 group-hover:scale-110 transition-transform">
-                          <svg className="w-8 h-8 text-white fill-current ml-1" viewBox="0 0 24 24">
-                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                          </svg>
+                  <h3 className="text-2xl font-bold text-blue-600 mb-4">
+                    NATIONAL ANTHEM V5
+                  </h3>
+                  {playingVideo === "ACKqYOV2Urk" ? (
+                    <div className="relative rounded-lg overflow-hidden shadow-lg h-48">
+                      <iframe
+                        src={`https://www.youtube-nocookie.com/embed/ACKqYOV2Urk?autoplay=1&rel=0&modestbranding=1`}
+                        title="National Anthem"
+                        allow="autoplay; encrypted-media; picture-in-picture"
+                        allowFullScreen
+                        className="w-full h-full"
+                      />
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setPlayingVideo("ACKqYOV2Urk")}
+                      aria-label="Play National Anthem"
+                      className="block w-full text-left"
+                    >
+                      <div className="relative rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow cursor-pointer h-48">
+                        <img
+                          src={`https://img.youtube.com/vi/ACKqYOV2Urk/hqdefault.jpg`}
+                          alt="National Anthem thumbnail"
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="bg-red-600 rounded-full p-4 transition-transform">
+                            <svg
+                              className="w-8 h-8 text-white fill-current ml-1"
+                              viewBox="0 0 24 24"
+                            >
+                              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                            </svg>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </a>
+                    </button>
+                  )}
                   <p className="text-sm text-gray-700 mt-3">
-                    <span className="font-semibold">Directed by:</span> Jaime G. Caro Jr. and Bob C. Belacura Jr.
+                    <span className="font-semibold">Directed by:</span> Jaime G.
+                    Caro Jr. and Bob C. Belacura Jr.
                   </p>
                 </div>
               </div>
