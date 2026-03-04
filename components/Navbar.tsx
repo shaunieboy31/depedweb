@@ -73,14 +73,14 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="bg-[#f7f7f7] border-b border-gray-200 sticky top-0 z-50">
+    <nav className="bg-[#f7f7f7] border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-35">
         <div className="flex items-center justify-between h-14">
           {/* Left - Brand */}
           <div className="flex items-center">
             <Link
               href="/"
-              className="text-gray-700 font-semibold text-lg px-6 py-3.5 bg-[#f7f7f7]"
+              className="text-gray-700 font-semibold text-base px-3 py-2 bg-[#f7f7f7]"
             >
               GOVPH
             </Link>
@@ -94,7 +94,7 @@ export default function Navbar() {
 
           {/* Center - Menu */}
           <div className="flex-1 flex justify-center">
-            <ul className="flex items-center gap-0 text-sm font-medium text-gray-700">
+            <ul className="flex items-center justify-between w-full gap-2 text-xs font-medium text-gray-700 flex-nowrap">
               {menuItems.map((item, idx) => {
                 const isActive = item.href !== "#" && pathname === item.href;
                 return (
@@ -120,10 +120,10 @@ export default function Navbar() {
                   >
                     <Link
                       href={item.href}
-                      className={`transition-colors py-3.5 px-4 flex items-center gap-1 ${
+                      className={`transition-colors py-1 px-2 text-xs flex items-center gap-1 whitespace-nowrap ${
                         isActive
-                          ? "bg-gray-100 text-gray-900 font-semibold"
-                          : "hover:text-blue-600"
+                          ? "bg-gray-200 text-gray-900 font-semibold"
+                          : "hover:text-gray-600 transform hover:scale-105"
                       }`}
                     >
                       {item.label}
@@ -172,7 +172,7 @@ export default function Navbar() {
               <input
                 type="text"
                 placeholder="Search ..."
-                className="px-4 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-40 bg-white"
+                className="px-2 py-1 border border-gray-200 rounded-md text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 w-36 bg-white"
               />
               <Icons.search
                 className="absolute right-3 top-2.5 text-gray-400"

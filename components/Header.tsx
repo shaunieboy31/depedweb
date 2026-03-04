@@ -40,7 +40,7 @@ export default function Header() {
   return (
     <header className="w-full bg-white">
       <div className="w-full bg-[#032977]">
-        <div className="max-w-7xl mx-auto px-35 py-6">
+        <div className="max-w-7xl mx-auto px-35 py-5">
           <Link href="/" className="block hover:opacity-90 transition-opacity">
             <div className="flex justify-between items-center">
               {/* Logo and Department Info */}
@@ -59,16 +59,16 @@ export default function Header() {
                 </div>
 
                 <div className="flex-1">
-                  <p className="text-sm text-gray-100 leading-tight">
+                  <p className="text-xs text-gray-100 leading-tight">
                     Department of Education
                   </p>
-                  <p className="text-sm text-gray-100 leading-tight">
+                  <p className="text-xs text-gray-100 leading-tight">
                     Region IV-A, CALABARZON
                   </p>
-                  <h1 className="font-bold text-white mt-1 text-lg underline decoration-white decoration-2 underline-offset-4">
+                  <h1 className="font-bold text-white mt-1 text-base decoration-white decoration-2">
                     SCHOOLS DIVISION OFFICE OF IMUS CITY
                   </h1>
-                  <p className="text-sm text-gray-100 mt-1 leading-tight">
+                  <p className="text-xs text-gray-100 mt-1 leading-tight">
                     Satorre St. Toclong I.C., Imus City, Cavite, 4103
                     Philippines
                   </p>
@@ -77,7 +77,7 @@ export default function Header() {
 
               {/* Right Side - Date/Time */}
               <div
-                className="text-right text-sm"
+                className="text-right text-xs"
                 style={{ fontFamily: "Arabato, sans-serif" }}
               >
                 <p className="text-gray-100">Philippine Standard Time:</p>
