@@ -4,7 +4,7 @@ import React, { useState, useRef } from "react";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import { usePathname } from "next/navigation";
-import { ChevronDown, Search, Volume2 } from "@/components/icons";
+import { Icons } from "@/components/icons";
 
 export default function Navbar() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -74,7 +74,7 @@ export default function Navbar() {
 
   return (
     <nav className="bg-[#f7f7f7] border-b border-gray-200 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-35">
         <div className="flex items-center justify-between h-14">
           {/* Left - Brand */}
           <div className="flex items-center">
@@ -128,7 +128,7 @@ export default function Navbar() {
                     >
                       {item.label}
                       {item.dropdown && (
-                        <ChevronDown size={14} className="ml-1" />
+                        <Icons.chevronDown size={14} className="ml-1" />
                       )}
                     </Link>
 
@@ -174,7 +174,7 @@ export default function Navbar() {
                 placeholder="Search ..."
                 className="px-4 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-40 bg-white"
               />
-              <Search
+              <Icons.search
                 className="absolute right-3 top-2.5 text-gray-400"
                 size={16}
               />
@@ -183,7 +183,7 @@ export default function Navbar() {
               className="bg-black text-white rounded-full p-2 w-9 h-9 flex items-center justify-center"
               aria-label="Accessibility"
             >
-              <Volume2 size={16} />
+              <Icons.volume2 size={16} />
             </button>
             <button
               className="text-gray-700 hover:text-gray-900 font-serif text-2xl px-2"

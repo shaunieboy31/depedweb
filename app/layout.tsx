@@ -34,7 +34,9 @@ export default function RootLayout({
       >
         <Navbar />
         <Header />
-        <main className="min-h-screen max-w-7xl mx-auto px-6">{children}</main>
+        <main className="min-h-screen max-w-7xl mx-auto px-35 py-8">
+          {children}
+        </main>
         <PageSeals />
         <Footer />
       </body>

@@ -21,8 +21,11 @@ export function Volume2(props: IconProps) {
   return <LucideVolume2 {...props} />;
 }
 
-export default {
-  ChevronDown,
-  Search,
-  Volume2,
+// shadcn-style Icons object (lowercase keys) for consistent usage
+export const Icons = {
+  chevronDown: ChevronDown,
+  search: Search,
+  volume2: Volume2,
 };
+
+export default Icons;

@@ -6,7 +6,7 @@ import Image from "next/image";
 export default function PageSeals() {
   return (
     <div className="bg-white">
-      <div className="max-w-1xl mx-auto px-1 py-1">
+      <div className="max-w-7xl mx-auto px-35 py-1">
         <div className="flex justify-center gap-100 mt-0">
           <a
             href="https://your-transparency-link.com"

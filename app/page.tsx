@@ -108,11 +108,11 @@ export default function Home() {
     },
   ];
   const cardColors = [
-    { bg: "bg-blue-50", border: "border-blue-200" },
-    { bg: "bg-green-50", border: "border-green-200" },
-    { bg: "bg-yellow-50", border: "border-yellow-200" },
-    { bg: "bg-indigo-50", border: "border-indigo-200" },
-    { bg: "bg-pink-50", border: "border-pink-200" },
+    { bg: "bg-blue-100", border: "border-blue-200" },
+    { bg: "bg-green-100", border: "border-green-200" },
+    { bg: "bg-yellow-100", border: "border-yellow-200" },
+    { bg: "bg-indigo-100", border: "border-indigo-200" },
+    { bg: "bg-pink-100", border: "border-pink-200" },
   ];
   const cardClass = (idx: number) => {
     const c = cardColors[idx % cardColors.length];
@@ -321,7 +321,7 @@ export default function Home() {
       {/* About Section */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             {/* Left Column - About Content */}
             <div className="lg:col-span-2">
               <h2 className="text-3xl font-bold text-gray-900 mb-8">

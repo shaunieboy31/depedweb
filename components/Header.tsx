@@ -40,7 +40,7 @@ export default function Header() {
   return (
     <header className="w-full bg-white">
       <div className="w-full bg-[#032977]">
-        <div className="max-w-7xl mx-auto px-6 py-6">
+        <div className="max-w-7xl mx-auto px-35 py-6">
           <Link href="/" className="block hover:opacity-90 transition-opacity">
             <div className="flex justify-between items-center">
               {/* Logo and Department Info */}
