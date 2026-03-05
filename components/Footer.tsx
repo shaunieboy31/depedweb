@@ -70,9 +70,7 @@ export default function Footer() {
             {/* Column 3 */}
             <div>
               <h3
-                className={cn(
-                  "text-sm font-bold uppercase tracking-wider mb-2",
-                )}
+                className={cn("text-xs font-bold uppercase mb-2 text-gray-500")}
               >
                 Government Links
               </h3>

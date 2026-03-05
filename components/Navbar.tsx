@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useRef, useState } from "react";
 import Link from "next/link";
-import { Separator } from "@/components/ui/separator";
 import { usePathname } from "next/navigation";
 import { Icons } from "@/components/icons";
 
@@ -12,11 +11,7 @@ export default function Navbar() {
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const menuItems = [
-    {
-      label: "Home Page",
-      href: "/",
-      dropdown: false,
-    },
+    { label: "Home Page", href: "/", dropdown: false },
     {
       label: "About Us",
       href: "/about-us",
@@ -73,34 +68,28 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="bg-[#f7f7f7] border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-35">
+    <nav className="bg-white border-t border-b border-gray-200">
+      <div className="max-w-7xl mx-auto px-10">
         <div className="flex items-center justify-between h-14">
           {/* Left - Brand */}
           <div className="flex items-center">
             <Link
               href="/"
-              className="text-gray-700 font-semibold text-base px-3 py-2 bg-[#f7f7f7]"
+              className="text-gray-800 font-semibold text-base px-3 py-2"
             >
               GOVPH
             </Link>
           </div>
 
-          <Separator
-            orientation="vertical"
-            className="mx-3 h-6"
-            decorative={false}
-          />
-
           {/* Center - Menu */}
           <div className="flex-1 flex justify-center">
-            <ul className="flex items-center justify-between w-full gap-2 text-xs font-medium text-gray-700 flex-nowrap">
-              {menuItems.map((item, idx) => {
+            <ul className="inline-flex items-center gap-4 text-xs font-medium text-gray-700">
+              {menuItems.map((item) => {
                 const isActive = item.href !== "#" && pathname === item.href;
                 return (
                   <li
                     key={item.label}
-                    className={`relative ${idx > 0 ? "border-l border-gray-100" : ""}`}
+                    className="relative"
                     onMouseEnter={() => {
                       if (item.dropdown) {
                         if (closeTimer.current) {
@@ -112,19 +101,21 @@ export default function Navbar() {
                     }}
                     onMouseLeave={() => {
                       if (item.dropdown) {
-                        closeTimer.current = setTimeout(() => {
-                          setOpenDropdown(null);
-                        }, 150);
+                        closeTimer.current = setTimeout(
+                          () => setOpenDropdown(null),
+                          150,
+                        );
                       }
                     }}
                   >
                     <Link
                       href={item.href}
-                      className={`transition-colors py-1 px-2 text-xs flex items-center gap-1 whitespace-nowrap ${
+                      className={`transition-colors py-5 px-3 text-xs inline-flex items-center gap-0 whitespace-nowrap ${
                         isActive
-                          ? "bg-gray-200 text-gray-900 font-semibold"
-                          : "hover:text-gray-600 transform hover:scale-105"
+                          ? "bg-gray-200 text-gray-900 font-bold"
+                          : "text-gray-700 hover:bg-gray-200 hover:text-gray-900 hover:font-bold"
                       }`}
+                      aria-current={isActive ? "page" : undefined}
                     >
                       {item.label}
                       {item.dropdown && (
@@ -136,7 +127,7 @@ export default function Navbar() {
                       item.submenu &&
                       openDropdown === item.label && (
                         <div
-                          className="absolute left-0 mt-1 w-56 bg-white border border-gray-200 rounded-md shadow-lg z-50"
+                          className="absolute left-0 top-full mt-1 ml-2 w-56 bg-white border border-gray-200 shadow-lg z-50"
                           onMouseEnter={() => {
                             if (closeTimer.current) {
                               clearTimeout(closeTimer.current as any);
@@ -144,16 +135,17 @@ export default function Navbar() {
                             }
                           }}
                           onMouseLeave={() => {
-                            closeTimer.current = setTimeout(() => {
-                              setOpenDropdown(null);
-                            }, 150);
+                            closeTimer.current = setTimeout(
+                              () => setOpenDropdown(null),
+                              150,
+                            );
                           }}
                         >
                           {item.submenu.map((subitem) => (
                             <Link
                               key={subitem.label}
                               href={subitem.href}
-                              className="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors text-sm"
+                              className="block px-4 py-3 text-gray-700 hover:bg-gray-200 hover:text-gray-700 hover:font-bold transition-colors text-sm whitespace-nowrap"
                             >
                               {subitem.label}
                             </Link>

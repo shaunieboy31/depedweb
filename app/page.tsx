@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import Image from "next/image";
+// removed unused Image import
 
 export default function Home() {
-  const [currentSlide, setCurrentSlide] = useState(0);
+  // carousel removed; using static banners
 
   // About cards configuration (convert paragraphs into colored cards)
   const aboutSections = [
@@ -107,47 +107,53 @@ export default function Home() {
       ),
     },
   ];
-  const cardColors = [
-    { bg: "bg-blue-100", border: "border-blue-200" },
-    { bg: "bg-green-100", border: "border-green-200" },
-    { bg: "bg-yellow-100", border: "border-yellow-200" },
-    { bg: "bg-indigo-100", border: "border-indigo-200" },
-    { bg: "bg-pink-100", border: "border-pink-200" },
-  ];
-  const cardClass = (idx: number) => {
-    const c = cardColors[idx % cardColors.length];
-    return `${c.bg} ${c.border}`;
-  };
+  // cleaned: removed unused `cardColors` and `cardClass`
   const [openIndexes, setOpenIndexes] = useState<number[]>([0, 3, 4]);
   const [playingVideo, setPlayingVideo] = useState<string | null>(null);
 
   const slides = [
     {
       id: 1,
-      title: "EARLY REGISTRATION",
-      subtitle: "for SY 2021-2022",
-      date: "March 26 to April 30, 2021",
+      title: "EARLY REGISTRATION NG SY 2026-2027",
+      subtitle: "Makipag-ugnayan sa papasukang paaralan",
+      date: "January 31 - February 27, 2026",
       description:
-        "Open to all incoming Kindergarten, Grades 1, 7, and 11 learners",
-      image: "/carousel-1.jpg",
+        "Open to incoming Kindergarten, Grades 1, 7, and 11 learners.",
+      image: "/images/carousel/Early-Reg-2026.png",
     },
     {
       id: 2,
-      title: "WELCOME TO DepEd",
-      subtitle: "Imus City Schools Division",
-      date: "Academic Year 2024-2025",
-      description: "Quality Education for All",
-      image: "/carousel-2.jpg",
+      title: "LEARNING RESOURCES PORTAL",
+      subtitle: "Search, download and use quality learning resources",
+      date: "Available online",
+      description:
+        "Access curated teaching and professional development materials.",
+      image: "/images/carousel/LRMDS.jpg",
     },
     {
       id: 3,
-      title: "EXCELLENCE IN EDUCATION",
-      subtitle: "Building Future Leaders",
-      date: "Learn More",
-      description: "Join us in our mission for educational excellence",
-      image: "/carousel-3.jpg",
+      title: "SCHOOLS DIVISION OF IMUS CITY",
+      subtitle: "Announcements & Events",
+      date: "2026",
+      description:
+        "Updates and highlights from the Schools Division of Imus City.",
+      image: "/images/carousel/Schools%20Division%20of%20Imus%20City.png",
+    },
+    // user's attached banner (place file at public/images/carousel/attached-banner.png)
+    {
+      id: 4,
+      title: "ATTACHED BANNER",
+      subtitle: "",
+      date: "",
+      description: "",
+      image: "/images/carousel/QPSslider.jpg",
     },
   ];
+
+  // Carousel state and controls
+  const [currentSlide, setCurrentSlide] = useState<number>(0);
+
+  // carousel uses a single uniform display for all slides
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -156,107 +162,54 @@ export default function Home() {
     return () => clearInterval(interval);
   }, [slides.length]);
 
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % slides.length);
-  };
-
-  const prevSlide = () => {
+  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % slides.length);
+  const prevSlide = () =>
     setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
-  };
+
+  // static banners — no auto-rotate or controls
 
   return (
     <div className="w-full">
       {/* Carousel Section */}
-      <section className="relative w-full bg-white overflow-hidden">
-        {/* Carousel Container */}
-        <div className="relative w-full h-[500px] md:h-[600px] flex items-center justify-center bg-gradient-to-b from-gray-100 to-gray-50">
-          {/* Slide Background */}
-          {slides.map((slide, index) => (
+      <section className="relative w-full bg-white">
+        <div className="relative w-full h-[420px] md:h-[560px] bg-gray-50 flex items-center group">
+          {slides.map((slide, idx) => (
             <div
               key={slide.id}
-              className={`absolute inset-0 transition-opacity duration-1000 flex items-center justify-center px-4 md:px-16 ${
-                index === currentSlide ? "opacity-100" : "opacity-0"
+              className={`absolute inset-0 flex items-center justify-center px-0 transition-opacity duration-700 ease-in-out ${
+                idx === currentSlide ? "opacity-100 z-10" : "opacity-0"
               }`}
             >
-              {/* Blue Border Frame */}
-              <div className="w-full max-w-5xl bg-white border-8 border-blue-600 rounded-lg shadow-2xl p-12 md:p-16">
-                <div className="space-y-6">
-                  <div className="text-center">
-                    <h2 className="text-4xl md:text-5xl font-bold text-red-600 mb-4">
-                      {slide.title}
-                    </h2>
-                    <h3 className="text-2xl md:text-3xl font-semibold text-gray-900 mb-4">
-                      {slide.subtitle}
-                    </h3>
-                    <p className="text-2xl md:text-3xl font-bold text-yellow-600 mb-6">
-                      {slide.date}
-                    </p>
-                  </div>
-
-                  <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-8 rounded-lg">
-                    <p className="text-lg md:text-xl text-gray-800 text-center leading-relaxed">
-                      {slide.description}
-                    </p>
-                  </div>
-
-                  {/* Contact Info */}
-                  <div className="bg-blue-600 rounded-lg p-6 text-white">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-                      <div>
-                        <p className="font-bold text-yellow-300 mb-2">
-                          Landline
-                        </p>
-                        <p className="text-sm">(046) 419-8450 local 204</p>
-                        <p className="text-sm">local 227</p>
-                      </div>
-                      <div>
-                        <p className="font-bold text-yellow-300 mb-2">Mobile</p>
-                        <p className="text-sm">0917-504-1518</p>
-                      </div>
-                      <div>
-                        <p className="font-bold text-yellow-300 mb-2">Email</p>
-                        <p className="text-sm">sgod.imus@deped.gov.ph</p>
-                        <p className="text-sm">planning.imus@deped.gov.ph</p>
-                      </div>
-                    </div>
+              <div className="w-full flex items-center justify-center">
+                <div className="w-full h-[420px] md:h-[560px] overflow-hidden relative flex items-center justify-center">
+                  <div className="w-full h-[420px] md:h-[560px] flex items-center justify-center bg-gray-50 overflow-hidden">
+                    <img
+                      src={slide.image}
+                      alt={slide.title}
+                      className="w-full h-full object-contain"
+                    />
                   </div>
                 </div>
               </div>
             </div>
           ))}
 
-          {/* Navigation Buttons - Positioned on carousel content */}
+          {/* Prev / Next controls */}
           <button
             onClick={prevSlide}
-            className="absolute left-8 top-1/2 -translate-y-1/2 z-20 bg-white hover:bg-gray-200 rounded-full p-3 transition-colors shadow-xl border-2 border-blue-600 hover:scale-110"
-            aria-label="Previous slide"
+            aria-label="Previous"
+            className="absolute left-3 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/20 hover:bg-black/40 text-white rounded-full p-2 z-30 focus:outline-none focus:ring-2 focus:ring-white/50"
           >
-            <ChevronLeft size={40} className="text-blue-600" />
+            <ChevronLeft className="w-5 h-5" />
           </button>
 
           <button
             onClick={nextSlide}
-            className="absolute right-8 top-1/2 -translate-y-1/2 z-20 bg-white hover:bg-gray-200 rounded-full p-3 transition-colors shadow-xl border-2 border-blue-600 hover:scale-110"
-            aria-label="Next slide"
+            aria-label="Next"
+            className="absolute right-3 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/20 hover:bg-black/40 text-white rounded-full p-2 z-30 focus:outline-none focus:ring-2 focus:ring-white/50"
           >
-            <ChevronRight size={40} className="text-blue-600" />
+            <ChevronRight className="w-5 h-5" />
           </button>
-
-          {/* Slide Indicators */}
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3 z-10">
-            {slides.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentSlide(index)}
-                className={`w-4 h-4 rounded-full transition-colors ${
-                  index === currentSlide
-                    ? "bg-blue-600"
-                    : "bg-gray-400 hover:bg-gray-500"
-                }`}
-                aria-label={`Go to slide ${index + 1}`}
-              />
-            ))}
-          </div>
         </div>
       </section>
 
@@ -319,168 +272,141 @@ export default function Home() {
       </section>
 
       {/* About Section */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            {/* Left Column - About Content */}
-            <div className="lg:col-span-2">
-              <h2 className="text-3xl font-bold text-gray-900 mb-8">
-                Schools Division Office of Imus City
-              </h2>
+      <section className="py-2 bg-white">
+        <div className="max-w-7xl mx-auto px-4 relative overflow-visible">
+          <div className="border border-gray-200 rounded-lg pt-8 px-6 pb-6 relative z-10 overflow-visible">
+            <div className="absolute left-0 top-0 -translate-y-1/2 z-40 w-full pointer-events-none">
+              <div
+                className="relative z-50 pointer-events-none"
+                aria-hidden="true"
+                style={{ marginTop: -20 }}
+              >
+                <span className="absolute left-6 top-0 -translate-y-1/2 bg-[#032977] text-white text-lg md:text-2xl lg:text-3xl font-bold whitespace-nowrap px-6 py-2 rounded-md pointer-events-none">
+                  Schools Division Office of Imus City
+                </span>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              <div className="lg:col-span-2">
+                <div className="mb-8" />
 
-              <div className="space-y-8 text-gray-700">
-                <div className="space-y-4">
-                  {aboutSections.map((sec, idx) => {
-                    const nonDropdown = [0, 3, 4];
-                    const classes = `border rounded-lg overflow-hidden ${cardClass(idx)}`;
-                    if (nonDropdown.includes(idx)) {
+                <div className="space-y-8 text-gray-700">
+                  <div className="space-y-4">
+                    {aboutSections.map((sec, idx) => {
                       return (
-                        <div key={idx} className={classes}>
-                          <div className="px-4 py-3 bg-gray-50">
-                            <span className="text-lg font-semibold">
-                              {sec.title}
-                            </span>
-                          </div>
-                          <div className="px-4 py-4 text-sm leading-relaxed">
+                        <div key={idx} className="mb-6">
+                          <h3 className="text-3xl font-bold text-white inline-block px-4 py-2 rounded bg-gradient-to-r bg-blue-600 from-blue-500 to-blue-700 mb-2">
+                            {sec.title}
+                          </h3>
+                          <div className="mt-3 mb-4 h-[2px] bg-gray-200 w-24 rounded" />
+                          <div className="text-sm leading-relaxed text-gray-700">
                             {sec.content}
                           </div>
                         </div>
                       );
-                    }
-
-                    return (
-                      <div key={idx} className={classes}>
-                        <button
-                          aria-expanded={openIndexes.includes(idx)}
-                          onClick={() =>
-                            setOpenIndexes((prev) =>
-                              prev.includes(idx)
-                                ? prev.filter((i) => i !== idx)
-                                : [...prev, idx],
-                            )
-                          }
-                          className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100"
-                        >
-                          <span className="text-lg font-semibold">
-                            {sec.title}
-                          </span>
-                          <span className="text-gray-600">
-                            {openIndexes.includes(idx) ? "−" : "+"}
-                          </span>
-                        </button>
-                        <div className="px-4 py-2">
-                          <p className="text-sm text-gray-600">{sec.summary}</p>
-                        </div>
-                        {openIndexes.includes(idx) && (
-                          <div className="px-4 py-4 text-sm leading-relaxed">
-                            {sec.content}
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
+                    })}
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Right Column - Video Boxes */}
-            <div className="lg:col-span-1">
-              <div className="space-y-8">
-                {/* Video Box 1 - Imus Hymn */}
-                <div>
-                  <h3 className="text-2xl font-bold text-blue-600 mb-4">
-                    IMUS HYMN
-                  </h3>
-                  {playingVideo === "aDD7lM0iO5Q" ? (
-                    <div className="relative rounded-lg overflow-hidden shadow-lg h-48">
-                      <iframe
-                        src={`https://www.youtube-nocookie.com/embed/aDD7lM0iO5Q?autoplay=1&rel=0&modestbranding=1`}
-                        title="Imus Hymn"
-                        allow="autoplay; encrypted-media; picture-in-picture"
-                        allowFullScreen
-                        className="w-full h-full"
-                      />
-                    </div>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => setPlayingVideo("aDD7lM0iO5Q")}
-                      aria-label="Play Imus Hymn"
-                      className="block w-full text-left"
-                    >
-                      <div className="relative rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow cursor-pointer h-48">
-                        <img
-                          src={`https://img.youtube.com/vi/aDD7lM0iO5Q/hqdefault.jpg`}
-                          alt="Imus Hymn thumbnail"
-                          className="w-full h-full object-cover"
+              <div className="lg:col-span-1">
+                <div className="space-y-8">
+                  <div>
+                    <h3 className="text-2xl font-bold text-blue-600 mb-4">
+                      IMUS HYMN
+                    </h3>
+                    {playingVideo === "aDD7lM0iO5Q" ? (
+                      <div className="relative rounded-lg overflow-hidden shadow-lg h-48">
+                        <iframe
+                          src={`https://www.youtube-nocookie.com/embed/aDD7lM0iO5Q?autoplay=1&rel=0&modestbranding=1`}
+                          title="Imus Hymn"
+                          allow="autoplay; encrypted-media; picture-in-picture"
+                          allowFullScreen
+                          className="w-full h-full"
                         />
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <div className="bg-red-600 rounded-full p-4 transition-transform">
-                            <svg
-                              className="w-8 h-8 text-white fill-current ml-1"
-                              viewBox="0 0 24 24"
-                            >
-                              <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                            </svg>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setPlayingVideo("aDD7lM0iO5Q")}
+                        aria-label="Play Imus Hymn"
+                        className="block w-full text-left"
+                      >
+                        <div className="relative rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow cursor-pointer h-48">
+                          <img
+                            src={`https://img.youtube.com/vi/aDD7lM0iO5Q/hqdefault.jpg`}
+                            alt="Imus Hymn thumbnail"
+                            className="w-full h-full object-cover"
+                          />
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="bg-red-600 rounded-full p-4 transition-transform">
+                              <svg
+                                className="w-8 h-8 text-white fill-current ml-1"
+                                viewBox="0 0 24 24"
+                              >
+                                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                              </svg>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </button>
-                  )}
-                  <p className="text-sm text-gray-700 mt-3">
-                    <span className="font-semibold">Composed & Lyrics by:</span>{" "}
-                    Engr. Aurello P. Bautista
-                    <br />
-                    <span className="font-semibold">Sung by:</span> Christian M.
-                    Bautista
-                  </p>
-                </div>
+                      </button>
+                    )}
+                    <p className="text-sm text-gray-700 mt-3">
+                      <span className="font-semibold">
+                        Composed & Lyrics by:
+                      </span>{" "}
+                      Engr. Aurello P. Bautista
+                      <br />
+                      <span className="font-semibold">Sung by:</span> Christian
+                      M. Bautista
+                    </p>
+                  </div>
 
-                {/* Video Box 2 - National Anthem */}
-                <div>
-                  <h3 className="text-2xl font-bold text-blue-600 mb-4">
-                    NATIONAL ANTHEM V5
-                  </h3>
-                  {playingVideo === "ACKqYOV2Urk" ? (
-                    <div className="relative rounded-lg overflow-hidden shadow-lg h-48">
-                      <iframe
-                        src={`https://www.youtube-nocookie.com/embed/ACKqYOV2Urk?autoplay=1&rel=0&modestbranding=1`}
-                        title="National Anthem"
-                        allow="autoplay; encrypted-media; picture-in-picture"
-                        allowFullScreen
-                        className="w-full h-full"
-                      />
-                    </div>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => setPlayingVideo("ACKqYOV2Urk")}
-                      aria-label="Play National Anthem"
-                      className="block w-full text-left"
-                    >
-                      <div className="relative rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow cursor-pointer h-48">
-                        <img
-                          src={`https://img.youtube.com/vi/ACKqYOV2Urk/hqdefault.jpg`}
-                          alt="National Anthem thumbnail"
-                          className="w-full h-full object-cover"
+                  <div>
+                    <h3 className="text-2xl font-bold text-blue-600 mb-4">
+                      NATIONAL ANTHEM V5
+                    </h3>
+                    {playingVideo === "ACKqYOV2Urk" ? (
+                      <div className="relative rounded-lg overflow-hidden shadow-lg h-48">
+                        <iframe
+                          src={`https://www.youtube-nocookie.com/embed/ACKqYOV2Urk?autoplay=1&rel=0&modestbranding=1`}
+                          title="National Anthem"
+                          allow="autoplay; encrypted-media; picture-in-picture"
+                          allowFullScreen
+                          className="w-full h-full"
                         />
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <div className="bg-red-600 rounded-full p-4 transition-transform">
-                            <svg
-                              className="w-8 h-8 text-white fill-current ml-1"
-                              viewBox="0 0 24 24"
-                            >
-                              <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                            </svg>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setPlayingVideo("ACKqYOV2Urk")}
+                        aria-label="Play National Anthem"
+                        className="block w-full text-left"
+                      >
+                        <div className="relative rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow cursor-pointer h-48">
+                          <img
+                            src={`https://img.youtube.com/vi/ACKqYOV2Urk/hqdefault.jpg`}
+                            alt="National Anthem thumbnail"
+                            className="w-full h-full object-cover"
+                          />
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="bg-red-600 rounded-full p-4 transition-transform">
+                              <svg
+                                className="w-8 h-8 text-white fill-current ml-1"
+                                viewBox="0 0 24 24"
+                              >
+                                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                              </svg>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </button>
-                  )}
-                  <p className="text-sm text-gray-700 mt-3">
-                    <span className="font-semibold">Directed by:</span> Jaime G.
-                    Caro Jr. and Bob C. Belacura Jr.
-                  </p>
+                      </button>
+                    )}
+                    <p className="text-sm text-gray-700 mt-3">
+                      <span className="font-semibold">Directed by:</span> Jaime
+                      G. Caro Jr. and Bob C. Belacura Jr.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

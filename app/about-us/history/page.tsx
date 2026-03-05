@@ -10,14 +10,14 @@ export default function History() {
       summary:
         "Brief history and establishment of the Schools Division of Imus City.",
       content: (
-        <div className="relative rounded-lg overflow-hidden">
+        <div className="relative rounded-lg overflow-hidden h-[420px] md:h-[560px]">
           <div
             className="absolute inset-0 bg-cover bg-center brightness-75"
             style={{ backgroundImage: "url('/images/newbuilding.webp')" }}
             aria-hidden
           />
 
-          <div className="relative z-10 px-4 py-8">
+          <div className="relative z-10 px-4 py-8 h-full flex items-center">
             <div className="max-w-4xl mx-auto space-y-4">
               <div className="bg-sky-600/30 text-white rounded-lg p-6 shadow backdrop-blur-sm border border-sky-500/20 transform transition hover:-translate-y-1">
                 <p className="text-lg leading-relaxed">
@@ -116,7 +116,7 @@ export default function History() {
       summary:
         "Legal basis and scope of responsibilities for DepEd and the division.",
       content: (
-        <div className="relative rounded-lg overflow-hidden">
+        <div className="relative rounded-lg overflow-hidden h-[420px] md:h-[560px]">
           <div
             className="absolute inset-0 bg-cover bg-center brightness-75"
             style={{
@@ -124,7 +124,7 @@ export default function History() {
             }}
             aria-hidden
           />
-          <div className="relative z-10 px-4 py-8">
+          <div className="relative z-10 px-4 py-8 h-full flex items-center">
             <div className="max-w-4xl mx-auto space-y-4">
               <div className="bg-indigo-600/30 text-white rounded-lg p-6 shadow backdrop-blur-sm border border-indigo-500/20  transform transition hover:-translate-y-1">
                 <p className="text-lg leading-relaxed">
@@ -232,18 +232,7 @@ export default function History() {
       ),
     },
   ];
-  const cardColors = [
-    { bg: "bg-blue-100", border: "border-blue-300" },
-    { bg: "bg-green-100", border: "border-green-300" },
-    { bg: "bg-yellow-100", border: "border-yellow-300" },
-    { bg: "bg-indigo-100", border: "border-indigo-300" },
-    { bg: "bg-pink-100", border: "border-pink-300" },
-    { bg: "bg-amber-100", border: "border-amber-300" },
-  ];
-  const cardClass = (idx: number) => {
-    const c = cardColors[idx % cardColors.length];
-    return `${c.bg} ${c.border}`;
-  };
+  // replaced colored cards with uniform bordered panels (home-style)
   return (
     <div className="w-full bg-white">
       <section className="px-4 lg:px-8 py-16">
@@ -259,55 +248,58 @@ export default function History() {
               <div className="space-y-4">
                 {sections.map((sec, idx) => {
                   const nonDropdown = [0, 3, 5];
-                  if (nonDropdown.includes(idx)) {
-                    return (
-                      <div
-                        key={idx}
-                        className={`border rounded-lg overflow-hidden ${cardClass(idx)}`}
-                      >
-                        <div className="px-4 py-3 bg-gray-50">
-                          <span className="text-lg font-semibold">
-                            {sec.title}
-                          </span>
-                        </div>
-                        <div className="px-4 py-4 text-sm leading-relaxed">
-                          {sec.content}
-                        </div>
-                      </div>
-                    );
-                  }
+
+                  const isOpen = openIndexes.includes(idx);
 
                   return (
-                    <div
-                      key={idx}
-                      className={`border rounded-lg overflow-hidden ${cardClass(idx)}`}
-                    >
-                      <button
-                        aria-expanded={openIndexes.includes(idx)}
-                        onClick={() =>
-                          setOpenIndexes((prev) =>
-                            prev.includes(idx)
-                              ? prev.filter((i) => i !== idx)
-                              : [...prev, idx],
-                          )
-                        }
-                        className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100"
-                      >
-                        <span className="text-lg font-semibold">
-                          {sec.title}
-                        </span>
-                        <span className="text-gray-600">
-                          {openIndexes.includes(idx) ? "−" : "+"}
-                        </span>
-                      </button>
-                      <div className="px-4 py-2">
-                        <p className="text-sm text-gray-600">{sec.summary}</p>
-                      </div>
-                      {openIndexes.includes(idx) && (
-                        <div className="px-4 py-4 text-sm leading-relaxed">
-                          {sec.content}
+                    <div key={idx} className="">
+                      <div className="border border-gray-200 rounded-lg pt-8 px-6 pb-6 relative overflow-visible">
+                        <div className="absolute left-0 top-0 -translate-y-1/2 z-40 w-full pointer-events-none">
+                          <div
+                            className="relative z-50 pointer-events-none"
+                            aria-hidden
+                          >
+                            <span className="absolute left-6 top-0 -translate-y-1/2 bg-[#032977] text-white text-lg font-bold whitespace-nowrap px-6 py-2 rounded-md pointer-events-none">
+                              {sec.title}
+                            </span>
+                          </div>
                         </div>
-                      )}
+
+                        <div className="pt-6">
+                          {nonDropdown.includes(idx) ? (
+                            <div className="text-sm leading-relaxed">
+                              {sec.content}
+                            </div>
+                          ) : (
+                            <>
+                              <div className="w-full flex items-center justify-between px-0 py-2">
+                                <p className="text-sm text-gray-600">
+                                  {sec.summary}
+                                </p>
+                                <button
+                                  onClick={() =>
+                                    setOpenIndexes((prev) =>
+                                      prev.includes(idx)
+                                        ? prev.filter((i) => i !== idx)
+                                        : [...prev, idx],
+                                    )
+                                  }
+                                  aria-expanded={isOpen}
+                                  className="text-gray-600 ml-4"
+                                >
+                                  {isOpen ? "−" : "+"}
+                                </button>
+                              </div>
+
+                              {isOpen && (
+                                <div className="mt-4 text-sm leading-relaxed">
+                                  {sec.content}
+                                </div>
+                              )}
+                            </>
+                          )}
+                        </div>
+                      </div>
                     </div>
                   );
                 })}
