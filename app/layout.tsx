@@ -35,7 +35,9 @@ export default function RootLayout({
         <Navbar />
         <Header />
         <main className="min-h-screen max-w-7xl mx-auto px-10 py-2">
-          {children}
+          <div className="border border-gray-200 rounded-lg p-6">
+            {children}
+          </div>
         </main>
         <PageSeals />
         <Footer />

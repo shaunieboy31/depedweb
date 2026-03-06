@@ -2,7 +2,7 @@
 
 import React, { useRef, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Icons } from "@/components/icons";
 
 export default function Navbar() {
@@ -11,6 +11,8 @@ export default function Navbar() {
   const pathname = usePathname();
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const nestedCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState("");
 
   const menuItems = [
     { label: "Home Page", href: "/", dropdown: false },
@@ -259,17 +261,31 @@ export default function Navbar() {
 
           {/* Right - Search and Accessibility Icons */}
           <div className="flex items-center gap-3 ml-4">
-            <div className="relative hidden sm:block">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (searchQuery.trim()) {
+                  router.push(
+                    `/search?q=${encodeURIComponent(searchQuery.trim())}`,
+                  );
+                }
+              }}
+              className="relative hidden sm:block"
+            >
               <input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 type="text"
                 placeholder="Search ..."
                 className="px-2 py-1 border border-gray-200 rounded-md text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 w-36 bg-white"
               />
-              <Icons.search
-                className="absolute right-3 top-2.5 text-gray-400"
-                size={16}
-              />
-            </div>
+              <button
+                type="submit"
+                className="absolute right-1 top-1 text-gray-400 p-1"
+              >
+                <Icons.search size={16} />
+              </button>
+            </form>
             <button
               className="bg-black text-white rounded-full p-2 w-9 h-9 flex items-center justify-center"
               aria-label="Accessibility"

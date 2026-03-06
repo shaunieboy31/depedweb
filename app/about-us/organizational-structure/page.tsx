@@ -190,9 +190,28 @@ export default function OrganizationalStructure() {
                   <li key={d.id}>
                     <a
                       href={`#${d.id}`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        // expand the section if it's closed
+                        setOpenIds((prev) =>
+                          prev.includes(d.id) ? prev : [...prev, d.id],
+                        );
+                        // smooth scroll into view after a tick so the element is expanded
+                        setTimeout(() => {
+                          const el = document.getElementById(d.id);
+                          if (el)
+                            el.scrollIntoView({
+                              behavior: "smooth",
+                              block: "start",
+                            });
+                        }, 60);
+                      }}
                       className={`text-blue-600 hover:underline ${s.linkHover}`}
                     >
                       {d.title}
+                      <span className="text-xs text-gray-400 ml-2">
+                        ({d.id})
+                      </span>
                     </a>
                   </li>
                 );

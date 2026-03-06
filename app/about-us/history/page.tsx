@@ -4,49 +4,79 @@ import React from "react";
 
 export default function History() {
   const [openIndexes, setOpenIndexes] = React.useState<number[]>([0, 3, 5]);
+
+  function HoverImageWrapper({
+    image,
+    children,
+  }: {
+    image: string;
+    children: React.ReactNode;
+  }) {
+    const [show, setShow] = React.useState(false);
+    return (
+      <div className="relative rounded-lg overflow-hidden h-[420px] md:h-[560px]">
+        <div
+          className="absolute inset-0 bg-cover bg-center brightness-75 opacity-100"
+          style={{ backgroundImage: `url('${image}')` }}
+          aria-hidden
+        />
+
+        <div className="absolute right-3 top-3 z-20">
+          <button
+            onMouseEnter={() => setShow(true)}
+            onMouseLeave={() => setShow(false)}
+            aria-label="View background"
+            className="bg-black/60 text-white text-sm px-3 py-1 rounded hover:bg-black/80"
+          >
+            View
+          </button>
+        </div>
+
+        <div
+          className={`relative z-10 px-4 py-8 h-full flex items-center transition-opacity duration-300 ${
+            show ? "opacity-0 pointer-events-none" : "opacity-100"
+          }`}
+        >
+          {children}
+        </div>
+      </div>
+    );
+  }
   const sections = [
     {
       title: "Overview",
       summary:
         "Brief history and establishment of the Schools Division of Imus City.",
       content: (
-        <div className="relative rounded-lg overflow-hidden h-[420px] md:h-[560px]">
-          <div
-            className="absolute inset-0 bg-cover bg-center brightness-75"
-            style={{ backgroundImage: "url('/images/newbuilding.webp')" }}
-            aria-hidden
-          />
+        <HoverImageWrapper image="/images/newbuilding.webp">
+          <div className="max-w-4xl mx-auto space-y-4">
+            <div className="bg-sky-600/30 text-white rounded-lg p-6 shadow backdrop-blur-sm border border-sky-500/20 transform transition hover:-translate-y-1">
+              <p className="text-lg leading-relaxed">
+                The City Schools Division of Imus was established pursuant to
+                Deped Order No. 50 s. 2002, when the City Government of Imus was
+                created with the promulgation of RA 10161.
+              </p>
+            </div>
 
-          <div className="relative z-10 px-4 py-8 h-full flex items-center">
-            <div className="max-w-4xl mx-auto space-y-4">
-              <div className="bg-sky-600/30 text-white rounded-lg p-6 shadow backdrop-blur-sm border border-sky-500/20 transform transition hover:-translate-y-1">
-                <p className="text-lg leading-relaxed">
-                  The City Schools Division of Imus was established pursuant to
-                  Deped Order No. 50 s. 2002, when the City Government of Imus
-                  was created with the promulgation of RA 10161.
-                </p>
-              </div>
+            <div className="bg-emerald-600/30 text-white rounded-lg p-6 shadow backdrop-blur-sm border border-emerald-500/20 transform transition hover:-translate-y-1">
+              <p className="text-lg leading-relaxed">
+                A memorandum of Agreement (MOA) was signed by the Secretary of
+                the Department of Education, Bro. Armin A. Luistro FSC and the
+                City Mayor of Imus, Hon. Emmanuel L. Maliksi, who then worked
+                collaboratively for the realization of this goal. Likewise, Dr.
+                Lualhati O. Cadavedo was appointed as its first OIC Division
+                Superintendent on January 12, 2013.
+              </p>
+            </div>
 
-              <div className="bg-emerald-600/30 text-white rounded-lg p-6 shadow backdrop-blur-sm border border-emerald-500/20 transform transition hover:-translate-y-1">
-                <p className="text-lg leading-relaxed">
-                  A memorandum of Agreement (MOA) was signed by the Secretary of
-                  the Department of Education, Bro. Armin A. Luistro FSC and the
-                  City Mayor of Imus, Hon. Emmanuel L. Maliksi, who then worked
-                  collaboratively for the realization of this goal. Likewise,
-                  Dr. Lualhati O. Cadavedo was appointed as its first OIC
-                  Division Superintendent on January 12, 2013.
-                </p>
-              </div>
-
-              <div className="bg-amber-500/30 text-white rounded-lg p-6 shadow backdrop-blur-sm border border-amber-400/20 transform transition hover:-translate-y-1">
-                <p className="text-lg leading-relaxed">
-                  Three Districts were created to ensure the effective and
-                  efficient delivery of Education services to its clientele.
-                </p>
-              </div>
+            <div className="bg-amber-500/30 text-white rounded-lg p-6 shadow backdrop-blur-sm border border-amber-400/20 transform transition hover:-translate-y-1">
+              <p className="text-lg leading-relaxed">
+                Three Districts were created to ensure the effective and
+                efficient delivery of Education services to its clientele.
+              </p>
             </div>
           </div>
-        </div>
+        </HoverImageWrapper>
       ),
     },
     {
@@ -116,45 +146,36 @@ export default function History() {
       summary:
         "Legal basis and scope of responsibilities for DepEd and the division.",
       content: (
-        <div className="relative rounded-lg overflow-hidden h-[420px] md:h-[560px]">
-          <div
-            className="absolute inset-0 bg-cover bg-center brightness-75"
-            style={{
-              backgroundImage: "url('/images/deped-division-office-imus.webp')",
-            }}
-            aria-hidden
-          />
-          <div className="relative z-10 px-4 py-8 h-full flex items-center">
-            <div className="max-w-4xl mx-auto space-y-4">
-              <div className="bg-indigo-600/30 text-white rounded-lg p-6 shadow backdrop-blur-sm border border-indigo-500/20  transform transition hover:-translate-y-1">
-                <p className="text-lg leading-relaxed">
-                  The Department of Education was established through the
-                  Education Decree of 1863 as the Superior Commission of Primary
-                  Instruction under a Chairman. The Education agency underwent
-                  many reorganization efforts in the 20th century in order to
-                  better define its purpose vis a vis the changing
-                  administrations and charters. The present day Department of
-                  Education was eventually mandated through Republic Act 9155,
-                  otherwise known as the Governance of Basic Education act of
-                  2001 which establishes the mandate of this agency.
-                </p>
-              </div>
+        <HoverImageWrapper image="/images/deped-division-office-imus.webp">
+          <div className="max-w-4xl mx-auto space-y-4">
+            <div className="bg-indigo-600/30 text-white rounded-lg p-6 shadow backdrop-blur-sm border border-indigo-500/20  transform transition hover:-translate-y-1">
+              <p className="text-lg leading-relaxed">
+                The Department of Education was established through the
+                Education Decree of 1863 as the Superior Commission of Primary
+                Instruction under a Chairman. The Education agency underwent
+                many reorganization efforts in the 20th century in order to
+                better define its purpose vis a vis the changing administrations
+                and charters. The present day Department of Education was
+                eventually mandated through Republic Act 9155, otherwise known
+                as the Governance of Basic Education act of 2001 which
+                establishes the mandate of this agency.
+              </p>
+            </div>
 
-              <div className="bg-pink-600/30 text-white rounded-lg p-6 shadow backdrop-blur-sm border border-pink-500/20  transform transition hover:-translate-y-1">
-                <p className="text-lg leading-relaxed">
-                  The Department of Education (DepEd) formulates, implements,
-                  and coordinates policies, plans, programs and projects in the
-                  areas of formal and non-formal basic education. It supervises
-                  all elementary and secondary education institutions, including
-                  alternative learning systems, both public and private, and
-                  provides for the establishment and maintenance of a complete,
-                  adequate, and integrated system of basic education relevant to
-                  the goals of national development.
-                </p>
-              </div>
+            <div className="bg-pink-600/30 text-white rounded-lg p-6 shadow backdrop-blur-sm border border-pink-500/20  transform transition hover:-translate-y-1">
+              <p className="text-lg leading-relaxed">
+                The Department of Education (DepEd) formulates, implements, and
+                coordinates policies, plans, programs and projects in the areas
+                of formal and non-formal basic education. It supervises all
+                elementary and secondary education institutions, including
+                alternative learning systems, both public and private, and
+                provides for the establishment and maintenance of a complete,
+                adequate, and integrated system of basic education relevant to
+                the goals of national development.
+              </p>
             </div>
           </div>
-        </div>
+        </HoverImageWrapper>
       ),
     },
     {

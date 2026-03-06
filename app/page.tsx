@@ -172,7 +172,7 @@ export default function Home() {
     <div className="w-full">
       <section className="py-2 bg-white">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="border border-gray-200 rounded-lg pt-8 px-6 pb-6 relative z-10 overflow-visible">
+          <div className="pt-8 px-6 pb-6 relative z-10 overflow-visible">
             {/* ribbon removed from global container; applied only to Overview below */}
 
             {/* Carousel (inside bordered container) */}
