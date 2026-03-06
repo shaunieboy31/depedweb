@@ -7,8 +7,10 @@ import { Icons } from "@/components/icons";
 
 export default function Navbar() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [openNested, setOpenNested] = useState<string | null>(null);
   const pathname = usePathname();
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const nestedCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const menuItems = [
     { label: "Home Page", href: "/", dropdown: false },
@@ -36,7 +38,57 @@ export default function Navbar() {
         { label: "Satisfaction", href: "/services/satisfaction" },
         { label: "Innovation", href: "/services/innovation" },
         { label: "SDOIC Easy Links", href: "/services/easy-links" },
-        { label: "Online Services", href: "/services/online" },
+        {
+          label: "Online Services",
+          href: "/services/online",
+          submenu: [
+            {
+              label: "Request / Submission of Documents",
+              href: "/services/online/request-submission",
+            },
+            {
+              label: "Document Tracking System Self Service",
+              href: "/services/online/document-tracking",
+            },
+            {
+              label: "Online Enrollment",
+              href: "/services/online/online-enrollment",
+            },
+            {
+              label: "Online Feedback",
+              href: "/services/online/online-feedback",
+            },
+            { label: "Online OBE Form", href: "/services/online/online-obe" },
+            { label: "PHILGEPS", href: "/services/online/philgeps" },
+            {
+              label: "QATAME Satisfaction Form",
+              href: "/services/online/qatame-satisfaction",
+            },
+            {
+              label: "Unified Information System",
+              href: "/services/online/unified-info",
+            },
+            { label: "Vacancies", href: "/services/online/vacancies" },
+            {
+              label: "Bida System",
+              href: "/services/online/bida-system",
+              submenu: [
+                {
+                  label: "Health Check",
+                  href: "/services/online/bida-system/health-check",
+                },
+              ],
+            },
+            {
+              label: "Complaint Form",
+              href: "/services/online/complaint-form",
+            },
+            {
+              label: "ICT Easy Links",
+              href: "/services/online/ict-easy-links",
+            },
+          ],
+        },
       ],
     },
     {
@@ -70,26 +122,26 @@ export default function Navbar() {
   return (
     <nav className="bg-white border-t border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-10">
-        <div className="flex items-center justify-between h-14">
+        <div className="flex items-center h-14 gap-4">
           {/* Left - Brand */}
           <div className="flex items-center">
             <Link
               href="/"
-              className="text-gray-800 font-semibold text-base px-3 py-2"
+              className="text-gray-900 font-semibold text-base px-3 py-2 pr-2"
             >
               GOVPH
             </Link>
           </div>
 
           {/* Center - Menu */}
-          <div className="flex-1 flex justify-center">
-            <ul className="inline-flex items-center gap-4 text-xs font-medium text-gray-700">
-              {menuItems.map((item) => {
+          <div className="flex-1 flex justify-start">
+            <ul className="inline-flex items-center text-sm font-medium text-gray-700">
+              {menuItems.map((item, idx) => {
                 const isActive = item.href !== "#" && pathname === item.href;
                 return (
                   <li
                     key={item.label}
-                    className="relative"
+                    className="relative border-l border-gray-200"
                     onMouseEnter={() => {
                       if (item.dropdown) {
                         if (closeTimer.current) {
@@ -110,7 +162,7 @@ export default function Navbar() {
                   >
                     <Link
                       href={item.href}
-                      className={`transition-colors py-5 px-3 text-xs inline-flex items-center gap-0 whitespace-nowrap ${
+                      className={`transition-colors block h-14 px-4 text-sm flex items-center whitespace-nowrap ${
                         isActive
                           ? "bg-gray-200 text-gray-900 font-bold"
                           : "text-gray-700 hover:bg-gray-200 hover:text-gray-900 hover:font-bold"
@@ -119,7 +171,7 @@ export default function Navbar() {
                     >
                       {item.label}
                       {item.dropdown && (
-                        <Icons.chevronDown size={14} className="ml-1" />
+                        <Icons.chevronDown size={16} className="ml-1" />
                       )}
                     </Link>
 
@@ -127,7 +179,7 @@ export default function Navbar() {
                       item.submenu &&
                       openDropdown === item.label && (
                         <div
-                          className="absolute left-0 top-full mt-1 ml-2 w-56 bg-white border border-gray-200 shadow-lg z-50"
+                          className="absolute left-0 top-full w-75 bg-white border border-gray-200 shadow-lg z-50"
                           onMouseEnter={() => {
                             if (closeTimer.current) {
                               clearTimeout(closeTimer.current as any);
@@ -141,15 +193,62 @@ export default function Navbar() {
                             );
                           }}
                         >
-                          {item.submenu.map((subitem) => (
-                            <Link
-                              key={subitem.label}
-                              href={subitem.href}
-                              className="block px-4 py-3 text-gray-700 hover:bg-gray-200 hover:text-gray-700 hover:font-bold transition-colors text-sm whitespace-nowrap"
-                            >
-                              {subitem.label}
-                            </Link>
-                          ))}
+                          {item.submenu.map((subitem) => {
+                            const nestedKey = `${item.label}::${subitem.label}`;
+                            return (
+                              <div
+                                key={subitem.label}
+                                className="relative"
+                                onMouseEnter={() => {
+                                  if (nestedCloseTimer.current) {
+                                    clearTimeout(
+                                      nestedCloseTimer.current as any,
+                                    );
+                                    nestedCloseTimer.current = null;
+                                  }
+                                  if (subitem.submenu) setOpenNested(nestedKey);
+                                }}
+                                onMouseLeave={() => {
+                                  if (subitem.submenu) {
+                                    nestedCloseTimer.current = setTimeout(
+                                      () =>
+                                        setOpenNested((prev) =>
+                                          prev === nestedKey ? null : prev,
+                                        ),
+                                      150,
+                                    );
+                                  }
+                                }}
+                              >
+                                <Link
+                                  href={subitem.href}
+                                  className="flex items-center justify-between px-4 py-4 text-gray-700 hover:bg-gray-200 hover:text-gray-700 hover:font-bold transition-colors text-sm whitespace-nowrap"
+                                >
+                                  <span>{subitem.label}</span>
+                                  {subitem.submenu && (
+                                    <span className="ml-2 text-gray-400">
+                                      ›
+                                    </span>
+                                  )}
+                                </Link>
+
+                                {subitem.submenu &&
+                                  openNested === nestedKey && (
+                                    <div className="absolute left-full top-0 ml-0 w-75 bg-white border border-gray-200 shadow-lg z-50">
+                                      {subitem.submenu.map((nested) => (
+                                        <Link
+                                          key={nested.label}
+                                          href={nested.href}
+                                          className="block px-4 py-3 text-gray-700 hover:bg-gray-200 hover:text-gray-700 hover:font-bold transition-colors text-sm whitespace-nowrap"
+                                        >
+                                          {nested.label}
+                                        </Link>
+                                      ))}
+                                    </div>
+                                  )}
+                              </div>
+                            );
+                          })}
                         </div>
                       )}
                   </li>
