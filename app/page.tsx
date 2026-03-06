@@ -170,122 +170,110 @@ export default function Home() {
 
   return (
     <div className="w-full">
-      {/* Carousel Section */}
-      <section className="relative w-full bg-white">
-        <div className="relative w-full h-[420px] md:h-[560px] bg-gray-50 flex items-center group">
-          {slides.map((slide, idx) => (
-            <div
-              key={slide.id}
-              className={`absolute inset-0 flex items-center justify-center px-0 transition-opacity duration-700 ease-in-out ${
-                idx === currentSlide ? "opacity-100 z-10" : "opacity-0"
-              }`}
-            >
-              <div className="w-full flex items-center justify-center">
-                <div className="w-full h-[420px] md:h-[560px] overflow-hidden relative flex items-center justify-center">
-                  <div className="w-full h-[420px] md:h-[560px] flex items-center justify-center bg-gray-50 overflow-hidden">
-                    <img
-                      src={slide.image}
-                      alt={slide.title}
-                      className="w-full h-full object-contain"
-                    />
+      <section className="py-2 bg-white">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="border border-gray-200 rounded-lg pt-8 px-6 pb-6 relative z-10 overflow-visible">
+            {/* ribbon removed from global container; applied only to Overview below */}
+
+            {/* Carousel (inside bordered container) */}
+            <div className="relative w-full h-[420px] md:h-[560px] bg-gray-50 flex items-center group mb-8 rounded-sm overflow-hidden">
+              {slides.map((slide, idx) => (
+                <div
+                  key={slide.id}
+                  className={`absolute inset-0 flex items-center justify-center px-0 transition-opacity duration-700 ease-in-out ${
+                    idx === currentSlide ? "opacity-100 z-10" : "opacity-0"
+                  }`}
+                >
+                  <div className="w-full flex items-center justify-center">
+                    <div className="w-full h-[420px] md:h-[560px] overflow-hidden relative flex items-center justify-center">
+                      <div className="w-full h-[420px] md:h-[560px] flex items-center justify-center bg-gray-50 overflow-hidden">
+                        <img
+                          src={slide.image}
+                          alt={slide.title}
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          ))}
+              ))}
 
-          {/* Prev / Next controls */}
-          <button
-            onClick={prevSlide}
-            aria-label="Previous"
-            className="absolute left-3 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/20 hover:bg-black/40 text-white rounded-full p-2 z-30 focus:outline-none focus:ring-2 focus:ring-white/50"
-          >
-            <ChevronLeft className="w-5 h-5" />
-          </button>
-
-          <button
-            onClick={nextSlide}
-            aria-label="Next"
-            className="absolute right-3 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/20 hover:bg-black/40 text-white rounded-full p-2 z-30 focus:outline-none focus:ring-2 focus:ring-white/50"
-          >
-            <ChevronRight className="w-5 h-5" />
-          </button>
-        </div>
-      </section>
-
-      {/* News & Updates Section */}
-      <section className="py-12 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">News & Updates</h2>
-            <a
-              href="#"
-              className="text-blue-600 hover:underline text-sm font-medium"
-            >
-              View all
-            </a>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              {
-                id: 1,
-                date: "Feb 28, 2026",
-                title: "Division Announces Early Registration Schedule",
-                excerpt:
-                  "The Schools Division Office of Imus City announces early registration dates for incoming learners for SY 2024-2025.",
-              },
-              {
-                id: 2,
-                date: "Jan 15, 2026",
-                title: "Learner Support Program Expanded",
-                excerpt:
-                  "New support initiatives were launched to assist learners with distance and blended learning modalities.",
-              },
-              {
-                id: 3,
-                date: "Dec 10, 2025",
-                title: "Division Awards Exemplary Teachers",
-                excerpt:
-                  "Outstanding teachers from elementary and secondary levels were recognized during the division awards ceremony.",
-              },
-            ].map((n) => (
-              <article
-                key={n.id}
-                className="bg-white border border-gray-100 rounded-lg p-4 hover:shadow-md transition-shadow"
+              <button
+                onClick={prevSlide}
+                aria-label="Previous"
+                className="absolute left-3 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/20 hover:bg-black/40 text-white rounded-full p-2 z-30 focus:outline-none focus:ring-2 focus:ring-white/50"
               >
-                <p className="text-sm text-gray-500 mb-2">{n.date}</p>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  {n.title}
-                </h3>
-                <p className="text-sm text-gray-700 mb-4">{n.excerpt}</p>
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+
+              <button
+                onClick={nextSlide}
+                aria-label="Next"
+                className="absolute right-3 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/20 hover:bg-black/40 text-white rounded-full p-2 z-30 focus:outline-none focus:ring-2 focus:ring-white/50"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* News & Updates (inside bordered container) */}
+            <div className="mb-8">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-gray-900">
+                  News & Updates
+                </h2>
                 <a
                   href="#"
-                  className="text-blue-600 font-medium hover:underline text-sm"
+                  className="text-blue-600 hover:underline text-sm font-medium"
                 >
-                  Read more
+                  View all
                 </a>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
+              </div>
 
-      {/* About Section */}
-      <section className="py-2 bg-white">
-        <div className="max-w-7xl mx-auto px-4 relative overflow-visible">
-          <div className="border border-gray-200 rounded-lg pt-8 px-6 pb-6 relative z-10 overflow-visible">
-            <div className="absolute left-0 top-0 -translate-y-1/2 z-40 w-full pointer-events-none">
-              <div
-                className="relative z-50 pointer-events-none"
-                aria-hidden="true"
-                style={{ marginTop: -20 }}
-              >
-                <span className="absolute left-6 top-0 -translate-y-1/2 bg-[#032977] text-white text-lg md:text-2xl lg:text-3xl font-bold whitespace-nowrap px-6 py-2 rounded-md pointer-events-none">
-                  Schools Division Office of Imus City
-                </span>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {[
+                  {
+                    id: 1,
+                    date: "Feb 28, 2026",
+                    title: "Division Announces Early Registration Schedule",
+                    excerpt:
+                      "The Schools Division Office of Imus City announces early registration dates for incoming learners for SY 2024-2025.",
+                  },
+                  {
+                    id: 2,
+                    date: "Jan 15, 2026",
+                    title: "Learner Support Program Expanded",
+                    excerpt:
+                      "New support initiatives were launched to assist learners with distance and blended learning modalities.",
+                  },
+                  {
+                    id: 3,
+                    date: "Dec 10, 2025",
+                    title: "Division Awards Exemplary Teachers",
+                    excerpt:
+                      "Outstanding teachers from elementary and secondary levels were recognized during the division awards ceremony.",
+                  },
+                ].map((n) => (
+                  <article
+                    key={n.id}
+                    className="bg-white border border-gray-100 rounded-lg p-4 hover:shadow-md transition-shadow"
+                  >
+                    <p className="text-sm text-gray-500 mb-2">{n.date}</p>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                      {n.title}
+                    </h3>
+                    <p className="text-sm text-gray-700 mb-4">{n.excerpt}</p>
+                    <a
+                      href="#"
+                      className="text-blue-600 font-medium hover:underline text-sm"
+                    >
+                      Read more
+                    </a>
+                  </article>
+                ))}
               </div>
             </div>
+
+            {/* About Section (inside bordered container) */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
               <div className="lg:col-span-2">
                 <div className="mb-8" />
@@ -295,6 +283,14 @@ export default function Home() {
                     {aboutSections.map((sec, idx) => {
                       return (
                         <div key={idx} className="mb-6">
+                          {idx === 0 && (
+                            <div className="mb-4">
+                              <span className="inline-block bg-[#032977] text-white text-lg md:text-2xl lg:text-3xl font-bold whitespace-nowrap px-6 py-2 rounded-md">
+                                Schools Division Office of Imus City
+                              </span>
+                            </div>
+                          )}
+
                           <h3 className="text-3xl font-bold text-white inline-block px-4 py-2 rounded bg-gradient-to-r bg-blue-600 from-blue-500 to-blue-700 mb-2">
                             {sec.title}
                           </h3>
