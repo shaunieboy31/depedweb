@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export function HomeCarousel() {
@@ -74,11 +75,14 @@ export function HomeCarousel() {
         >
           <div className="w-full flex items-center justify-center">
             <div className="w-full h-[420px] md:h-[560px] overflow-hidden relative flex items-center justify-center">
-              <div className="w-full h-[420px] md:h-[560px] flex items-center justify-center bg-gray-50 overflow-hidden">
-                <img
+              <div className="w-full h-[420px] md:h-[560px] flex items-center justify-center bg-gray-50 overflow-hidden relative">
+                <Image
                   src={slide.image}
                   alt={slide.title}
-                  className="w-full h-full object-contain"
+                  fill
+                  sizes="100vw"
+                  className="object-contain"
+                  priority={idx === 0}
                 />
               </div>
             </div>

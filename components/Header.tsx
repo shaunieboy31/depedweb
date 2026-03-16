@@ -6,9 +6,12 @@ import Image from "next/image";
 
 export default function Header() {
   const [currentTime, setCurrentTime] = React.useState("");
+  const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
-    setCurrentTime(
+    setMounted(true);
+
+    const format = () =>
       new Date().toLocaleDateString("en-US", {
         weekday: "long",
         year: "numeric",
@@ -17,21 +20,13 @@ export default function Header() {
         hour: "2-digit",
         minute: "2-digit",
         second: "2-digit",
-      }),
-    );
+      });
+
+    // initialize after mount to avoid SSR/client mismatch
+    setCurrentTime(format());
 
     const interval = setInterval(() => {
-      setCurrentTime(
-        new Date().toLocaleDateString("en-US", {
-          weekday: "long",
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-        }),
-      );
+      setCurrentTime(format());
     }, 1000);
 
     return () => clearInterval(interval);
@@ -81,7 +76,12 @@ export default function Header() {
                 style={{ fontFamily: "Arabato, sans-serif" }}
               >
                 <p className="text-gray-100">Philippine Standard Time:</p>
-                <p className="text-gray-100 mb-15">{currentTime}</p>
+                <p
+                  className="text-gray-100 mb-15"
+                  suppressHydrationWarning
+                >
+                  {mounted ? currentTime : null}
+                </p>
               </div>
             </div>
           </Link>
