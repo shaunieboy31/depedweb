@@ -98,9 +98,17 @@ export default function Navbar() {
       href: "#",
       dropdown: true,
       submenu: [
-        { label: "Learning Programs", href: "/programs/learning" },
-        { label: "Special Programs", href: "/programs/special" },
-        { label: "Development Programs", href: "/programs/development" },
+        { label: "Central Office", href: "/programs/central-office" },
+        { label: "Regional Office", href: "/programs/regional-office" },
+        {
+          label: "Division Office",
+          href: "/programs/division-office",
+          submenu: [
+            { label: "OSDS", href: "/programs/division-office/osds" },
+            { label: "CID", href: "/programs/division-office/cid" },
+            { label: "SGOD", href: "/programs/division-office/sgod" },
+          ],
+        },
       ],
     },
     { label: "News", href: "/news", dropdown: false },

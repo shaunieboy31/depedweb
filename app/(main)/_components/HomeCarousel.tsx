@@ -12,7 +12,7 @@ export function HomeCarousel() {
       date: "January 31 - February 27, 2026",
       description:
         "Open to incoming Kindergarten, Grades 1, 7, and 11 learners.",
-      image: "/images/carousel/Early-Reg-2026.png",
+      image: "/images/carousel/1.jpg",
     },
     {
       id: 2,
@@ -21,7 +21,7 @@ export function HomeCarousel() {
       date: "Available online",
       description:
         "Access curated teaching and professional development materials.",
-      image: "/images/carousel/LRMDS.jpg",
+      image: "/images/carousel/2.jpg",
     },
     {
       id: 3,
@@ -30,7 +30,7 @@ export function HomeCarousel() {
       date: "2026",
       description:
         "Updates and highlights from the Schools Division of Imus City.",
-      image: "/images/carousel/Schools%20Division%20of%20Imus%20City.png",
+      image: "/images/carousel/3.jpg",
     },
     {
       id: 4,
@@ -38,7 +38,15 @@ export function HomeCarousel() {
       subtitle: "",
       date: "",
       description: "",
-      image: "/images/carousel/QPSslider.jpg",
+      image: "/images/carousel/4.jpg",
+    },
+    {
+      id: 5,
+      title: "ADDITIONAL SLIDE",
+      subtitle: "",
+      date: "",
+      description: "",
+      image: "/images/carousel/5.jpg",
     },
   ];
 

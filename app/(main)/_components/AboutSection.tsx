@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import React, { useState } from "react";
 
 export function AboutSection() {
@@ -189,10 +190,13 @@ export function AboutSection() {
                 className="block w-full text-left"
               >
                 <div className="relative rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow cursor-pointer h-48">
-                  <img
+                  <Image
                     src={`https://img.youtube.com/vi/aDD7lM0iO5Q/hqdefault.jpg`}
                     alt="Imus Hymn thumbnail"
-                    className="w-full h-full object-cover"
+                    fill
+                    unoptimized
+                    sizes="(max-width: 1024px) 100vw, 33vw"
+                    className="object-cover"
                   />
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="bg-red-600 rounded-full p-4 transition-transform">
@@ -238,10 +242,13 @@ export function AboutSection() {
                 className="block w-full text-left"
               >
                 <div className="relative rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow cursor-pointer h-48">
-                  <img
+                  <Image
                     src={`https://img.youtube.com/vi/ACKqYOV2Urk/hqdefault.jpg`}
                     alt="National Anthem thumbnail"
-                    className="w-full h-full object-cover"
+                    fill
+                    unoptimized
+                    sizes="(max-width: 1024px) 100vw, 33vw"
+                    className="object-cover"
                   />
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="bg-red-600 rounded-full p-4 transition-transform">
