@@ -1,7 +1,7 @@
 import React from "react";
-import { HomeCarousel } from "./_components/HomeCarousel";
-import { NewsUpdates } from "./_components/NewsUpdates";
-import { AboutSection } from "./_components/AboutSection";
+import { HomeCarousel } from "./Home-Page/HomeCarousel";
+import { NewsUpdates } from "./Home-Page/NewsUpdates";
+import { AboutSection } from "./Home-Page/AboutSection";
 
 export default function Home() {
   return (
