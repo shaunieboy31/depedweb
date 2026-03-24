@@ -11,8 +11,11 @@ export default function AdminLayout({
           <a href="/dashboard" className="block text-slate-300 hover:text-white transition-colors py-2 px-3 rounded hover:bg-slate-800">
             Dashboard Overview
           </a>
-          <a href="#" className="block text-slate-300 hover:text-white transition-colors py-2 px-3 rounded hover:bg-slate-800">
-            Image Manager
+          <a href="/dashboard/carousel" className="block text-slate-300 hover:text-white transition-colors py-2 px-3 rounded hover:bg-slate-800">
+            Carousel Manager
+          </a>
+          <a href="/dashboard/news" className="block text-slate-300 hover:text-white transition-colors py-2 px-3 rounded hover:bg-slate-800">
+            News Manager
           </a>
           <a href="#" className="block text-slate-300 hover:text-white transition-colors py-2 px-3 rounded hover:bg-slate-800">
             Document Center

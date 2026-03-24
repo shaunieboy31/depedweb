@@ -3,11 +3,12 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
 export function HomeCarousel() {
-  const slides = [
+  const defaultSlides = [
     {
-      id: 1,
+      id: "1",
       title: "EARLY REGISTRATION NG SY 2026-2027",
       subtitle: "Makipag-ugnayan sa papasukang paaralan",
       date: "January 31 - February 27, 2026",
@@ -16,7 +17,7 @@ export function HomeCarousel() {
       image: "/images/carousel/1.jpg",
     },
     {
-      id: 2,
+      id: "2",
       title: "LEARNING RESOURCES PORTAL",
       subtitle: "Search, download and use quality learning resources",
       date: "Available online",
@@ -25,7 +26,7 @@ export function HomeCarousel() {
       image: "/images/carousel/2.jpg",
     },
     {
-      id: 3,
+      id: "3",
       title: "SCHOOLS DIVISION OF IMUS CITY",
       subtitle: "Announcements & Events",
       date: "2026",
@@ -34,7 +35,7 @@ export function HomeCarousel() {
       image: "/images/carousel/3.jpg",
     },
     {
-      id: 4,
+      id: "4",
       title: "ATTACHED BANNER",
       subtitle: "",
       date: "",
@@ -42,7 +43,7 @@ export function HomeCarousel() {
       image: "/images/carousel/4.jpg",
     },
     {
-      id: 5,
+      id: "5",
       title: "ADDITIONAL SLIDE",
       subtitle: "",
       date: "",
@@ -51,9 +52,46 @@ export function HomeCarousel() {
     },
   ];
 
+  const [slides, setSlides] = useState(defaultSlides);
   const [currentSlide, setCurrentSlide] = useState<number>(0);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    async function fetchSlides() {
+      try {
+        const { data, error } = await supabase
+          .from("banners")
+          .select("*")
+          .eq("active", true)
+          .order("order_index", { ascending: true });
+
+        if (error) {
+          console.warn("Using default slides due to Supabase error:", error.message);
+          return;
+        }
+
+        if (data && data.length > 0) {
+          setSlides(data.map((item: any) => ({
+            id: item.id.toString(),
+            title: item.title,
+            subtitle: item.description || "",
+            date: "",
+            description: item.description || "",
+            image: item.image_url
+          })));
+        }
+      } catch (err) {
+        console.error("Error fetching slides:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchSlides();
+  }, []);
+
+  useEffect(() => {
+    if (slides.length === 0) return;
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
     }, 5000);
