@@ -43,41 +43,42 @@ export default function Header() {
                 className="flex gap-4 items-center flex-1"
                 style={{ fontFamily: "Times New Roman, serif" }}
               >
-                <div className="w-24 h-24 flex-shrink-0 flex items-center justify-center">
-                  <Image
-                    src="/images/logo/deped_logo.png"
-                    alt="DepEd Logo"
-                    width={96}
-                    height={96}
-                    className="rounded-full shadow-lg object-cover"
-                  />
+                <div className="flex items-center gap-6 flex-shrink-0">
+                  <div className="w-28 h-28 flex-shrink-0 flex items-center justify-center">
+                    <Image
+                      src="/images/logo/deped_logo.png"
+                      alt="SDO Imus Logo"
+                      width={110}
+                      height={110}
+                      className="object-contain"
+                    />
+                  </div>
                 </div>
 
-                <div className="flex-1">
-                  <p className="text-xs text-gray-100 leading-tight">
+                <div className="flex-1 text-white" style={{ fontFamily: "serif" }}>
+                  <p className="text-base leading-tight">
                     Department of Education
                   </p>
-                  <p className="text-xs text-gray-100 leading-tight">
+                  <p className="text-base leading-tight">
                     Region IV-A, CALABARZON
                   </p>
-                  <h1 className="font-bold text-white mt-1 text-base decoration-white decoration-2">
+                  <h1 className="font-bold text-lg mt-0.5 underline decoration-1 tracking-tight">
                     SCHOOLS DIVISION OFFICE OF IMUS CITY
                   </h1>
-                  <p className="text-xs text-gray-100 mt-1 leading-tight">
-                    Satorre St. Toclong I.C., Imus City, Cavite, 4103
-                    Philippines
+                  <p className="text-xs mt-1 leading-tight opacity-90">
+                    Satorre St. Toclong I-C, Imus, City Cavite, 4103 Philippines
                   </p>
                 </div>
               </div>
 
               {/* Right Side - Date/Time */}
               <div
-                className="text-right text-xs"
-                style={{ fontFamily: "Arabato, sans-serif" }}
+                className="text-right text-sm font-medium"
+                style={{ fontFamily: "serif" }}
               >
-                <p className="text-gray-100">Philippine Standard Time:</p>
+                <p className="text-gray-100 opacity-90">Philippine Standard Time:</p>
                 <p
-                  className="text-gray-100 mb-15"
+                  className="text-gray-100"
                   suppressHydrationWarning
                 >
                   {mounted ? currentTime : null}
@@ -88,5 +89,7 @@ export default function Header() {
         </div>
       </div>
     </header>
+
+
   );
 }

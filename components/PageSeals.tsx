@@ -9,18 +9,17 @@ export default function PageSeals() {
       <div className="max-w-7xl mx-auto px-35 py-1">
         <div className="flex justify-center gap-100 mt-0">
           <a
-            href="https://your-transparency-link.com"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/transparency-seal"
           >
             <Image
-              src="/images/logo/transparency-seal.webp"
+              src="/images/logo/transparency-seal-160x160.png"
               alt="Transparency Seal"
               width={150}
               height={128}
               className="object-contain hover:scale-105 transition-transform duration-200"
             />
           </a>
+
           <a
             href="https://your-foi-link.com"
             target="_blank"

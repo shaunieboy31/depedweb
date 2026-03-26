@@ -75,44 +75,16 @@ export default function Footer() {
                 Government Links
               </h3>
               <ul className="space-y-1 text-xs">
-                <li>
-                  <a href="#" className="text-gray-600 hover:underline">
-                    Office of the President
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-600 hover:underline">
-                    Office of the Vice President
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-600 hover:underline">
-                    Senate of the Philippines
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-600 hover:underline">
-                    House of Representatives
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-600 hover:underline">
-                    Supreme Court
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-600 hover:underline">
-                    Court of Appeals
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-600 hover:underline">
-                    Sandiganbayan
-                  </a>
-                </li>
+                <li><a href="#" className="text-gray-600 hover:underline">Office of the President</a></li>
+                <li><a href="#" className="text-gray-600 hover:underline">Office of the Vice President</a></li>
+                <li><a href="#" className="text-gray-600 hover:underline">Senate of the Philippines</a></li>
+                <li><a href="#" className="text-gray-600 hover:underline">House of Representatives</a></li>
+                <li><a href="#" className="text-gray-600 hover:underline">Supreme Court</a></li>
               </ul>
             </div>
           </div>
+
+
           <Separator className="mt-8" />
         </div>
       </div>
