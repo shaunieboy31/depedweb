@@ -2,10 +2,9 @@
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import React, { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase";
 
 export default function EmployeeOfMonth() {
-  const defaultMonths = [
+  const months = [
     "January 2024",
     "February 2024",
     "March 2024",
@@ -20,50 +19,16 @@ export default function EmployeeOfMonth() {
     "December 2024",
   ];
 
-  const [months, setMonths] = useState(defaultMonths);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [employeeData, setEmployeeData] = useState<any[]>([]);
 
   // selected month key (use month string)
   const makeKey = (e: any) => (typeof e === "string" ? e : e.month);
-  const [selectedKey, setSelectedKey] = useState<string>(() => defaultMonths[0]);
+  const [selectedKey, setSelectedKey] = useState<string>(() => months[0]);
 
   // track which month sections are open
   const [openIds, setOpenIds] = useState<string[]>([]);
 
-  useEffect(() => {
-    async function fetchEmployees() {
-      try {
-        const { data, error } = await supabase
-          .from("employees")
-          .select("*")
-          .order("year", { ascending: false });
-
-        if (error) {
-          console.warn("Using default employees due to Supabase error:", error.message);
-          return;
-        }
-
-        if (data && data.length > 0) {
-          const sortedData = data.sort((a, b) => {
-            const dateA = new Date(`${a.month} 1, ${a.year}`);
-            const dateB = new Date(`${b.month} 1, ${b.year}`);
-            return dateB.getTime() - dateA.getTime();
-          });
-          setEmployeeData(sortedData);
-          const monthStrings = sortedData.map(item => `${item.month} ${item.year}`);
-          setMonths(monthStrings);
-          setSelectedKey(monthStrings[0]);
-        }
-      } catch (err) {
-        console.error("Error fetching employees:", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchEmployees();
-  }, []);
 
   // derive index and navigation helpers from months
   const currentIndex = Math.max(

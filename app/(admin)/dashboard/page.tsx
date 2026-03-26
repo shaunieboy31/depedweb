@@ -1,40 +1,10 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase";
+import React from "react";
 import { ChevronRight } from "lucide-react";
 
 export default function Dashboard() {
-  const [stats, setStats] = useState({ banners: 0, documents: 0, news: 0 });
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchStats() {
-      try {
-        const [
-          { count: bannerCount },
-          { count: docCount },
-          { count: newsCount }
-        ] = await Promise.all([
-          supabase.from("banners").select("*", { count: "exact", head: true }),
-          supabase.from("documents").select("*", { count: "exact", head: true }),
-          supabase.from("news").select("*", { count: "exact", head: true }),
-        ]);
-
-        setStats({
-          banners: bannerCount || 0,
-          documents: docCount || 0,
-          news: newsCount || 0,
-        });
-      } catch (err) {
-        console.error("Error fetching stats:", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchStats();
-  }, []);
+  const stats = { banners: 5, documents: 0, news: 3 };
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -50,25 +20,26 @@ export default function Dashboard() {
           <div className="grid grid-cols-3 gap-4 mt-6">
             <div className="p-4 bg-blue-50 border border-blue-100 rounded-lg">
               <span className="block text-2xl font-bold text-blue-700">
-                {loading ? "..." : stats.banners}
+                {stats.banners}
               </span>
               <span className="text-sm text-blue-600">Active Banners</span>
             </div>
             <div className="p-4 bg-emerald-50 border border-emerald-100 rounded-lg">
               <span className="block text-2xl font-bold text-emerald-700">
-                {loading ? "..." : stats.documents}
+                {stats.documents}
               </span>
               <span className="text-sm text-emerald-600">Documents</span>
             </div>
             <div className="p-4 bg-amber-50 border border-amber-100 rounded-lg">
               <span className="block text-2xl font-bold text-amber-700">
-                {loading ? "..." : stats.news}
+                {stats.news}
               </span>
               <span className="text-sm text-amber-600">News Items</span>
             </div>
           </div>
         </div>
       </div>
+
       
       <div className="col-span-1">
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">

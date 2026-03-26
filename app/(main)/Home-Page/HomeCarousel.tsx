@@ -3,92 +3,26 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { supabase } from "@/lib/supabase";
 
 export function HomeCarousel() {
-  const defaultSlides = [
+  const [currentSlide, setCurrentSlide] = useState<number>(0);
+  const slides = [
     {
       id: "1",
-      title: "EARLY REGISTRATION NG SY 2026-2027",
-      subtitle: "Makipag-ugnayan sa papasukang paaralan",
-      date: "January 31 - February 27, 2026",
-      description:
-        "Open to incoming Kindergarten, Grades 1, 7, and 11 learners.",
+      title: "LEARNING RESOURCES PORTAL",
       image: "/images/carousel/1.jpg",
     },
     {
       id: "2",
-      title: "LEARNING RESOURCES PORTAL",
-      subtitle: "Search, download and use quality learning resources",
-      date: "Available online",
-      description:
-        "Access curated teaching and professional development materials.",
+      title: "SCHOOLS DIVISION OF IMUS CITY",
       image: "/images/carousel/2.jpg",
     },
     {
       id: "3",
-      title: "SCHOOLS DIVISION OF IMUS CITY",
-      subtitle: "Announcements & Events",
-      date: "2026",
-      description:
-        "Updates and highlights from the Schools Division of Imus City.",
+      title: "Early Registration SY 2026-2027",
       image: "/images/carousel/3.jpg",
     },
-    {
-      id: "4",
-      title: "ATTACHED BANNER",
-      subtitle: "",
-      date: "",
-      description: "",
-      image: "/images/carousel/4.jpg",
-    },
-    {
-      id: "5",
-      title: "ADDITIONAL SLIDE",
-      subtitle: "",
-      date: "",
-      description: "",
-      image: "/images/carousel/5.jpg",
-    },
   ];
-
-  const [slides, setSlides] = useState(defaultSlides);
-  const [currentSlide, setCurrentSlide] = useState<number>(0);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchSlides() {
-      try {
-        const { data, error } = await supabase
-          .from("banners")
-          .select("*")
-          .eq("active", true)
-          .order("order_index", { ascending: true });
-
-        if (error) {
-          console.warn("Using default slides due to Supabase error:", error.message);
-          return;
-        }
-
-        if (data && data.length > 0) {
-          setSlides(data.map((item: any) => ({
-            id: item.id.toString(),
-            title: item.title,
-            subtitle: item.description || "",
-            date: "",
-            description: item.description || "",
-            image: item.image_url
-          })));
-        }
-      } catch (err) {
-        console.error("Error fetching slides:", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchSlides();
-  }, []);
 
   useEffect(() => {
     if (slides.length === 0) return;
@@ -99,50 +33,62 @@ export function HomeCarousel() {
   }, [slides.length]);
 
   const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % slides.length);
-  const prevSlide = () =>
-    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
 
   return (
-    <div className="relative w-full h-[420px] md:h-[560px] bg-red-50 border-4 border-red-500 flex items-center group mb-12 rounded-2xl shadow-xl overflow-hidden p-2">
-      {slides.map((slide, idx) => (
-        <div
-          key={slide.id}
-          className={`absolute inset-0 flex items-center justify-center px-0 transition-opacity duration-700 ease-in-out ${
-            idx === currentSlide ? "opacity-100 z-10" : "opacity-0"
-          }`}
-        >
-          <div className="w-full flex items-center justify-center">
-            <div className="w-full h-[420px] md:h-[560px] overflow-hidden relative flex items-center justify-center">
-              <div className="w-full h-[420px] md:h-[560px] flex items-center justify-center bg-gray-50 overflow-hidden relative">
-                <Image
-                  src={slide.image}
-                  alt={slide.title}
-                  fill
-                  sizes="100vw"
-                  className="object-contain"
-                  priority={idx === 0}
-                />
-              </div>
+    <div className="relative w-full bg-white mb-16">
+      {/* Main Carousel Container */}
+      <div className="relative w-full h-[300px] md:h-[450px] overflow-hidden group">
+        {slides.map((slide, idx) => (
+          <div
+            key={slide.id}
+            className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
+              idx === currentSlide ? "opacity-100 z-10" : "opacity-0"
+            }`}
+          >
+            {/* Image Layer - Clean, no overlays */}
+            <div className="absolute inset-0 flex items-center justify-center bg-slate-50">
+              <Image
+                src={slide.image}
+                alt={slide.title}
+                fill
+                sizes="100vw"
+                className="object-contain"
+                priority={idx === 0}
+              />
             </div>
           </div>
-        </div>
-      ))}
+        ))}
 
-      <button
-        onClick={prevSlide}
-        aria-label="Previous"
-        className="absolute left-3 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/20 hover:bg-black/40 text-white rounded-full p-2 z-30 focus:outline-none focus:ring-2 focus:ring-white/50"
-      >
-        <ChevronLeft className="w-5 h-5" />
-      </button>
+        {/* Minimal Navigation Arrows */}
+        <button
+          onClick={prevSlide}
+          className="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-2 bg-white/20 hover:bg-white/40 backdrop-blur-sm text-slate-800 rounded-full transition-all opacity-0 group-hover:opacity-100"
+        >
+          <ChevronLeft className="w-6 h-6" />
+        </button>
+        <button
+          onClick={nextSlide}
+          className="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-2 bg-white/20 hover:bg-white/40 backdrop-blur-sm text-slate-800 rounded-full transition-all opacity-0 group-hover:opacity-100"
+        >
+          <ChevronRight className="w-6 h-6" />
+        </button>
+      </div>
 
-      <button
-        onClick={nextSlide}
-        aria-label="Next"
-        className="absolute right-3 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/20 hover:bg-black/40 text-white rounded-full p-2 z-30 focus:outline-none focus:ring-2 focus:ring-white/50"
-      >
-        <ChevronRight className="w-5 h-5" />
-      </button>
+      {/* Centered Pagination Dots Below */}
+      <div className="flex justify-center gap-3 mt-6">
+        {slides.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setCurrentSlide(i)}
+            className={`h-2.5 rounded-full transition-all duration-300 ${
+              i === currentSlide ? "w-8 bg-[#4279D2]" : "w-2.5 bg-slate-200 hover:bg-slate-300"
+            }`}
+          />
+        ))}
+      </div>
     </div>
   );
 }
+
+
