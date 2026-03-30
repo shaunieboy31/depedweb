@@ -17,12 +17,12 @@ export function AboutSection() {
   const [playingVideo, setPlayingVideo] = useState<string | null>(null);
 
   return (
-    <div className="py-24 space-y-32 bg-white">
+    <div className="py-24 space-y-32">
       {/* Overview Section */}
       <div className="space-y-8 max-w-4xl">
         <div className="space-y-2">
-          <h2 className="text-3xl font-black text-[#4279D2] uppercase tracking-tight">Schools Division Office of Imus City</h2>
-          <div className="h-1 w-20 bg-[#4279D2]" />
+          <h2 className="text-3xl font-black text-[#191970] uppercase tracking-tight">Schools Division Office of Imus City</h2>
+          <div className="h-1 w-20 bg-[#191970]" />
         </div>
         <div className="space-y-6 text-slate-600 leading-relaxed font-medium">
           <p>
@@ -46,7 +46,7 @@ export function AboutSection() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
         {/* Vision */}
         <div className="space-y-6">
-          <div className="flex items-center gap-4 text-[#4279D2]">
+          <div className="flex items-center gap-4 text-[#191970]">
             <Eye size={32} />
             <h3 className="text-2xl font-black uppercase tracking-tight">Vision</h3>
           </div>
@@ -65,7 +65,7 @@ export function AboutSection() {
 
         {/* Mission */}
         <div className="space-y-6">
-          <div className="flex items-center gap-4 text-[#4279D2]">
+          <div className="flex items-center gap-4 text-[#191970]">
             <Target size={32} />
             <h3 className="text-2xl font-black uppercase tracking-tight">Mission</h3>
           </div>
@@ -83,7 +83,7 @@ export function AboutSection() {
 
       {/* Mandate Section */}
       <div className="space-y-8 bg-slate-50 p-12 rounded-2xl border border-slate-100">
-        <div className="flex items-center gap-4 text-[#4279D2]">
+        <div className="flex items-center gap-4 text-[#191970]">
           <History size={32} />
           <h3 className="text-2xl font-black uppercase tracking-tight">Mandate</h3>
         </div>
@@ -98,9 +98,9 @@ export function AboutSection() {
       </div>
 
       {/* Quality Policy Section */}
-      <div className="space-y-10 border-l-4 border-[#4279D2] pl-12">
+      <div className="space-y-10 border-l-4 border-[#191970] pl-12">
         <div className="space-y-6">
-          <div className="flex items-center gap-4 text-[#4279D2]">
+          <div className="flex items-center gap-4 text-[#191970]">
             <ShieldCheck size={32} />
             <h3 className="text-2xl font-black uppercase tracking-tight">DepEd Quality Policy Statement (QPS)</h3>
           </div>
@@ -112,27 +112,27 @@ export function AboutSection() {
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4 text-slate-600 font-medium">
           <div className="flex items-center gap-3">
-            <div className="h-1.5 w-1.5 rounded-full bg-[#4279D2]" />
+            <div className="h-1.5 w-1.5 rounded-full bg-[#191970]" />
             <p>Proactive leadership</p>
           </div>
           <div className="flex items-center gap-3">
-            <div className="h-1.5 w-1.5 rounded-full bg-[#4279D2]" />
+            <div className="h-1.5 w-1.5 rounded-full bg-[#191970]" />
             <p>Shared governance</p>
           </div>
           <div className="flex items-center gap-3">
-            <div className="h-1.5 w-1.5 rounded-full bg-[#4279D2]" />
+            <div className="h-1.5 w-1.5 rounded-full bg-[#191970]" />
             <p>Evidenced-based policies, standards and programs</p>
           </div>
           <div className="flex items-center gap-3">
-            <div className="h-1.5 w-1.5 rounded-full bg-[#4279D2]" />
+            <div className="h-1.5 w-1.5 rounded-full bg-[#191970]" />
             <p>Responsive and relevant curricula</p>
           </div>
           <div className="flex items-center gap-3">
-            <div className="h-1.5 w-1.5 rounded-full bg-[#4279D2]" />
+            <div className="h-1.5 w-1.5 rounded-full bg-[#191970]" />
             <p>Highly competent and committed officials, and teaching and non-teaching personnel</p>
           </div>
           <div className="flex items-center gap-3">
-            <div className="h-1.5 w-1.5 rounded-full bg-[#4279D2]" />
+            <div className="h-1.5 w-1.5 rounded-full bg-[#191970]" />
             <p>An enabling learning environment</p>
           </div>
         </div>
@@ -148,7 +148,7 @@ export function AboutSection() {
       {/* Institutional Media */}
       <div className="space-y-12">
         <div className="border-b border-slate-100 pb-6">
-          <h2 className="text-3xl font-black text-[#4279D2] uppercase tracking-tight">Institutional Media</h2>
+          <h2 className="text-3xl font-black text-[#191970] uppercase tracking-tight">Institutional Media</h2>
           <p className="text-slate-500 font-medium">Hymns and national symbols of unity</p>
         </div>
         
@@ -179,7 +179,7 @@ export function AboutSection() {
                     />
                     <div className="absolute inset-0 bg-slate-900/10 group-hover:bg-slate-900/30 transition-colors" />
                     <div className="absolute inset-0 flex items-center justify-center">
-                       <div className="w-16 h-16 bg-[#4279D2] text-white rounded-full flex items-center justify-center shadow-2xl group-hover:scale-110 transition duration-300">
+                       <div className="w-16 h-16 bg-[#191970] text-white rounded-full flex items-center justify-center shadow-2xl group-hover:scale-110 transition duration-300">
                           <Play size={32} fill="currentColor" />
                        </div>
                     </div>
@@ -188,7 +188,7 @@ export function AboutSection() {
               </div>
               <div>
                 <h4 className="text-lg font-bold text-slate-800">{vid.title}</h4>
-                <p className="text-xs font-bold text-[#4279D2] uppercase tracking-widest mt-1">{vid.author}</p>
+                <p className="text-xs font-bold text-[#191970] uppercase tracking-widest mt-1">{vid.author}</p>
               </div>
             </div>
           ))}

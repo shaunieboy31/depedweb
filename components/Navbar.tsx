@@ -285,7 +285,7 @@ export default function Navbar() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 type="text"
                 placeholder="Search ..."
-                className="px-2 py-1 border border-gray-200 rounded-md text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 w-36 bg-white"
+                className="px-2 py-1 border border-gray-200 rounded-md text-xs focus:outline-none focus:ring-2 focus:ring-[#191970] w-36 bg-white"
               />
               <button
                 type="submit"

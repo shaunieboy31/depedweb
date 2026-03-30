@@ -34,7 +34,7 @@ export default function Header() {
 
   return (
     <header className="w-full bg-white">
-      <div className="w-full bg-[#032977]">
+      <div className="w-full bg-[#191970]">
         <div className="max-w-7xl mx-auto px-10 py-5">
           <Link href="/" className="block hover:opacity-90 transition-opacity">
             <div className="flex justify-between items-center">

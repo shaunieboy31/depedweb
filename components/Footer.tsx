@@ -11,7 +11,7 @@ export default function Footer() {
       {/* Main footer band with faded watermark on the left */}
 
       <div
-        className="bg-[#f0f0f0] bg-no-repeat"
+        className="bg-[#ECEFF1] bg-no-repeat"
         style={{
           backgroundImage: "url('/images/logo/govph-seal-mono-footer.webp')",
           backgroundSize: "160px",

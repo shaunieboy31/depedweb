@@ -82,7 +82,7 @@ export function HomeCarousel() {
             key={i}
             onClick={() => setCurrentSlide(i)}
             className={`h-2.5 rounded-full transition-all duration-300 ${
-              i === currentSlide ? "w-8 bg-[#4279D2]" : "w-2.5 bg-slate-200 hover:bg-slate-300"
+              i === currentSlide ? "w-8 bg-[#191970]" : "w-2.5 bg-slate-200 hover:bg-slate-300"
             }`}
           />
         ))}
