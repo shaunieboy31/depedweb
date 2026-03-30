@@ -6,8 +6,8 @@ import { FileText } from "lucide-react";
 
 export default function TransparencySealPage() {
   return (
-    <div className="bg-white min-h-screen pb-32">
-      <div className="max-w-5xl mx-auto px-6 pt-12 space-y-16">
+    <div className="bg-[#f9f9f9] min-h-screen py-10 font-sans text-[14px] leading-relaxed">
+      <div className="max-w-5xl mx-auto bg-white p-8 md:p-12 shadow-sm border border-gray-200">
 
         {/* Header Section */}
         <div className="text-center space-y-6">
@@ -72,20 +72,20 @@ export default function TransparencySealPage() {
 
         {/* Compliance Sections Grid */}
         <div className="space-y-20">
-          
+
           {/* I. Mandates and Officials */}
           <MainSection title="I. The Agency’s Mandates, Vision, Mission, and List of Officials with their Position, Designation, and Contact Information">
-             <SubSection title="A. Agency Mandate, Vision, Mission">
-                <ul className="space-y-2 pl-6">
-                   <ListItem title="Agency Mandate, Vision, Mission, and Core Values" href="https://www.depedimuscity.com/about-us.php" isExternal />
-                   <ListItem title="Legal Mandate (RA 9155)" href="/" />
-                </ul>
-             </SubSection>
-             <SubSection title="B. SDO Imus City Organizational Structure, Roles, and List of Officials with their Position, Designation, and Contact Information">
-                <ul className="space-y-2 pl-6">
-                   <ListItem title="SDO Imus City Organizational Structure, Roles, and List of Officials with their Position, Designation, and Contact Information" href="https://www.depedimuscity.com/list_of_Officials.php" isExternal />
-                </ul>
-             </SubSection>
+            <SubSection title="A. Agency Mandate, Vision, Mission">
+              <ul className="space-y-2 pl-6">
+                <ListItem title="Agency Mandate, Vision, Mission, and Core Values" href="https://www.depedimuscity.com/about-us.php" isExternal />
+                <ListItem title="Legal Mandate (RA 9155)" href="/" />
+              </ul>
+            </SubSection>
+            <SubSection title="B. SDO Imus City Organizational Structure, Roles, and List of Officials with their Position, Designation, and Contact Information">
+              <ul className="space-y-2 pl-6">
+                <ListItem title="SDO Imus City Organizational Structure, Roles, and List of Officials with their Position, Designation, and Contact Information" href="https://www.depedimuscity.com/list_of_Officials.php" isExternal />
+              </ul>
+            </SubSection>
           </MainSection>
 
           {/* II. Annual Financial Reports */}
@@ -158,49 +158,49 @@ export default function TransparencySealPage() {
 
           {/* III. Approved Budgets and Corresponding Targets (GAA) */}
           <MainSection title="III. DBM Approved Budgets and Corresponding Targets (GAA)">
-             <SubSection title="A. DBM Approved Budget Part for SDO Imus City">
-                <ul className="space-y-1 pl-6">
-                   <ListItem title="GAA 2023" href="https://www.depedimuscity.com/TransparencySeal/DBM_GAA/GAA_2023.pdf" isExternal />
-                   <ListItem title="GAA 2022" href="https://www.depedimuscity.com/TransparencySeal/DBM_GAA/GAA_2022.pdf" isExternal />
-                   <ListItem title="GAA 2021" href="https://www.depedimuscity.com/TransparencySeal/DBM_GAA/GAA_2021.pdf" isExternal />
-                   <ListItem title="GAA 2020" href="https://www.depedimuscity.com/TransparencySeal/DBM_GAA/GAA_2020.pdf" isExternal />
-                   <ListItem title="GAA 2019" href="https://www.depedimuscity.com/TransparencySeal/DBM_GAA/GAA_2019.pdf" isExternal />
-                   <ListItem title="GAA 2018" href="https://www.depedimuscity.com/TransparencySeal/DBM_GAA/GAA_2018.pdf" isExternal />
-                </ul>
-             </SubSection>
-             <SubSection title="B. Performance Targets (SDO Imus City)">
-                <ul className="space-y-1 pl-6">
-                   <ListItem title="GAA 2022" href="https://www.depedimuscity.com/TransparencySeal/PRS/BAR%201%204th%20Quarter%202022.pdf" isExternal />
-                   <ListItem title="GAA 2021" href="https://www.depedimuscity.com/TransparencySeal/PRS/BAR%201%204th%20Quarter%202021.pdf" isExternal />
-                   <ListItem title="GAA 2020" href="https://www.depedimuscity.com/TransparencySeal/PRS/GAA%202020.pdf" isExternal />
-                </ul>
-             </SubSection>
+            <SubSection title="A. DBM Approved Budget Part for SDO Imus City">
+              <ul className="space-y-1 pl-6">
+                <ListItem title="GAA 2023" href="https://www.depedimuscity.com/TransparencySeal/DBM_GAA/GAA_2023.pdf" isExternal />
+                <ListItem title="GAA 2022" href="https://www.depedimuscity.com/TransparencySeal/DBM_GAA/GAA_2022.pdf" isExternal />
+                <ListItem title="GAA 2021" href="https://www.depedimuscity.com/TransparencySeal/DBM_GAA/GAA_2021.pdf" isExternal />
+                <ListItem title="GAA 2020" href="https://www.depedimuscity.com/TransparencySeal/DBM_GAA/GAA_2020.pdf" isExternal />
+                <ListItem title="GAA 2019" href="https://www.depedimuscity.com/TransparencySeal/DBM_GAA/GAA_2019.pdf" isExternal />
+                <ListItem title="GAA 2018" href="https://www.depedimuscity.com/TransparencySeal/DBM_GAA/GAA_2018.pdf" isExternal />
+              </ul>
+            </SubSection>
+            <SubSection title="B. Performance Targets (SDO Imus City)">
+              <ul className="space-y-1 pl-6">
+                <ListItem title="GAA 2022" href="https://www.depedimuscity.com/TransparencySeal/PRS/BAR%201%204th%20Quarter%202022.pdf" isExternal />
+                <ListItem title="GAA 2021" href="https://www.depedimuscity.com/TransparencySeal/PRS/BAR%201%204th%20Quarter%202021.pdf" isExternal />
+                <ListItem title="GAA 2020" href="https://www.depedimuscity.com/TransparencySeal/PRS/GAA%202020.pdf" isExternal />
+              </ul>
+            </SubSection>
           </MainSection>
 
           {/* IV. Major Projects, Programs and Activities */}
           <MainSection title="IV. Major Projects, Programs and Activities, Beneficiaries, and Status of Implementation">
-             <SubSection title="Major Projects, Programs and Activities (PPAs)">
-                <ul className="space-y-1 pl-6">
-                   <ListItem title="Major Projects, Programs and Activities (PPAs) (2022)" href="https://www.depedimuscity.com/TransparencySeal/PRS/MAJOR%20PPAs%202022.pdf" isExternal />
-                   <ListItem title="Major Projects, Programs and Activities (PPAs) (2021)" href="https://www.depedimuscity.com/TransparencySeal/PRS/MAJOR%20PPAs%202021.pdf" isExternal />
-                   <ListItem title="Major Projects, Programs and Activities (PPAs) (2020)" href="https://www.depedimuscity.com/TransparencySeal/PRS/MAJOR%20PPAs%202020.pdf" isExternal />
-                </ul>
-             </SubSection>
-             <SubSection title="Annual Implementation Plan (AIP)">
-                <ul className="space-y-1 pl-6">
-                   <ListItem title="AIP 2022" href="https://www.depedimuscity.com/TransparencySeal/AIP/SDOIC-03C-PRS-File-041c-AIP-FY-2022.pdf" isExternal />
-                   <ListItem title="AIP 2021" href="https://www.depedimuscity.com/TransparencySeal/AIP/SDOIC-03C-PRS-File-041c-AIP-FY-2021.pdf" isExternal />
-                   <ListItem title="AIP 2020" href="https://www.depedimuscity.com/TransparencySeal/AIP/AIP-PROGRAMS-AND-PROJECTS-2020_for-submission-to-RO.pdf" isExternal />
-                </ul>
-             </SubSection>
-             <SubSection title="Accomplishment Report of Education Dashboard">
-                <ul className="space-y-1 pl-6">
-                   <ListItem title="2022" href={getDashboardHref(2022)} />
-                   <ListItem title="2021" href={getDashboardHref(2021)} />
-                   <ListItem title="2020" href={getDashboardHref(2020)} />
-                   <ListItem title="2019" href={getDashboardHref(2019)} />
-                </ul>
-             </SubSection>
+            <SubSection title="Major Projects, Programs and Activities (PPAs)">
+              <ul className="space-y-1 pl-6">
+                <ListItem title="Major Projects, Programs and Activities (PPAs) (2022)" href="https://www.depedimuscity.com/TransparencySeal/PRS/MAJOR%20PPAs%202022.pdf" isExternal />
+                <ListItem title="Major Projects, Programs and Activities (PPAs) (2021)" href="https://www.depedimuscity.com/TransparencySeal/PRS/MAJOR%20PPAs%202021.pdf" isExternal />
+                <ListItem title="Major Projects, Programs and Activities (PPAs) (2020)" href="https://www.depedimuscity.com/TransparencySeal/PRS/MAJOR%20PPAs%202020.pdf" isExternal />
+              </ul>
+            </SubSection>
+            <SubSection title="Annual Implementation Plan (AIP)">
+              <ul className="space-y-1 pl-6">
+                <ListItem title="AIP 2022" href="https://www.depedimuscity.com/TransparencySeal/AIP/SDOIC-03C-PRS-File-041c-AIP-FY-2022.pdf" isExternal />
+                <ListItem title="AIP 2021" href="https://www.depedimuscity.com/TransparencySeal/AIP/SDOIC-03C-PRS-File-041c-AIP-FY-2021.pdf" isExternal />
+                <ListItem title="AIP 2020" href="https://www.depedimuscity.com/TransparencySeal/AIP/AIP-PROGRAMS-AND-PROJECTS-2020_for-submission-to-RO.pdf" isExternal />
+              </ul>
+            </SubSection>
+            <SubSection title="Accomplishment Report of Education Dashboard">
+              <ul className="space-y-1 pl-6">
+                <ListItem title="2022" href={getDashboardHref(2022)} />
+                <ListItem title="2021" href={getDashboardHref(2021)} />
+                <ListItem title="2020" href={getDashboardHref(2020)} />
+                <ListItem title="2019" href={getDashboardHref(2019)} />
+              </ul>
+            </SubSection>
           </MainSection>
 
           {/* V. Annual Procurement Plan */}
@@ -213,38 +213,38 @@ export default function TransparencySealPage() {
               </ul>
             </SubSection>
             <SubSection title="B. List of Contracts awarded and Contractors/Suppliers/Consultants">
-               <ListItem title="List of Contracts awarded and Contractors/Suppliers/Consultants" href="https://www.depedimuscity.com/contracts-awarded.php" isExternal />
+              <ListItem title="List of Contracts awarded and Contractors/Suppliers/Consultants" href="https://www.depedimuscity.com/contracts-awarded.php" isExternal />
             </SubSection>
             <SubSection title="C. Philippine Government Electronic Procurement System (PhilGeps) posting of SDO Imus City">
-               <ListItem title="Philippine Government Electronic Procurement System (PhilGeps) posting of SDO Imus City" href="https://www.depedimuscity.com/philgeps.php" isExternal />
+              <ListItem title="Philippine Government Electronic Procurement System (PhilGeps) posting of SDO Imus City" href="https://www.depedimuscity.com/philgeps.php" isExternal />
             </SubSection>
           </MainSection>
 
           {/* VI. Quality Management System */}
           <MainSection title="VI. Quality Management System Certified by International Certifying Body or Agency Operations Manual">
-             <ul className="space-y-2 pl-6">
-                <ListItem title="SDO Imus City ISO 9001:2015 Certification" href="/" isExternal />
-                <ListItem title="DepEd Quality Policy Statement" href="https://www.deped.gov.ph/wp-content/uploads/2021/05/Quality-Policy-Poster-revised.pdf" isExternal />
-                <ListItem title="DepEd National Quality Management System (DO No. 009, s. 2021)" href="https://www.deped.gov.ph/wp-content/uploads/2021/02/DO_s2021_009.pdf" isExternal />
-                <ListItem title="The DepEd QMS Manual and Procedures and Work Instructions Manual (DM No. 014, s. 2022)" href="https://www.deped.gov.ph/wp-content/uploads/2022/03/DM_s2022_014.pdf" isExternal />
-             </ul>
+            <ul className="space-y-2 pl-6">
+              <ListItem title="SDO Imus City ISO 9001:2015 Certification" href="/" isExternal />
+              <ListItem title="DepEd Quality Policy Statement" href="https://www.deped.gov.ph/wp-content/uploads/2021/05/Quality-Policy-Poster-revised.pdf" isExternal />
+              <ListItem title="DepEd National Quality Management System (DO No. 009, s. 2021)" href="https://www.deped.gov.ph/wp-content/uploads/2021/02/DO_s2021_009.pdf" isExternal />
+              <ListItem title="The DepEd QMS Manual and Procedures and Work Instructions Manual (DM No. 014, s. 2022)" href="https://www.deped.gov.ph/wp-content/uploads/2022/03/DM_s2022_014.pdf" isExternal />
+            </ul>
           </MainSection>
 
           {/* VII. System of Ranking */}
           <MainSection title="VII. System of Ranking Delivery Units and Individuals">
-             <SubSection title="A. PBB Guidelines">
-                <ul className="space-y-1 pl-6">
-                   <ListItem title="PBB Guidelines on Eligibility Requirements Accountability Matrix (DepEd Order No. 005, s. 2022)" href="https://www.deped.gov.ph/wp-content/uploads/2022/02/DO_s2022_005.pdf" isExternal />
-                   <ListItem title="Internal Multiyear Guidelines on the Grant of Performance-Based Bonus for the Department of Education Employees and Officials (DepEd Order No. 007, s. 2021)" href="https://www.deped.gov.ph/wp-content/uploads/2021/02/DO_s2021_007.pdf" isExternal />
-                </ul>
-             </SubSection>
-             <SubSection title="B. Rating and Ranking of Delivery Units">
-                <ul className="space-y-1 pl-6">
-                   <ListItem title="FY 2020" href="/" />
-                   <ListItem title="FY 2019" href="/" />
-                   <ListItem title="FY 2018" href="/" />
-                </ul>
-             </SubSection>
+            <SubSection title="A. PBB Guidelines">
+              <ul className="space-y-1 pl-6">
+                <ListItem title="PBB Guidelines on Eligibility Requirements Accountability Matrix (DepEd Order No. 005, s. 2022)" href="https://www.deped.gov.ph/wp-content/uploads/2022/02/DO_s2022_005.pdf" isExternal />
+                <ListItem title="Internal Multiyear Guidelines on the Grant of Performance-Based Bonus for the Department of Education Employees and Officials (DepEd Order No. 007, s. 2021)" href="https://www.deped.gov.ph/wp-content/uploads/2021/02/DO_s2021_007.pdf" isExternal />
+              </ul>
+            </SubSection>
+            <SubSection title="B. Rating and Ranking of Delivery Units">
+              <ul className="space-y-1 pl-6">
+                <ListItem title="FY 2020" href="/" />
+                <ListItem title="FY 2019" href="/" />
+                <ListItem title="FY 2018" href="/" />
+              </ul>
+            </SubSection>
           </MainSection>
 
           {/* VIII. SALN Compliance */}
@@ -278,7 +278,7 @@ export default function TransparencySealPage() {
 
           {/* XI. FOI Manual */}
           <MainSection title="XI. DepEd Freedom of Information (FOI) Manual">
-             <ListItem title="DepEd Freedom of Information (FOI) Manual" href="https://www.deped.gov.ph/wp-content/uploads/2018/10/DO_s2017_072.pdf" isExternal />
+            <ListItem title="DepEd Freedom of Information (FOI) Manual" href="https://www.deped.gov.ph/wp-content/uploads/2018/10/DO_s2017_072.pdf" isExternal />
           </MainSection>
 
         </div>
