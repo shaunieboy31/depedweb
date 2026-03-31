@@ -1,8 +1,11 @@
+"use client";
+
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { ChevronRight, Calendar } from "lucide-react";
 
 export function NewsUpdates() {
-  const news = [
+  const [news, setNews] = useState([
     {
       id: "1",
       date: "Feb 28, 2026",
@@ -27,7 +30,18 @@ export function NewsUpdates() {
       excerpt: "Outstanding teachers from elementary and secondary levels were recognized during the division awards ceremony.",
       image: "/images/news/3.jpg",
     },
-  ];
+  ]);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("deped_admin_news");
+    if (saved) {
+      try {
+        setNews(JSON.parse(saved));
+      } catch (e) {
+        console.error("Failed to sync news data");
+      }
+    }
+  }, []);
 
   return (
     <div className="py-20 bg-white">
@@ -47,7 +61,7 @@ export function NewsUpdates() {
             {/* Image Container with Label */}
             <div className="relative aspect-[4/3] rounded-xl overflow-hidden mb-6 shadow-sm border border-slate-100">
               <Image
-                src={n.image}
+                src={n.image || "/images/news-placeholder.webp"}
                 alt={n.title}
                 fill
                 className="object-cover group-hover:scale-105 transition duration-500"

@@ -33,34 +33,25 @@ export default function EmployeeOfMonth() {
       achievement: 'Outstanding performance in student mentoring and curriculum development',
       image_url: '/employee-1.jpg'
     },
-    {
-      month: 'February',
-      year: '2024',
-      name: 'Juan dela Cruz',
-      position: 'Principal II',
-      school: 'Imus Central Elementary School',
-      achievement: 'Excellent school governance and community engagement initiatives',
-      image_url: '/employee-2.jpg'
-    },
-    {
-      month: 'March',
-      year: '2024',
-      name: 'Rosa Lopez',
-      position: 'Counselor',
-      school: 'Imus East National High School',
-      achievement: 'Exceptional dedication to student welfare and holistic development',
-      image_url: '/employee-3.jpg'
-    },
-    {
-      month: 'April',
-      year: '2024',
-      name: 'Roberto Reyes',
-      position: 'Administrative Officer II',
-      school: 'Schools Division Office',
-      achievement: 'Exemplary service and innovative administrative processes',
-      image_url: '/employee-4.jpg'
-    },
+    // ... other defaults
   ]);
+
+  // Sync with Admin Dashboard
+  useEffect(() => {
+    const saved = localStorage.getItem("deped_admin_employee");
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        setEmployeeData([{
+          ...data,
+          image_url: data.image // Map field from admin sync
+        }]);
+      } catch (e) {
+        console.error("Failed to sync employee data");
+      }
+    }
+  }, []);
+
   const [openIds, setOpenIds] = useState<string[]>([]);
 
   // selected month key (use month string)

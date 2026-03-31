@@ -71,19 +71,43 @@ export default function Header() {
                 </div>
               </div>
 
-              {/* Right Side - Date/Time */}
-              <div
-                className="text-right text-sm font-medium"
-                style={{ fontFamily: "serif" }}
-              >
-                <p className="text-gray-100 opacity-90">Philippine Standard Time:</p>
-                <p
-                  className="text-gray-100"
-                  suppressHydrationWarning
-                >
-                  {mounted ? currentTime : null}
-                </p>
-              </div>
+               {/* Right Side - Date/Time & Admin Access */}
+               <div className="flex items-center gap-6">
+                 <div
+                   className="text-right text-sm font-medium"
+                   style={{ fontFamily: "serif" }}
+                 >
+                   <p className="text-gray-100 opacity-90 text-[10px] uppercase tracking-widest">Philippine Standard Time:</p>
+                   <p
+                     className="text-gray-100 font-bold"
+                     suppressHydrationWarning
+                   >
+                     {mounted ? currentTime : null}
+                   </p>
+                 </div>
+
+                 {/* Admin Quick Link */}
+                 <Link 
+                   href="/dashboard" 
+                   className="p-3 bg-white/10 hover:bg-white/20 rounded-2xl transition-all border border-white/10 group shadow-lg"
+                   title="Admin Command Center"
+                 >
+                   <svg 
+                     xmlns="http://www.w3.org/2000/svg" 
+                     width="20" 
+                     height="20" 
+                     viewBox="0 0 24 24" 
+                     fill="none" 
+                     stroke="currentColor" 
+                     strokeWidth="2" 
+                     strokeLinecap="round" 
+                     strokeLinejoin="round" 
+                     className="text-blue-200 group-hover:text-white transition-colors"
+                   >
+                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
+                   </svg>
+                 </Link>
+               </div>
             </div>
           </Link>
         </div>
