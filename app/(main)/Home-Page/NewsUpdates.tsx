@@ -32,15 +32,9 @@ export function NewsUpdates() {
     },
   ]);
 
+  // Sync with Admin Dashboard (Removed)
   useEffect(() => {
-    const saved = localStorage.getItem("deped_admin_news");
-    if (saved) {
-      try {
-        setNews(JSON.parse(saved));
-      } catch (e) {
-        console.error("Failed to sync news data");
-      }
-    }
+    // Persistence removed for database-less mode
   }, []);
 
   return (

@@ -59,16 +59,13 @@ export default function AdminDashboard() {
   const employeeFileRef = useRef<HTMLInputElement>(null);
   const newsFileRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
 
-  // --- LOAD & SAVE ---
+  // --- LOAD & SAVE (Removed local persistence) ---
   useEffect(() => {
-    const savedEmp = localStorage.getItem("deped_admin_employee");
-    const savedNews = localStorage.getItem("deped_admin_news");
-    if (savedEmp) setEmployee(JSON.parse(savedEmp));
-    if (savedNews) setNews(JSON.parse(savedNews));
+    // Data is now static/mock for this session
   }, []);
 
   const persistData = (type: "employee" | "news", data: any) => {
-    localStorage.setItem(`deped_admin_${type}`, JSON.stringify(data));
+    // Persistence removed
     setIsSaved(true);
     setTimeout(() => setIsSaved(false), 2000);
   };
@@ -147,7 +144,7 @@ export default function AdminDashboard() {
                    <div className="relative z-10 space-y-6">
                       <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight">System Status</h3>
                       <p className="text-slate-500 leading-relaxed font-medium">
-                        You are currently in the **Development Dashboard**. All updates made here are saved to your browser's local storage for real-time previewing.
+                        You are currently in the **Mock Dashboard**. All updates made here are temporary for this session and will not be saved.
                       </p>
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pt-4">
                          <div className="p-5 bg-blue-50 rounded-2xl border border-blue-100">
@@ -226,11 +223,10 @@ export default function AdminDashboard() {
                    </div>
 
                    <button 
-                     onClick={() => persistData("employee", employee)}
                      className="w-full py-5 bg-blue-600 text-white rounded-[2rem] font-black uppercase tracking-[0.2em] text-xs hover:bg-blue-700 transition-all flex items-center justify-center gap-3 shadow-xl shadow-blue-200"
                    >
                       <Save size={20} />
-                      <span>Sync to Website</span>
+                      <span>Preview Changes</span>
                    </button>
                 </div>
              </div>
@@ -315,11 +311,10 @@ export default function AdminDashboard() {
                    </div>
 
                    <button 
-                     onClick={() => persistData("news", news)}
                      className="w-full py-5 bg-emerald-600 text-white rounded-[2rem] font-black uppercase tracking-[0.2em] text-xs hover:bg-emerald-700 transition-all flex items-center justify-center gap-3 shadow-xl shadow-emerald-200"
                    >
                       <Save size={20} />
-                      <span>Update Home Feed</span>
+                      <span>Preview Home Feed</span>
                    </button>
                 </div>
              </div>

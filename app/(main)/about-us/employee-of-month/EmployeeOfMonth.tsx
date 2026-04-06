@@ -36,20 +36,9 @@ export default function EmployeeOfMonth() {
     // ... other defaults
   ]);
 
-  // Sync with Admin Dashboard
+  // Sync with Admin Dashboard (Removed)
   useEffect(() => {
-    const saved = localStorage.getItem("deped_admin_employee");
-    if (saved) {
-      try {
-        const data = JSON.parse(saved);
-        setEmployeeData([{
-          ...data,
-          image_url: data.image // Map field from admin sync
-        }]);
-      } catch (e) {
-        console.error("Failed to sync employee data");
-      }
-    }
+    // Persistence removed for database-less mode
   }, []);
 
   const [openIds, setOpenIds] = useState<string[]>([]);

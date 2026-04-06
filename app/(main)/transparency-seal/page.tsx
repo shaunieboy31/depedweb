@@ -1,8 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
-import { FileText } from "lucide-react";
+import { FileText, ChevronDown, LayoutGrid, CheckCircle2 } from "lucide-react";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
 export default function TransparencySealPage() {
   return (
@@ -36,9 +41,11 @@ export default function TransparencySealPage() {
 
             {/* Content on Right */}
             <div className="space-y-6 text-slate-700 leading-relaxed font-medium text-sm md:text-base">
-              <div className="flex items-center gap-3 text-black mb-4">
-                <FileText size={24} />
-                <h2 className="text-xl font-black uppercase tracking-tight">Legal Basis</h2>
+              <div className="flex items-center gap-3 text-[#4279D2] mb-4">
+                <div className="p-2 bg-blue-50 rounded-xl border border-blue-100">
+                   <FileText size={24} />
+                </div>
+                <h2 className="text-xl font-black uppercase tracking-tight text-slate-800">Legal Basis</h2>
               </div>
 
               <div className="space-y-6">
@@ -71,7 +78,23 @@ export default function TransparencySealPage() {
         </section>
 
         {/* Compliance Sections Grid */}
-        <div className="space-y-20">
+        <div className="space-y-10">
+          
+          <div className="flex items-center justify-between py-6 border-b border-slate-100 mb-4">
+             <div className="flex items-center gap-4">
+                <div className="p-3 bg-blue-600 text-white rounded-2xl shadow-lg shadow-blue-100">
+                   <LayoutGrid size={24} />
+                </div>
+                <div>
+                   <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tight">Compliance Index</h2>
+                   <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-0.5 italic">Interactive Drill-down</p>
+                </div>
+             </div>
+             <div className="hidden md:flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-600 rounded-full border border-emerald-100 italic font-bold text-[10px] uppercase tracking-widest">
+                <CheckCircle2 size={14} />
+                Verified SY 2026
+             </div>
+          </div>
 
           {/* I. Mandates and Officials */}
           <MainSection title="I. The Agency’s Mandates, Vision, Mission, and List of Officials with their Position, Designation, and Contact Information">
@@ -358,28 +381,68 @@ function getDashboardHref(year: number) {
 }
 
 function MainSection({ title, children }: { title: string, children: React.ReactNode }) {
+  const [isOpen, setIsOpen] = useState(false);
+  
   return (
-    <div className="space-y-8">
-      <h2 className="text-xl md:text-2xl font-black text-black border-b-4 border-black pb-3 uppercase tracking-tight leading-tight">
-        {title}
-      </h2>
+    <Collapsible open={isOpen} onOpenChange={setIsOpen} className="group/main">
       <div className="space-y-6">
-        {children}
+        <CollapsibleTrigger asChild>
+          <button className="w-full text-left group">
+            <div className={`flex items-start justify-between gap-6 pb-4 border-b-4 transition-all duration-300 ${
+              isOpen ? "border-[#4279D2] text-[#4279D2]" : "border-slate-300 text-slate-900 hover:border-slate-400"
+            }`}>
+              <h2 className="text-xl md:text-2xl font-black uppercase tracking-tight leading-tight flex-1">
+                {title}
+              </h2>
+              <div className={`mt-1.5 p-1.5 rounded-full transition-all duration-500 ${
+                isOpen ? "bg-[#4279D2] text-white rotate-180" : "bg-slate-100 text-slate-400 group-hover:bg-slate-200"
+              }`}>
+                <ChevronDown size={24} />
+              </div>
+            </div>
+          </button>
+        </CollapsibleTrigger>
+        
+        <CollapsibleContent className="animate-in slide-in-from-top-4 duration-500">
+          <div className="space-y-8 pl-2 md:pl-6 pb-8 border-l-2 border-slate-50 ml-1">
+            {children}
+          </div>
+        </CollapsibleContent>
       </div>
-    </div>
+    </Collapsible>
   );
 }
 
 function SubSection({ title, children }: { title: string, children: React.ReactNode }) {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <div className="space-y-4">
-      <h3 className="text-lg md:text-xl font-bold text-slate-800 border-b border-slate-200 pb-2">
-        {title}
-      </h3>
+    <Collapsible open={isOpen} onOpenChange={setIsOpen} className="group/sub">
       <div className="space-y-4">
-        {children}
+        <CollapsibleTrigger asChild>
+          <button className="w-full text-left group">
+            <div className={`flex items-center justify-between gap-4 pb-2 border-b transition-all duration-300 ${
+              isOpen ? "border-[#4279D2]/30 text-[#4279D2]" : "border-slate-200 text-slate-700 hover:border-slate-300"
+            }`}>
+              <h3 className="text-lg md:text-xl font-bold">
+                {title}
+              </h3>
+              <div className={`p-1 rounded-lg transition-all duration-300 ${
+                isOpen ? "bg-blue-50 text-[#4279D2] rotate-180" : "bg-slate-50 text-slate-300 group-hover:text-slate-500"
+              }`}>
+                <ChevronDown size={18} />
+              </div>
+            </div>
+          </button>
+        </CollapsibleTrigger>
+        
+        <CollapsibleContent className="animate-in slide-in-from-top-2 duration-300">
+          <div className="space-y-4 pt-2">
+            {children}
+          </div>
+        </CollapsibleContent>
       </div>
-    </div>
+    </Collapsible>
   );
 }
 
