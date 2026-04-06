@@ -1,0 +1,42 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model News {
+  id        Int      @id @default(autoincrement())
+  title     String   @db.VarChar(255)
+  date      String   @db.VarChar(100)
+  category  String   @db.VarChar(100)
+  excerpt   String   @db.Text
+  image     String?  @db.VarChar(1024) // Relative path to public/uploads
+  content   String?  @db.LongText    // Detailed news body
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("news")
+}
+
+model EmployeeHonor {
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(255)
+  month       String   @db.VarChar(50)
+  year        String   @db.VarChar(20)
+  position    String?  @db.VarChar(255) // Optional based on User Preference
+  school      String?  @db.VarChar(255) // Optional based on User Preference
+  achievement String   @db.Text
+  image       String?  @db.VarChar(1024) // Relative path to public/uploads
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("employee_honors")
+}

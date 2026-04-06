@@ -1,5 +1,6 @@
 import { HomeCarousel } from "./Home-Page/HomeCarousel";
 import { AboutSection } from "./Home-Page/AboutSection";
+import { NewsUpdates } from "./Home-Page/NewsUpdates";
 
 export default function Home() {
   return (
@@ -8,6 +9,11 @@ export default function Home() {
         {/* Hero / Carousel Section */}
         <section className="relative z-10">
           <HomeCarousel />
+        </section>
+
+        {/* News & Announcements Section */}
+        <section id="news-section">
+          <NewsUpdates />
         </section>
 
         {/* About & Institutional Media Section */}
