@@ -40,3 +40,12 @@ model EmployeeHonor {
 
   @@map("employee_honors")
 }
+
+model CarouselSlide {
+  id        Int      @id @default(autoincrement())
+  image     String   @db.VarChar(1024) // Path to the uploaded image
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("carousel_slides")
+}

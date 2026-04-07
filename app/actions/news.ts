@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { writeFile } from "fs/promises";
 import { join } from "path";
 import { revalidatePath } from "next/cache";
