@@ -28,13 +28,9 @@ model News {
 
 model EmployeeHonor {
   id          Int      @id @default(autoincrement())
-  name        String   @db.VarChar(255)
   month       String   @db.VarChar(50)
   year        String   @db.VarChar(20)
-  position    String?  @db.VarChar(255) // Optional based on User Preference
-  school      String?  @db.VarChar(255) // Optional based on User Preference
-  achievement String   @db.Text
-  image       String?  @db.VarChar(1024) // Relative path to public/uploads
+  image       String?  @db.VarChar(1024) 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

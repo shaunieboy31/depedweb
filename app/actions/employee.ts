@@ -20,12 +20,8 @@ export async function getEmployeeHonorsAction() {
 export async function updateEmployeeHonorAction(formData: FormData) {
   try {
     const id = formData.get("id") ? parseInt(formData.get("id") as string) : null;
-    const name = formData.get("name") as string;
     const month = formData.get("month") as string;
     const year = formData.get("year") as string;
-    const position = formData.get("position") as string;
-    const school = formData.get("school") as string;
-    const achievement = formData.get("achievement") as string;
     const imageFile = formData.get("image") as File;
     const oldImagePath = formData.get("oldImagePath") as string;
 
@@ -48,11 +44,11 @@ export async function updateEmployeeHonorAction(formData: FormData) {
     if (id) {
       await prisma.employeeHonor.update({
         where: { id },
-        data: { name, month, year, position, school, achievement, image: imagePath },
+        data: { month, year, image: imagePath },
       });
     } else {
       await prisma.employeeHonor.create({
-        data: { name, month, year, position, school, achievement, image: imagePath },
+        data: { month, year, image: imagePath },
       });
     }
 

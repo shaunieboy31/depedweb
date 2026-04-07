@@ -23,10 +23,8 @@ import { getEmployeeHonorsAction, updateEmployeeHonorAction, deleteEmployeeHonor
 
 // Types
 type EmployeeWinner = {
-   name: string;
    month: string;
    year: string;
-   achievement: string;
    image: string | null;
 };
 
@@ -164,12 +162,8 @@ export default function AdminDashboard() {
       if (editingHonor.id && editingHonor.id !== "new") {
          formData.append("id", editingHonor.id.toString());
       }
-      formData.append("name", editingHonor.name);
       formData.append("month", editingHonor.month);
       formData.append("year", editingHonor.year);
-      formData.append("position", editingHonor.position || "");
-      formData.append("school", editingHonor.school || "");
-      formData.append("achievement", editingHonor.achievement);
       formData.append("oldImagePath", editingHonor.image || "");
 
       const file = honorFiles[editingHonor.id || "new"];
@@ -374,7 +368,7 @@ export default function AdminDashboard() {
                                  <p className="text-slate-400 text-xs font-bold uppercase tracking-widest italic">Monthly Award Winners</p>
                               </div>
                               <button
-                                 onClick={() => setEditingHonor({ id: "new", name: "", month: "", year: "2024", position: "", school: "", achievement: "", image: null })}
+                                 onClick={() => setEditingHonor({ id: "new", month: "", year: "2024", image: null })}
                                  className="px-6 py-3 bg-emerald-600 text-white rounded-xl font-bold uppercase tracking-widest text-[10px] flex items-center gap-2 shadow-lg shadow-emerald-100 hover:bg-emerald-700 transition-all"
                               >
                                  <PlusCircle size={16} />
@@ -391,15 +385,12 @@ export default function AdminDashboard() {
                               ) : (
                                  <div className="grid grid-cols-1 gap-4">
                                     {honors.map(h => (
-                                       <div key={h.id} className="group flex items-center gap-6 p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-white hover:border-blue-100 hover:shadow-xl hover:shadow-blue-50/50 transition-all">
+                                        <div key={h.id} className="group flex items-center gap-6 p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-white hover:border-blue-100 hover:shadow-xl hover:shadow-blue-50/50 transition-all">
                                           <div className="w-16 h-16 rounded-xl overflow-hidden bg-white border border-slate-100">
                                              <img src={h.image || "/images/leader-placeholder.webp"} className="w-full h-full object-cover" alt="" />
                                           </div>
                                           <div className="flex-1">
-                                             <div className="flex items-center gap-2 mb-1">
-                                                <span className="text-[10px] font-black text-blue-600 px-2 py-0.5 bg-blue-50 rounded-md uppercase tracking-widest">{h.month} {h.year}</span>
-                                             </div>
-                                             <h4 className="font-bold text-slate-800">{h.name}</h4>
+                                             <h4 className="font-bold text-slate-800 italic uppercase tracking-widest text-sm">{h.month} {h.year}</h4>
                                           </div>
                                           <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                              <button onClick={() => setEditingHonor(h)} className="p-3 bg-white text-blue-600 rounded-xl border border-blue-50 hover:bg-blue-600 hover:text-white transition-all shadow-sm"><Save size={16} /></button>
@@ -423,26 +414,18 @@ export default function AdminDashboard() {
 
                            <form onSubmit={handleSaveHonor} className="space-y-10">
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                                 <div className="space-y-6">
-                                    <div className="grid grid-cols-2 gap-4">
-                                       <div className="space-y-2">
-                                          <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Award Month</label>
-                                          <input required className="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 text-sm font-bold" value={editingHonor.month} onChange={e => setEditingHonor({ ...editingHonor, month: e.target.value })} />
+                                    <div className="space-y-6 pt-4">
+                                       <div className="grid grid-cols-1 gap-6">
+                                          <div className="space-y-2">
+                                             <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Award Month</label>
+                                             <input required className="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 text-sm font-bold" value={editingHonor.month} onChange={e => setEditingHonor({ ...editingHonor, month: e.target.value })} />
+                                          </div>
+                                          <div className="space-y-2">
+                                             <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Year</label>
+                                             <input required className="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 text-sm font-bold" value={editingHonor.year} onChange={e => setEditingHonor({ ...editingHonor, year: e.target.value })} />
+                                          </div>
                                        </div>
-                                       <div className="space-y-2">
-                                          <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Year</label>
-                                          <input required className="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 text-sm font-bold" value={editingHonor.year} onChange={e => setEditingHonor({ ...editingHonor, year: e.target.value })} />
-                                       </div>
                                     </div>
-                                    <div className="space-y-2">
-                                       <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Recipient Full Name</label>
-                                       <input required className="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 text-sm font-black" value={editingHonor.name} onChange={e => setEditingHonor({ ...editingHonor, name: e.target.value })} />
-                                    </div>
-                                    <div className="space-y-2">
-                                       <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Achievement Highlight</label>
-                                       <textarea required className="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 text-sm font-medium h-32" value={editingHonor.achievement} onChange={e => setEditingHonor({ ...editingHonor, achievement: e.target.value })} />
-                                    </div>
-                                 </div>
 
                                  <div className="space-y-2">
                                     <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Awardee Profile Photo</label>
