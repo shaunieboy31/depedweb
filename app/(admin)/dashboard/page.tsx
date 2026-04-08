@@ -202,7 +202,7 @@ function DashboardContent() {
       }
       formData.append("department", editingOrgItem.department);
       formData.append("sortOrder", editingOrgItem.sortOrder.toString());
-      
+
       const isPath = editingOrgItem.image && editingOrgItem.image.startsWith("/uploads");
       formData.append("oldImagePath", isPath && editingOrgItem.image ? (editingOrgItem.image as string) : "");
 
@@ -256,19 +256,12 @@ function DashboardContent() {
       <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in duration-700">
          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-slate-200">
             <div className="space-y-1">
-               <h1 className="text-3xl font-black text-slate-900 uppercase tracking-tight">
-                  {activeTab === 'overview' && "Dashboard Overview"}
-                  {activeTab === 'carousel' && "Carousel Manager"}
-                  {activeTab === 'news' && "News Manager"}
-                  {activeTab === 'employee' && "Hall of Excellence"}
-                  {activeTab === 'org' && "Org Chart Manager"}
-               </h1>
                <p className="text-slate-500 font-medium lowercase italic opacity-80">
-                  {activeTab === 'overview' && "System health and quick statistics."}
-                  {activeTab === 'carousel' && "Manage images for the homepage hero slider."}
-                  {activeTab === 'news' && "Publish and archive institutional news updates."}
-                  {activeTab === 'employee' && "Recognize division monthly award winners."}
-                  {activeTab === 'org' && "Update departmental functional structures."}
+                  {activeTab === 'overview' && "system health and quick statistics."}
+                  {activeTab === 'carousel' && "manage images for the homepage hero slider."}
+                  {activeTab === 'news' && "publish and archive institutional news updates."}
+                  {activeTab === 'employee' && "recognize division monthly award winners."}
+                  {activeTab === 'org' && "update departmental functional structures."}
                </p>
             </div>
             {isSaved && (
@@ -378,7 +371,7 @@ function DashboardContent() {
                      <div className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm space-y-8">
                         <div className="flex items-center justify-between">
                            <div className="space-y-1">
-                              <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight">Hall of Excellence</h3>
+                              <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight">Employee of the Month</h3>
                               <p className="text-slate-400 text-xs font-bold uppercase tracking-widest italic">Monthly Award Winners</p>
                            </div>
                            <button

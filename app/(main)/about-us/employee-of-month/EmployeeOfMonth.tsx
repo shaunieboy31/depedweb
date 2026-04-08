@@ -68,7 +68,7 @@ export default function EmployeeOfMonth() {
            <Trophy size={80} strokeWidth={0.5} />
         </div>
         <div className="space-y-2">
-           <h2 className="text-3xl font-black text-slate-800 uppercase tracking-tight">Hall of Excellence</h2>
+           <h2 className="text-3xl font-black text-slate-800 uppercase tracking-tight">Employee of the Month</h2>
            <p className="text-slate-500 font-medium">The Division is currently selecting the next outstanding employee. Check back soon!</p>
         </div>
       </div>
@@ -77,23 +77,32 @@ export default function EmployeeOfMonth() {
 
   return (
     <div className="w-full bg-white min-h-screen">
-      {/* Hero Section */}
-      <section className="bg-slate-900 text-white py-24 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-           <div className="absolute top-0 right-0 p-20"><Trophy size={400} /></div>
+      {/* Modernized Hero Section */}
+      <section className="relative h-[400px] md:h-[500px] w-full flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 text-white">
+          <Image
+            src="/images/newbuilding.webp"
+            alt="SDO Imus Building"
+            fill
+            className="object-cover object-center brightness-[0.35]"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#032977] via-transparent to-transparent opacity-80" />
         </div>
-        <div className="max-w-7xl mx-auto px-6 relative z-10 flex flex-col items-center text-center space-y-6">
-           <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 rounded-full text-[10px] font-black uppercase tracking-widest animate-bounce">
-              <Star size={14} fill="currentColor" />
-              Monthly Recognition
-           </div>
-           <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none">
-              Hall of <span className="text-blue-500">Excellence</span>
-           </h1>
-           <p className="max-w-2xl text-slate-400 font-medium text-lg leading-relaxed">
-              Celebrating the exceptional dedication of SDO Imus City personnel visually capturing 
-              their commitment to education excellence.
-           </p>
+        
+        <div className="relative z-10 text-center px-6 max-w-4xl animate-in fade-in slide-in-from-bottom-10 duration-1000">
+          <span className="inline-block px-4 py-1.5 mb-6 text-xs font-bold tracking-widest text-blue-300 uppercase bg-blue-950/40 backdrop-blur-md rounded-full border border-blue-400/30">
+            Employee of the Month
+          </span>
+          <h1 className="text-4xl md:text-7xl font-black text-white tracking-tight leading-[1.1] mb-6 drop-shadow-2xl uppercase">
+            Employee <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">
+              of the Month
+            </span>
+          </h1>
+          <p className="text-lg md:text-xl text-slate-200 leading-relaxed max-w-2xl mx-auto drop-shadow-lg font-medium">
+             Celebrating the exceptional dedication and commitment of SDO Imus City personnel.
+          </p>
         </div>
       </section>
 
@@ -164,24 +173,24 @@ export default function EmployeeOfMonth() {
                 {/* FILTER CONTROLS */}
                 <div className="flex flex-col sm:flex-row gap-4">
                    <div className="flex-1 space-y-2">
-                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">Filter Month</label>
-                      <select 
-                        value={selectedMonth}
-                        onChange={(e) => { setSelectedMonth(e.target.value); setActiveIndex(0); }}
-                        className="w-full p-4 bg-slate-50 rounded-2xl border border-slate-100 text-xs font-black uppercase tracking-widest outline-none focus:ring-2 focus:ring-blue-600/20 transition-all appearance-none cursor-pointer"
-                      >
-                        {availableMonths.map(m => <option key={m} value={m}>{m}</option>)}
-                      </select>
+                       <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">Filter Month</label>
+                       <select 
+                         value={selectedMonth}
+                         onChange={(e) => { setSelectedMonth(e.target.value); setActiveIndex(0); }}
+                         className="w-full p-4 bg-slate-50 rounded-2xl border border-slate-100 text-xs font-black uppercase tracking-widest outline-none focus:ring-2 focus:ring-blue-600/20 transition-all appearance-none cursor-pointer"
+                       >
+                         {availableMonths.map(m => <option key={m} value={m}>{m}</option>)}
+                       </select>
                    </div>
                    <div className="flex-1 space-y-2">
-                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">Filter Year</label>
-                      <select 
-                        value={selectedYear}
-                        onChange={(e) => { setSelectedYear(e.target.value); setActiveIndex(0); }}
-                        className="w-full p-4 bg-slate-50 rounded-2xl border border-slate-100 text-xs font-black uppercase tracking-widest outline-none focus:ring-2 focus:ring-blue-600/20 transition-all appearance-none cursor-pointer"
-                      >
-                        {availableYears.map(y => <option key={y} value={y}>{y}</option>)}
-                      </select>
+                       <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">Filter Year</label>
+                       <select 
+                         value={selectedYear}
+                         onChange={(e) => { setSelectedYear(e.target.value); setActiveIndex(0); }}
+                         className="w-full p-4 bg-slate-50 rounded-2xl border border-slate-100 text-xs font-black uppercase tracking-widest outline-none focus:ring-2 focus:ring-blue-600/20 transition-all appearance-none cursor-pointer"
+                       >
+                         {availableYears.map(y => <option key={y} value={y}>{y}</option>)}
+                       </select>
                    </div>
                 </div>
              </div>
