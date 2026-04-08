@@ -42,7 +42,7 @@ export default function IntegratedSchools() {
             <span>Unified K-12 Centers</span>
           </div>
           <h1 className="text-4xl md:text-7xl font-black text-white tracking-tighter uppercase mb-4 drop-shadow-2xl">
-             Integrated <br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">Schools</span>
+             INTEGRATED <br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">SCHOOL</span>
           </h1>
           <p className="text-slate-300 font-medium italic text-sm md:text-lg max-w-xl mx-auto leading-relaxed">
              "Streamlining the educational journey from Kindergarten to Grade 12 within a single, unified campus structure."
@@ -60,7 +60,7 @@ export default function IntegratedSchools() {
              <div className="bg-white rounded-[2.5rem] shadow-xl border border-slate-200 p-8 md:p-12 mb-8">
                 <div className="flex items-center justify-between mb-10 border-b border-slate-50 pb-6">
                    <div className="space-y-1">
-                      <h2 className="text-xl font-black text-slate-900 uppercase tracking-tight">Public Integrated Registry</h2>
+                      <h2 className="text-xl font-black text-slate-900 uppercase tracking-tight">PUBLIC INTEGRATED REGISTRY</h2>
                       <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">K-12 Unified Institutions Directory</p>
                    </div>
                    <div className="p-3 bg-blue-50 text-blue-600 rounded-2xl">

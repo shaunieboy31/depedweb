@@ -64,17 +64,17 @@ export default function SchoolsPage() {
                  <ShieldCheck size={24} />
               </div>
               <div className="space-y-1">
-                 <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tight">Public Schools</h2>
+                 <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tight">PUBLIC</h2>
                  <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest">Government Funded Institutions</p>
               </div>
            </div>
 
            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
-                { title: "Elementary", href: "/schools/elementary", icon: BookOpen, desc: "Foundational Primary Education", count: "35K+" },
-                { title: "Junior High", href: "/schools/junior-high", icon: School, desc: "Grades 7 to 10 Programs", count: "15K+" },
-                { title: "Senior High", href: "/schools/senior-high", icon: GraduationCap, desc: "Specialized Grades 11-12", count: "8K+" },
-                { title: "Integrated", href: "/schools/integrated-school", icon: Building2, desc: "K-12 Unified Learning Centres", count: "New" },
+                { title: "ELEMENTARY", href: "/schools/elementary", icon: BookOpen, desc: "Foundational Primary Education", count: "35K+" },
+                { title: "JUNIOR HIGH SCHOOL", href: "/schools/junior-high", icon: School, desc: "Grades 7 to 10 Programs", count: "15K+" },
+                { title: "SENIOR HIGH SCHOOL", href: "/schools/senior-high", icon: GraduationCap, desc: "Specialized Grades 11-12", count: "8K+" },
+                { title: "INTEGRATED SCHOOL", href: "/schools/integrated-school", icon: Building2, desc: "K-12 Unified Learning Centres", count: "New" },
               ].map((item, i) => (
                  <Link key={i} href={item.href} className="group">
                     <div className="bg-white/70 backdrop-blur-xl rounded-[2.5rem] p-8 h-full border border-white shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 relative overflow-hidden flex flex-col justify-between ring-1 ring-black/5">
@@ -107,7 +107,7 @@ export default function SchoolsPage() {
                     <Building size={24} />
                  </div>
                  <div className="space-y-1">
-                    <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tight">Private Sector</h2>
+                    <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tight">PRIVATE</h2>
                     <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest">Non-Government Institutions</p>
                  </div>
               </div>
@@ -118,7 +118,7 @@ export default function SchoolsPage() {
                        <Sparkles size={150} className="text-amber-500" />
                     </div>
                     <div className="space-y-4 relative z-10">
-                       <h4 className="text-2xl font-black text-white uppercase tracking-tighter">All Levels</h4>
+                       <h4 className="text-2xl font-black text-white uppercase tracking-tighter">ALL LEVELS</h4>
                        <p className="text-slate-400 text-xs font-medium leading-relaxed max-w-[200px]">
                           Complete directory of private educational institutions across all grade levels.
                        </p>
@@ -138,7 +138,7 @@ export default function SchoolsPage() {
                     <Map size={24} />
                  </div>
                  <div className="space-y-1">
-                    <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tight">Interactive Tools</h2>
+                    <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tight">SCHOOLS MAP</h2>
                     <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest">Geographical & Data Access</p>
                  </div>
               </div>

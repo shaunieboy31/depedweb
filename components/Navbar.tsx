@@ -5,6 +5,15 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Icons } from "@/components/icons";
 
+interface MenuItem {
+  label: string;
+  href: string;
+  dropdown?: boolean;
+  isHeader?: boolean;
+  isSeparator?: boolean;
+  submenu?: MenuItem[];
+}
+
 export default function Navbar() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [openNested, setOpenNested] = useState<string | null>(null);
@@ -14,7 +23,7 @@ export default function Navbar() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
 
-  const menuItems = [
+  const menuItems: MenuItem[] = [
     { label: "Home Page", href: "/", dropdown: false },
     {
       label: "About Us",
@@ -117,15 +126,39 @@ export default function Navbar() {
       href: "#",
       dropdown: true,
       submenu: [
-        { label: "Schools", href: "/schools" },
-        { label: "School Directory", href: "/schools/directory" },
-        { label: "Featured Schools", href: "/schools/featured" },
-        { label: "Elementary", href: "/schools/elementary" },
-        { label: "Junior High School", href: "/schools/junior-high" },
-        { label: "Senior High School", href: "/schools/senior-high" },
+        { label: "PUBLIC", href: "/schools", isHeader: true },
+        { label: "ELEMENTARY", href: "/schools/elementary" },
+        { label: "JUNIOR HIGH SCHOOL", href: "/schools/junior-high" },
+        { label: "SENIOR HIGH SCHOOL", href: "/schools/senior-high" },
+        { label: "INTEGRATED SCHOOL", href: "/schools/integrated-school" },
+        { label: "PRIVATE", href: "#", isHeader: true },
+        { label: "ALL LEVELS", href: "/schools/private" },
+        { label: "SEPARATOR", href: "#", isSeparator: true },
+        { label: "SCHOOLS MAP", href: "/schools/map" },
       ],
     },
-    { label: "Issuances", href: "/issuances", dropdown: false },
+    {
+      label: "Issuances",
+      href: "#",
+      dropdown: true,
+      submenu: [
+        { label: "ISSUANCES", href: "/issuances", isHeader: true },
+        { 
+          label: "DIVISION ISSUANCES", 
+          href: "#",
+          submenu: [
+            { label: "DIVISION MEMORANDA", href: "/issuances/division/memoranda" },
+            { label: "DEPED MEMORANDA", href: "/issuances/division/deped-memoranda" },
+            { label: "DIVISION ADVISORIES", href: "/issuances/division/advisories" },
+            { label: "DIVISION BULLETIN", href: "/issuances/division/bulletin" },
+            { label: "NOTICE OF MEETING", href: "/issuances/division/notice-of-meeting" },
+            { label: "NOTICE OF DISTRIBUTION", href: "/issuances/division/notice-of-distribution" },
+          ]
+        },
+        { label: "REGIONAL ISSUANCES", href: "/issuances/regional" },
+        { label: "NATIONAL ISSUANCES", href: "/issuances/national" },
+      ],
+    },
     { label: "Contact Us", href: "/contact", dropdown: false },
   ];
 
@@ -230,17 +263,27 @@ export default function Navbar() {
                                   }
                                 }}
                               >
-                                <Link
-                                  href={subitem.href}
-                                  className="flex items-center justify-between px-4 py-4 text-gray-700 hover:bg-gray-200 hover:text-gray-700 hover:font-bold transition-colors text-sm whitespace-nowrap"
-                                >
-                                  <span>{subitem.label}</span>
-                                  {subitem.submenu && (
-                                    <span className="ml-2 text-gray-400">
-                                      ›
-                                    </span>
+                                <div className={`${subitem.isHeader ? 'px-4 py-3 bg-gray-50/50 border-b border-gray-100' : ''}`}>
+                                  {subitem.isSeparator ? (
+                                    <div className="mx-4 border-t border-gray-100 my-1" />
+                                  ) : subitem.isHeader ? (
+                                    <div className="text-[11px] font-black text-slate-500 tracking-[0.2em] uppercase">
+                                      {subitem.label}
+                                    </div>
+                                  ) : (
+                                    <Link
+                                      href={subitem.href}
+                                      className="flex items-center justify-between px-4 py-3 text-gray-700 hover:bg-gray-100 hover:text-blue-700 transition-colors text-sm whitespace-nowrap group"
+                                    >
+                                      <span className="font-semibold">{subitem.label}</span>
+                                      {subitem.submenu && (
+                                        <span className="ml-2 text-gray-400 group-hover:text-blue-600 transition-colors">
+                                          ›
+                                        </span>
+                                      )}
+                                    </Link>
                                   )}
-                                </Link>
+                                </div>
 
                                 {subitem.submenu &&
                                   openNested === nestedKey && (

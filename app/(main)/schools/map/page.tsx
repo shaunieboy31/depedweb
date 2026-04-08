@@ -39,7 +39,7 @@ export default function SchoolsMap() {
             <span>Geographical Visualization</span>
           </div>
           <h1 className="text-4xl md:text-7xl font-black text-white tracking-tighter uppercase mb-4 drop-shadow-2xl">
-             Schools <br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-300">Map</span>
+             SCHOOLS <br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-300">MAP</span>
           </h1>
           <p className="text-slate-300 font-medium italic text-sm md:text-lg max-w-xl mx-auto leading-relaxed">
              "Locating educational landmarks across the vibrant schools division of Imus City."
@@ -63,7 +63,7 @@ export default function SchoolsMap() {
                       </div>
                    </div>
                    <div className="space-y-4 max-w-md">
-                      <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight">Interactive Map Loading</h3>
+                      <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight">INTERACTIVE MAP LOADING</h3>
                       <p className="text-slate-500 font-medium leading-relaxed">
                          Our interactive GIS (Geographic Information System) for division-wide school locations is being optimized for your browser.
                       </p>
