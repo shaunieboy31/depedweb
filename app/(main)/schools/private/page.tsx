@@ -3,7 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import { 
-  Building2, 
+  Building, 
   MapPin, 
   Phone, 
   ChevronRight, 
@@ -12,16 +12,15 @@ import {
   BookOpen,
   Users,
   CheckCircle2,
-  Briefcase
+  Building2,
+  ShieldCheck
 } from "lucide-react";
 
-export default function JuniorHighSchools() {
+export default function PrivateSchools() {
   const schools = [
-    { id: 1, name: 'Imus National High School (JHS)', district: 'District I', contact: '(046) 111-2222', color: 'blue' },
-    { id: 2, name: 'Imus East National High School', district: 'District II', contact: '(046) 111-4444', color: 'amber' },
-    { id: 3, name: 'Imus North High School', district: 'District I', contact: '(046) 111-6666', color: 'blue' },
-    { id: 4, name: 'Imus West High School', district: 'District III', contact: '(046) 111-1010', color: 'emerald' },
-    { id: 5, name: 'Imus South High School', district: 'District II', contact: '(046) 111-1111', color: 'amber' },
+    { id: 1, name: 'Imus Academy', level: 'Elementary / High School', district: 'District I', color: 'blue' },
+    { id: 2, name: 'St. Edward School', level: 'Elementary / High School', district: 'District III', color: 'emerald' },
+    { id: 3, name: 'Benedictine Institute of Learning', level: 'Elementary', district: 'District II', color: 'amber' },
   ];
 
   return (
@@ -32,7 +31,7 @@ export default function JuniorHighSchools() {
         <div className="absolute inset-0">
           <Image
             src="/images/newbuilding.webp"
-            alt="Junior High Schools"
+            alt="Private Schools"
             fill
             className="object-cover object-center brightness-[0.35]"
             priority
@@ -42,14 +41,14 @@ export default function JuniorHighSchools() {
         
         <div className="relative z-10 text-center px-6 max-w-4xl animate-in fade-in slide-in-from-bottom-10 duration-1000">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-[9px] font-black tracking-[0.3em] text-blue-300 uppercase bg-blue-950/40 backdrop-blur-md rounded-full border border-blue-400/30">
-            <Building2 size={12} className="text-blue-400" />
-            <span>Intermediate Education</span>
+            <Building size={12} className="text-blue-400" />
+            <span>Private Institutions</span>
           </div>
           <h1 className="text-4xl md:text-7xl font-black text-white tracking-tighter uppercase mb-4 drop-shadow-2xl">
-             Junior High <br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">Schools</span>
+             Private <br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">Schools</span>
           </h1>
           <p className="text-slate-300 font-medium italic text-sm md:text-lg max-w-xl mx-auto leading-relaxed">
-             "Equipping Grades 7–10 learners with the core competencies and values for future success."
+             "Recognizing the vital partnership of private educational institutions in delivering quality learning to Imusenos."
           </p>
         </div>
       </section>
@@ -64,11 +63,11 @@ export default function JuniorHighSchools() {
              <div className="bg-white rounded-[2.5rem] shadow-xl border border-slate-200 p-8 md:p-12 mb-8">
                 <div className="flex items-center justify-between mb-10 border-b border-slate-50 pb-6">
                    <div className="space-y-1">
-                      <h2 className="text-xl font-black text-slate-900 uppercase tracking-tight">Public JHS Registry</h2>
-                      <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Grades 7 to 10 Directory</p>
+                      <h2 className="text-xl font-black text-slate-900 uppercase tracking-tight">Private Registry</h2>
+                      <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Recognized Non-Government Institutions</p>
                    </div>
                    <div className="p-3 bg-blue-50 text-blue-600 rounded-2xl">
-                      <Briefcase size={24} />
+                      <ShieldCheck size={24} />
                    </div>
                 </div>
 
@@ -85,13 +84,13 @@ export default function JuniorHighSchools() {
                                   </div>
                                   <div className="w-1 h-1 bg-slate-200 rounded-full" />
                                   <div className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-slate-400">
-                                     <Phone size={12} className="text-blue-500" />
-                                     <span>{school.contact}</span>
+                                     <Building2 size={12} className="text-blue-500" />
+                                     <span>{school.level}</span>
                                   </div>
                                </div>
                             </div>
                             <button className="flex items-center gap-2 px-6 py-3 bg-white border border-slate-100 rounded-xl text-[9px] font-black uppercase tracking-widest text-slate-400 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 transition-all">
-                               <span>View Details</span>
+                               <span>View Profile</span>
                                <ChevronRight size={14} />
                             </button>
                          </div>
@@ -103,54 +102,54 @@ export default function JuniorHighSchools() {
 
           {/* Program Spotlight (Spans 4) */}
           <div className="lg:col-span-4 space-y-8">
-             <div className="bg-slate-900 rounded-[2.5rem] p-10 text-white shadow-2xl relative overflow-hidden group">
+             <div className="bg-amber-500 rounded-[2.5rem] p-10 text-white shadow-2xl relative overflow-hidden group">
                 <div className="absolute top-0 right-0 p-10 opacity-10 group-hover:scale-125 transition-transform duration-1000">
                    <Sparkles size={120} />
                 </div>
                 <div className="relative z-10 space-y-8">
                    <div className="space-y-4">
-                      <div className="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center shadow-xl border border-blue-400/30">
+                      <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center shadow-xl border border-white/30">
                          <Award size={24} />
                       </div>
-                      <h3 className="text-xl font-black uppercase tracking-tight">Curriculum Focus</h3>
+                      <h3 className="text-xl font-black uppercase tracking-tight">Private Excellence</h3>
                    </div>
                    
-                   <p className="text-slate-400 text-sm font-medium leading-relaxed">
-                      The Junior High School program is meticulously structured for transitional success:
+                   <p className="text-amber-100 text-sm font-medium leading-relaxed">
+                      Private institutions contribute to the division through specialized orientations:
                    </p>
                    
                    <ul className="space-y-4">
                       {[
-                        "Core & Specialized Subjects",
-                        "21st Century Skills",
-                        "Career Guidance & Pathing",
-                        "Values & Character Formation"
+                        "Diverse Curricular Offerings",
+                        "Focused Learning Paradigms",
+                        "Religious & Values-Oriented",
+                        "Industry-Targeted Strands"
                       ].map((item, i) => (
                          <li key={i} className="flex items-center gap-3">
-                            <div className="p-1 bg-blue-500/20 rounded-lg text-blue-400">
+                            <div className="p-1 bg-white/20 rounded-lg text-white">
                                <CheckCircle2 size={14} />
                             </div>
-                            <span className="text-xs font-bold uppercase tracking-widest text-blue-50">{item}</span>
+                            <span className="text-xs font-bold uppercase tracking-widest text-white">{item}</span>
                          </li>
                       ))}
                    </ul>
 
                    <div className="pt-8 border-t border-white/10">
-                      <p className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-400">Future Ready</p>
-                      <p className="text-sm font-bold opacity-60 italic">Preparing for Senior High School</p>
+                      <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white">Partner Institutions</p>
+                      <p className="text-sm font-bold opacity-60 italic">Quality Recognized Partners</p>
                    </div>
                 </div>
              </div>
 
              <div className="bg-white rounded-[2.5rem] p-10 border border-slate-200 shadow-sm space-y-6">
-                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Enrolled Population</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Regional Footprint</p>
                 <div className="flex items-center gap-6">
                    <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center text-blue-600">
                       <Users size={32} />
                    </div>
                    <div>
-                      <p className="text-3xl font-black text-slate-900 leading-none">15K+</p>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">JHS Learners</p>
+                      <p className="text-3xl font-black text-slate-900 leading-none">100+</p>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Private Institutions</p>
                    </div>
                 </div>
              </div>

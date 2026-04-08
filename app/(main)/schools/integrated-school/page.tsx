@@ -12,15 +12,12 @@ import {
   BookOpen,
   Users,
   CheckCircle2,
-  Briefcase,
-  Layers
+  GraduationCap
 } from "lucide-react";
 
-export default function SeniorHighSchools() {
+export default function IntegratedSchools() {
   const schools = [
-    { id: 1, name: 'Imus National High School (SHS)', district: 'District I', contact: '(046) 111-2222', tracks: ['STEM', 'GAS', 'ABM', 'HE'], color: 'blue' },
-    { id: 2, name: 'Imus East National High School (SHS)', district: 'District II', contact: '(046) 111-4444', tracks: ['STEM', 'GAS'], color: 'amber' },
-    { id: 3, name: 'Imus North High School (SHS)', district: 'District I', contact: '(046) 111-6666', tracks: ['STEM', 'ABM'], color: 'blue' },
+    { id: 1, name: 'Imus City Integrated School', district: 'District III', contact: '(046) 111-5555', color: 'blue' },
   ];
 
   return (
@@ -31,7 +28,7 @@ export default function SeniorHighSchools() {
         <div className="absolute inset-0">
           <Image
             src="/images/newbuilding.webp"
-            alt="Senior High Schools"
+            alt="Integrated Schools"
             fill
             className="object-cover object-center brightness-[0.35]"
             priority
@@ -41,14 +38,14 @@ export default function SeniorHighSchools() {
         
         <div className="relative z-10 text-center px-6 max-w-4xl animate-in fade-in slide-in-from-bottom-10 duration-1000">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-[9px] font-black tracking-[0.3em] text-blue-300 uppercase bg-blue-950/40 backdrop-blur-md rounded-full border border-blue-400/30">
-            <Layers size={12} className="text-blue-400" />
-            <span>Specialized Education</span>
+            <Building2 size={12} className="text-blue-400" />
+            <span>Unified K-12 Centers</span>
           </div>
           <h1 className="text-4xl md:text-7xl font-black text-white tracking-tighter uppercase mb-4 drop-shadow-2xl">
-             Senior High <br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">Schools</span>
+             Integrated <br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">Schools</span>
           </h1>
           <p className="text-slate-300 font-medium italic text-sm md:text-lg max-w-xl mx-auto leading-relaxed">
-             "Equipping Grades 11–12 learners with specialized skills for higher education, entrepreneurship, or employment."
+             "Streamlining the educational journey from Kindergarten to Grade 12 within a single, unified campus structure."
           </p>
         </div>
       </section>
@@ -63,20 +60,20 @@ export default function SeniorHighSchools() {
              <div className="bg-white rounded-[2.5rem] shadow-xl border border-slate-200 p-8 md:p-12 mb-8">
                 <div className="flex items-center justify-between mb-10 border-b border-slate-50 pb-6">
                    <div className="space-y-1">
-                      <h2 className="text-xl font-black text-slate-900 uppercase tracking-tight">Public SHS Registry</h2>
-                      <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Grades 11 to 12 Specialized Directory</p>
+                      <h2 className="text-xl font-black text-slate-900 uppercase tracking-tight">Public Integrated Registry</h2>
+                      <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">K-12 Unified Institutions Directory</p>
                    </div>
                    <div className="p-3 bg-blue-50 text-blue-600 rounded-2xl">
-                      <Briefcase size={24} />
+                      <GraduationCap size={24} />
                    </div>
                 </div>
 
-                <div className="space-y-6">
+                <div className="space-y-4">
                    {schools.map((school) => (
-                      <div key={school.id} className="group bg-slate-50/50 p-8 rounded-2xl border border-slate-100 hover:bg-white hover:border-blue-100 hover:shadow-xl transition-all duration-300">
-                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-6">
-                            <div className="space-y-3">
-                               <h3 className="text-xl font-black text-slate-900 group-hover:text-blue-600 transition-colors uppercase tracking-tight">{school.name}</h3>
+                      <div key={school.id} className="group bg-slate-50/50 p-6 rounded-2xl border border-slate-100 hover:bg-white hover:border-blue-100 hover:shadow-xl transition-all duration-300">
+                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                            <div className="space-y-2">
+                               <h3 className="text-lg font-black text-slate-900 group-hover:text-blue-600 transition-colors uppercase tracking-tight">{school.name}</h3>
                                <div className="flex items-center gap-4">
                                   <div className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-slate-400">
                                      <MapPin size={12} className="text-blue-500" />
@@ -90,21 +87,9 @@ export default function SeniorHighSchools() {
                                </div>
                             </div>
                             <button className="flex items-center gap-2 px-6 py-3 bg-white border border-slate-100 rounded-xl text-[9px] font-black uppercase tracking-widest text-slate-400 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 transition-all">
-                               <span>View Tracks</span>
+                               <span>School Profile</span>
                                <ChevronRight size={14} />
                             </button>
-                         </div>
-
-                         {/* SHS Tracks */}
-                         <div className="pt-6 border-t border-slate-200/50">
-                            <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-3">Available Strands</p>
-                            <div className="flex flex-wrap gap-2">
-                               {school.tracks.map((track, i) => (
-                                  <span key={i} className="px-4 py-1.5 bg-white border border-slate-200 rounded-full text-[10px] font-black text-blue-600 uppercase tracking-widest shadow-sm group-hover:border-blue-100 transition-colors">
-                                     {track}
-                                  </span>
-                               ))}
-                            </div>
                          </div>
                       </div>
                    ))}
@@ -114,7 +99,7 @@ export default function SeniorHighSchools() {
 
           {/* Program Spotlight (Spans 4) */}
           <div className="lg:col-span-4 space-y-8">
-             <div className="bg-blue-900 rounded-[2.5rem] p-10 text-white shadow-2xl relative overflow-hidden group">
+             <div className="bg-slate-900 rounded-[2.5rem] p-10 text-white shadow-2xl relative overflow-hidden group">
                 <div className="absolute top-0 right-0 p-10 opacity-10 group-hover:scale-125 transition-transform duration-1000">
                    <Sparkles size={120} />
                 </div>
@@ -123,48 +108,45 @@ export default function SeniorHighSchools() {
                       <div className="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center shadow-xl border border-blue-400/30">
                          <Award size={24} />
                       </div>
-                      <h3 className="text-xl font-black uppercase tracking-tight">SHS Specialized Tracks</h3>
+                      <h3 className="text-xl font-black uppercase tracking-tight">Integrated Excellence</h3>
                    </div>
                    
-                   <p className="text-blue-200 text-sm font-medium leading-relaxed">
-                      Our Senior High Schools offer diverse strands designed for global competitiveness:
+                   <p className="text-slate-400 text-sm font-medium leading-relaxed">
+                      Integrated Schools offer a complete K-12 path, ensuring:
                    </p>
                    
-                   <div className="grid grid-cols-1 gap-4">
+                   <ul className="space-y-4">
                       {[
-                        { title: "STEM", desc: "Science, Tech, Engineering, & Math" },
-                        { title: "GAS", desc: "General Academic Strand" },
-                        { title: "ABM", desc: "Accountancy, Business, & Management" },
-                        { title: "HE", desc: "Home Economics" }
-                      ].map((track, i) => (
-                         <div key={i} className="flex items-start gap-3 p-3 bg-white/5 rounded-2xl hover:bg-white/10 transition-colors cursor-default">
-                            <div className="p-1 px-2.5 bg-blue-600 rounded text-blue-100 text-[10px] font-black">
-                               {track.title}
+                        "Academic Continuity",
+                        "Seamless Level Transitions",
+                        "Unified Administrative Support",
+                        "Long-term Learner Tracking"
+                      ].map((item, i) => (
+                         <li key={i} className="flex items-center gap-3">
+                            <div className="p-1 bg-blue-500/20 rounded-lg text-blue-400">
+                               <CheckCircle2 size={14} />
                             </div>
-                            <div className="space-y-0.5">
-                               <p className="text-[11px] font-bold text-white tracking-tight uppercase leading-none">{track.title}</p>
-                               <p className="text-[9px] text-blue-300 italic opacity-80 leading-none">{track.desc}</p>
-                            </div>
-                         </div>
+                            <span className="text-xs font-bold uppercase tracking-widest text-blue-50">{item}</span>
+                         </li>
                       ))}
-                   </div>
+                   </ul>
 
                    <div className="pt-8 border-t border-white/10">
-                      <p className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-400">Career Readiness</p>
-                      <p className="text-sm font-bold opacity-60 italic">Bridging Education to Industry</p>
+                      <p className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-400">Holistic Tracking</p>
+                      <p className="text-sm font-bold opacity-60 italic">From Entry to Graduation</p>
                    </div>
                 </div>
              </div>
 
              <div className="bg-white rounded-[2.5rem] p-10 border border-slate-200 shadow-sm space-y-6">
-                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Total Enrollment</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Campus Capacity</p>
                 <div className="flex items-center gap-6">
                    <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center text-blue-600">
                       <Users size={32} />
                    </div>
                    <div>
-                      <p className="text-3xl font-black text-slate-900 leading-none">8K+</p>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">SHS Learners</p>
+                      <p className="text-3xl font-black text-slate-900 leading-none">2K+</p>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Unified Learners</p>
                    </div>
                 </div>
              </div>
