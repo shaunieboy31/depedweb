@@ -8,7 +8,8 @@ import {
   Users,
   LogOut,
   Building2,
-  FileText
+  FileText,
+  Star
 } from "lucide-react";
 import AdminHeader from "./AdminHeader";
 import { getSession } from "@/app/actions/auth";
@@ -30,8 +31,8 @@ export default async function AdminLayout({
     <div className="flex min-h-screen bg-[#f8fafc] font-sans selection:bg-blue-100 selection:text-blue-900">
 
       {/* Sidebar */}
-      <aside className="w-72 bg-[#0F172A] text-white p-8 shadow-[10px_0_40px_rgba(0,0,0,0.05)] hidden md:flex flex-col h-screen sticky top-0 border-r border-white/5">
-        <div className="flex items-center gap-4 mb-16 px-2">
+      <aside className="w-72 bg-[#0F172A] text-white p-8 shadow-[10px_0_40px_rgba(0,0,0,0.05)] hidden md:flex flex-col h-screen sticky top-0 border-r border-white/5 overflow-y-auto custom-scrollbar">
+        <div className="flex items-center gap-4 mb-10 px-2 flex-shrink-0">
           <div className="p-3 bg-blue-600 rounded-2xl shadow-2xl shadow-blue-500/40 border border-blue-400/30">
             <Building2 size={28} className="text-white" />
           </div>
@@ -47,6 +48,7 @@ export default async function AdminLayout({
             { id: "news", label: "News & Updates", icon: Newspaper, href: "/dashboard?tab=news" },
             { id: "issuances", label: "Issuances", icon: FileText, href: "/dashboard?tab=issuances" },
             { id: "employee", label: "Employee of the Month", icon: Trophy, href: "/dashboard?tab=employee" },
+            { id: "leaders", label: "Learning Leaders", icon: Star, href: "/dashboard?tab=leaders" },
             { id: "org", label: "Org Charts", icon: Users, href: "/dashboard?tab=org" },
           ].map((item) => (
             <Link

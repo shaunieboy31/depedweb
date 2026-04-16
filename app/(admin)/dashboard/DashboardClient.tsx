@@ -22,7 +22,8 @@ import {
    Shield,
    Download,
    FileArchive,
-   Search as SearchIcon
+   Search as SearchIcon,
+   Star
 } from "lucide-react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { getNewsAction, updateNewsAction, deleteNewsAction } from "@/app/actions/news";
@@ -30,9 +31,18 @@ import { getCarouselSlidesAction, createCarouselSlideAction, deleteCarouselSlide
 import { getEmployeeHonorsAction, updateEmployeeHonorAction, deleteEmployeeHonorAction } from "@/app/actions/employee";
 import { getOrgChartsAction, updateOrgChartAction, deleteOrgChartAction } from "@/app/actions/org-chart";
 import { getIssuancesAction, updateIssuanceAction, deleteIssuanceAction } from "@/app/actions/issuances";
+import { getLeadersAction, updateLeaderAction, deleteLeaderAction } from "@/app/actions/leaders";
 import { logout } from "@/app/actions/auth";
 
 // Types
+type Leader = {
+   id: string | number;
+   name: string;
+   position: string;
+   image: string | null;
+   startYear?: string;
+   endYear?: string;
+};
 type EmployeeWinner = {
    id: string | number;
    month: string;
@@ -81,13 +91,14 @@ interface DashboardClientProps {
 export default function DashboardClient({ user }: DashboardClientProps) {
    const searchParams = useSearchParams();
    const router = useRouter();
-   const activeTab = (searchParams.get("tab") || "overview") as "overview" | "employee" | "news" | "carousel" | "org" | "issuances";
+   const activeTab = (searchParams.get("tab") || "overview") as "overview" | "employee" | "news" | "carousel" | "org" | "issuances" | "leaders";
 
    const [news, setNews] = useState<NewsItem[]>([]);
    const [honors, setHonors] = useState<EmployeeWinner[]>([]);
    const [carousel, setCarousel] = useState<CarouselSlide[]>([]);
    const [orgCharts, setOrgCharts] = useState<OrgChartItem[]>([]);
    const [issuances, setIssuances] = useState<Issuance[]>([]);
+   const [leaders, setLeaders] = useState<Leader[]>([]);
    const [issuanceSearch, setIssuanceSearch] = useState("");
 
    const [isSaved, setIsSaved] = useState(false);
@@ -99,6 +110,7 @@ export default function DashboardClient({ user }: DashboardClientProps) {
    const orgFileRef = useRef<HTMLInputElement>(null);
    const newsFileRef = useRef<HTMLInputElement>(null);
    const issuanceFileRef = useRef<HTMLInputElement>(null);
+   const leaderFileRef = useRef<HTMLInputElement>(null);
 
    // --- LOAD & SAVE ---
    async function loadData() {
@@ -132,6 +144,11 @@ export default function DashboardClient({ user }: DashboardClientProps) {
       const issuanceResult = await getIssuancesAction();
       if (issuanceResult.success && issuanceResult.data) {
          setIssuances(issuanceResult.data);
+      }
+
+      const leadersResult = await getLeadersAction();
+      if (leadersResult.success && leadersResult.data) {
+         setLeaders(leadersResult.data);
       }
    }
 
@@ -339,6 +356,48 @@ export default function DashboardClient({ user }: DashboardClientProps) {
       item.type.toLowerCase().includes(issuanceSearch.toLowerCase())
    );
 
+   // --- LEADERS ACTIONS ---
+   const [editingLeader, setEditingLeader] = useState<Leader | null>(null);
+   const [leaderFile, setLeaderFile] = useState<File | null>(null);
+
+   const handleSaveLeader = async (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!editingLeader) return;
+      setIsUpdating(true);
+
+      const formData = new FormData();
+      if (editingLeader.id && editingLeader.id !== "new") {
+         formData.append("id", editingLeader.id.toString());
+      }
+      formData.append("name", editingLeader.name);
+      formData.append("position", editingLeader.position);
+      formData.append("startYear", editingLeader.startYear || "");
+      formData.append("endYear", editingLeader.endYear || "");
+      formData.append("oldImagePath", editingLeader.image || "");
+
+      if (leaderFile) formData.append("image", leaderFile);
+
+      const result = await updateLeaderAction(formData);
+      setIsUpdating(false);
+
+      if (result.success) {
+         setIsSaved(true);
+         setTimeout(() => setIsSaved(false), 2000);
+         setEditingLeader(null);
+         setLeaderFile(null);
+         loadData();
+      } else {
+         alert("Failed: " + result.error);
+      }
+   };
+
+   const handleDeleteLeader = async (id: number) => {
+      if (!confirm("Remove this leader from archive?")) return;
+      const result = await deleteLeaderAction(id);
+      if (result.success) loadData();
+      else alert("Delete failed");
+   };
+
    return (
       <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in duration-700">
          {/* Personalized Admin Header */}
@@ -359,6 +418,7 @@ export default function DashboardClient({ user }: DashboardClientProps) {
                      {activeTab === 'employee' && "recognize division monthly award winners."}
                      {activeTab === 'org' && "update departmental functional structures."}
                      {activeTab === 'issuances' && "recall and update official division publications."}
+                     {activeTab === 'leaders' && "manage profiles of SDO Imus City visionary leaders."}
                   </p>
                </div>
             </div>
@@ -396,7 +456,7 @@ export default function DashboardClient({ user }: DashboardClientProps) {
                                 Greetings, {user.username}. You are currently managing the central command center. All updates performed here are synchronized in real-time across the division's public web portal.
                            </p>
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
                            <div className="p-8 bg-blue-50 rounded-[2rem] border border-blue-100 text-center space-y-2">
                               <span className="block text-4xl font-black text-blue-700">{carousel.length}</span>
                               <span className="text-[10px] font-black uppercase text-blue-600 tracking-widest">Main Slides</span>
@@ -412,6 +472,10 @@ export default function DashboardClient({ user }: DashboardClientProps) {
                            <div className="p-8 bg-slate-50 rounded-[2rem] border border-slate-200 text-center space-y-2">
                               <span className="block text-4xl font-black text-slate-700">{orgCharts.length}</span>
                               <span className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Org Charts</span>
+                           </div>
+                           <div className="p-8 bg-amber-50 rounded-[2rem] border border-amber-100 text-center space-y-2">
+                              <span className="block text-4xl font-black text-amber-700">{leaders.length}</span>
+                              <span className="text-[10px] font-black uppercase text-amber-600 tracking-widest">Leaders</span>
                            </div>
                         </div>
                      </div>
@@ -917,6 +981,115 @@ export default function DashboardClient({ user }: DashboardClientProps) {
 
                            <button type="submit" disabled={isUpdating} className="w-full py-5 bg-blue-600 text-white rounded-[2rem] font-black uppercase tracking-[0.2em] text-xs hover:bg-blue-700 transition-all flex items-center justify-center gap-3 shadow-xl disabled:opacity-50">
                               {isUpdating ? <RefreshCcw className="animate-spin" /> : <Save size={20} />} <span>Deploy Functional Chart</span>
+                           </button>
+                        </form>
+                      </div>
+                   )}
+                </div>
+             )}
+
+            {/* LEADERS MANAGER */}
+            {activeTab === "leaders" && (
+               <div className="space-y-8 animate-in slide-in-from-right-10 duration-500">
+                  {!editingLeader ? (
+                     <div className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm space-y-10">
+                        <div className="flex items-center justify-between">
+                           <div className="space-y-1">
+                              <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight">Learning Leaders Archive</h3>
+                              <p className="text-slate-400 text-xs font-bold uppercase tracking-widest italic">Management of Visionary Leadership Profiles</p>
+                           </div>
+                           <button
+                              onClick={() => setEditingLeader({ id: "new", name: "", position: "", image: null, startYear: "", endYear: "" })}
+                              className="px-6 py-3 bg-blue-600 text-white rounded-xl font-bold uppercase tracking-widest text-[10px] flex items-center gap-2 shadow-lg hover:bg-blue-700 transition-all"
+                           >
+                              <PlusCircle size={16} />
+                              <span>Add New Leader</span>
+                           </button>
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-4">
+                           {leaders.length === 0 ? (
+                              <div className="p-20 text-center space-y-4 border-2 border-dashed border-slate-100 rounded-[2rem]">
+                                 <Star size={48} className="mx-auto text-slate-200" strokeWidth={1} />
+                                 <p className="text-slate-400 text-xs font-bold uppercase">No leaders archived yet</p>
+                              </div>
+                           ) : (
+                              leaders.map(le => (
+                                 <div key={le.id} className="group flex items-center gap-6 p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-white hover:border-blue-100 transition-all">
+                                    <div className="w-16 h-16 rounded-full overflow-hidden bg-white border-2 border-slate-100 shadow-sm">
+                                       <img src={le.image || "/images/leader-placeholder.webp"} className="w-full h-full object-cover" alt="" />
+                                    </div>
+                                    <div className="flex-1">
+                                       <h4 className="font-black text-slate-800 uppercase tracking-tight text-sm">{le.name}</h4>
+                                       <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest italic">{le.position}</p>
+                                       {le.startYear && (
+                                          <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">
+                                             Tenure: {le.startYear} — {le.endYear || 'Present'}
+                                          </p>
+                                       )}
+                                    </div>
+                                    <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                       <button onClick={() => setEditingLeader(le)} className="p-3 bg-white text-blue-600 rounded-xl border border-blue-50 hover:bg-blue-600 hover:text-white transition-all shadow-sm"><Save size={16} /></button>
+                                       <button onClick={() => handleDeleteLeader(le.id as number)} className="p-3 bg-white text-rose-500 rounded-xl border border-rose-50 hover:bg-rose-500 hover:text-white transition-all shadow-sm"><Trash2 size={16} /></button>
+                                    </div>
+                                 </div>
+                              ))
+                           )}
+                        </div>
+                     </div>
+                  ) : (
+                     <div className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm space-y-10">
+                        <div className="flex items-center justify-between">
+                           <button onClick={() => setEditingLeader(null)} className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 hover:text-slate-900 transition-colors flex items-center gap-2">
+                              <ChevronRight size={14} className="rotate-180" /> Back to Archive
+                           </button>
+                           <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight">Leader Profile Update</h3>
+                        </div>
+
+                        <form onSubmit={handleSaveLeader} className="space-y-10">
+                           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                              <div className="space-y-6">
+                                 <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">FullName & Honorifics</label>
+                                    <input required className="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 text-sm font-black" value={editingLeader.name} onChange={e => setEditingLeader({ ...editingLeader, name: e.target.value })} placeholder="e.g. Dr. Lualhati O. Cadavedo" />
+                                 </div>
+                                 <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Official Position / Title</label>
+                                    <input required className="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 text-sm font-bold italic" value={editingLeader.position} onChange={e => setEditingLeader({ ...editingLeader, position: e.target.value })} placeholder="e.g. Former OIC Division Superintendent" />
+                                 </div>
+                                 <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                       <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Start Year</label>
+                                       <input className="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 text-sm font-black" value={editingLeader.startYear || ""} onChange={e => setEditingLeader({ ...editingLeader, startYear: e.target.value })} placeholder="e.g. 2013" />
+                                    </div>
+                                    <div className="space-y-2">
+                                       <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">End Year</label>
+                                       <input className="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 text-sm font-black" value={editingLeader.endYear || ""} onChange={e => setEditingLeader({ ...editingLeader, endYear: e.target.value })} placeholder="e.g. 2016 (or 'Present')" />
+                                    </div>
+                                 </div>
+                              </div>
+
+                              <div className="space-y-2">
+                                 <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Profile Picture</label>
+                                 <div className="relative aspect-square w-48 bg-slate-50 rounded-full overflow-hidden border-4 border-dashed border-slate-200 group mx-auto">
+                                    {editingLeader.image ? <img src={editingLeader.image} className="w-full h-full object-cover" alt="" /> : <div className="absolute inset-0 flex items-center justify-center text-slate-300"><ImageIcon size={48} /></div>}
+                                    <div className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                       <button type="button" onClick={() => leaderFileRef.current?.click()} className="p-3 bg-white text-slate-900 rounded-full font-bold uppercase shadow-xl"><Upload size={18} /></button>
+                                    </div>
+                                    <input type="file" ref={leaderFileRef} className="hidden" accept="image/*" onChange={e => {
+                                       const file = e.target.files?.[0];
+                                       if (file) {
+                                          setEditingLeader({ ...editingLeader, image: URL.createObjectURL(file) });
+                                          setLeaderFile(file);
+                                       }
+                                    }} />
+                                 </div>
+                                 <p className="text-center text-[9px] font-black text-slate-400 uppercase tracking-widest mt-4">1:1 Aspect Ratio Recommended</p>
+                              </div>
+                           </div>
+
+                           <button type="submit" disabled={isUpdating} className="w-full py-5 bg-blue-600 text-white rounded-[2rem] font-black uppercase tracking-[0.2em] text-xs hover:bg-blue-700 transition-all flex items-center justify-center gap-3 shadow-xl disabled:opacity-50">
+                              {isUpdating ? <RefreshCcw className="animate-spin" /> : <Save size={20} />} <span>Sync Leadership Profile</span>
                            </button>
                         </form>
                      </div>

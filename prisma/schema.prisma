@@ -77,3 +77,16 @@ model Issuance {
 
   @@map("issuances")
 }
+
+model Leader {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(255)
+  position  String   @db.VarChar(255)
+  image     String?  @db.VarChar(1024)
+  startYear String?  @db.VarChar(50)
+  endYear   String?  @db.VarChar(50)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("leaders")
+}

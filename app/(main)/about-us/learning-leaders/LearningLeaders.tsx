@@ -13,51 +13,8 @@ import {
   Star
 } from 'lucide-react';
 
-export default function LearningLeaders() {
-  const [expandedId, setExpandedId] = useState<number | null>(null);
-
-  const leaders = [
-    {
-      id: 1,
-      name: 'Dr. Lualhati O. Cadavedo',
-      position: 'Former OIC Division Superintendent',
-      image: '/images/leader-placeholder.webp', // Generic placeholder for user to replace
-      bio: 'Founding leader of the Schools Division Office of Imus City, serving from 2013 with exceptional dedication to educational excellence. Her visionary leadership laid the foundation for the division\'s success.',
-      quote: 'Leadership is about empowering others to achieve their full potential.',
-      quote_author: 'Dr. Lualhati O. Cadavedo'
-    },
-    {
-      id: 2,
-      name: 'Mr. Homer N. Mendoza',
-      position: 'Educational Administrator',
-      image: '/images/leader-placeholder.webp',
-      bio: 'A visionary leader focused on innovation and excellence in educational service delivery. Known for his commitment to transforming vision into reality through strategic planning and collaborative action.',
-      quote: 'Leadership is the ability to translate vision into reality.',
-      quote_author: 'Mr. Homer N. Mendoza'
-    },
-    {
-      id: 3,
-      name: 'Bro. Armin A. Luistro FSC',
-      position: 'Former Secretary, Department of Education',
-      image: '/images/leader-placeholder.webp',
-      bio: 'A key figure in establishing the City Schools Division of Imus. His collaborative governance and strategic partnerships were instrumental in building the division\'s institutional capacity.',
-      quote: 'Education is the cornerstone of nation-building.',
-      quote_author: 'Bro. Armin A. Luistro FSC'
-    },
-    {
-      id: 4,
-      name: 'Hon. Emmanuel L. Maliksi',
-      position: 'Former Mayor of Imus City',
-      image: '/images/leader-placeholder.webp',
-      bio: 'Instrumental in the creation of Imus City and a strong advocate for quality education. His support for the Schools Division Office has been a catalyst for educational development in the city.',
-      quote: 'A well-educated community builds a better future for all.',
-      quote_author: 'Hon. Emmanuel L. Maliksi'
-    },
-  ];
-
-  const toggleExpand = (id: number) => {
-    setExpandedId(expandedId === id ? null : id);
-  };
+export default function LearningLeaders({ initialLeaders = [] }: { initialLeaders?: any[] }) {
+  const leaders = initialLeaders;
 
   return (
     <div className="w-full bg-[#f8fafc] min-h-screen font-sans selection:bg-blue-100 selection:text-blue-900">
@@ -103,89 +60,58 @@ export default function LearningLeaders() {
            </p>
         </div>
 
-        {/* Leaders Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-32">
-          {leaders.map((leader) => (
-            <div
-              key={leader.id}
-              className={`group relative h-full bg-white rounded-[2.5rem] border border-slate-200 transition-all duration-500 overflow-hidden ${
-                expandedId === leader.id ? 'shadow-2xl ring-2 ring-blue-100' : 'shadow-sm hover:shadow-xl hover:-translate-y-1'
-              }`}
-            >
-              {/* Leader Header */}
-              <button
-                onClick={() => toggleExpand(leader.id)}
-                className="w-full p-8 md:p-10 flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-8 transition-colors"
-                aria-expanded={expandedId === leader.id}
+        {/* Leaders Grid - Simplified Clean Layout */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mb-32">
+          {leaders.length === 0 ? (
+            <div className="col-span-full py-20 text-center bg-white rounded-[3rem] border border-slate-100 shadow-sm">
+               <Users size={64} className="mx-auto text-slate-200 mb-4" strokeWidth={1} />
+               <p className="text-slate-400 font-bold uppercase tracking-widest text-xs italic">Leadership Archive is currently being updated...</p>
+            </div>
+          ) : (
+            leaders.map((leader) => (
+              <div
+                key={leader.id}
+                className="group relative bg-white rounded-[3rem] border border-slate-200 p-8 pt-12 text-center transition-all duration-500 hover:shadow-2xl hover:border-blue-100 hover:-translate-y-2"
               >
-                {/* Profile Picture Container */}
-                <div className="relative w-32 h-32 md:w-40 md:h-40 flex-shrink-0 group-hover:scale-105 transition-transform duration-500">
-                  <div className="absolute inset-0 bg-blue-100 rounded-full blur-xl opacity-0 group-hover:opacity-40 transition-opacity" />
-                  <div className="relative h-full w-full rounded-full border-4 border-white shadow-lg overflow-hidden bg-slate-100">
+                {/* Profile Picture */}
+                <div className="relative w-32 h-32 md:w-40 md:h-40 mx-auto mb-8">
+                  <div className="absolute inset-0 bg-blue-100 rounded-full blur-2xl opacity-0 group-hover:opacity-40 transition-opacity duration-700" />
+                  <div className="relative h-full w-full rounded-full border-4 border-white shadow-xl overflow-hidden bg-slate-50">
                     <Image
-                      src={leader.image}
+                      src={leader.image || '/images/leader-placeholder.webp'}
                       alt={leader.name}
                       fill
-                      className="object-cover"
+                      className="object-cover transition-transform duration-700 group-hover:scale-110"
                     />
-                    {/* Placeholder Overlay when image is missing */}
-                    <div className="absolute inset-0 flex items-center justify-center bg-slate-50 text-slate-300">
-                      <Users size={48} strokeWidth={1} />
-                    </div>
                   </div>
                 </div>
 
                 {/* Name & Title */}
-                <div className="flex-1 space-y-3 pt-2">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 text-[#4279D2] rounded-full text-[10px] font-black uppercase tracking-widest border border-blue-100">
+                <div className="space-y-3">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-[9px] font-black uppercase tracking-widest border border-blue-100">
                     <Award size={12} />
                     <span>Learning Leader</span>
                   </div>
-                  <h3 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight leading-tight group-hover:text-[#4279D2] transition-colors line-clamp-2">
+                  <h3 className="text-xl md:text-2xl font-black text-slate-900 tracking-tight leading-tight group-hover:text-blue-600 transition-colors uppercase">
                     {leader.name}
                   </h3>
-                  <p className="text-lg text-[#4279D2] font-bold italic tracking-tight">{leader.position}</p>
-                  
-                  <div className={`flex items-center justify-center sm:justify-start gap-2 pt-2 text-[#4279D2] font-bold text-xs uppercase tracking-widest transition-opacity ${expandedId === leader.id ? 'opacity-0' : 'opacity-100'}`}>
-                    <span>View Bio</span>
-                    <ChevronDown size={14} className="animate-bounce" />
-                  </div>
-                </div>
-              </button>
-
-              {/* Bio & Quote Section (Accordion Body) */}
-              <div 
-                className={`transition-all duration-500 ease-in-out px-8 md:px-10 pb-8 md:pb-12 ${
-                  expandedId === leader.id ? 'opacity-100 max-h-[1000px]' : 'opacity-0 max-h-0 overflow-hidden'
-                }`}
-              >
-                <div className="space-y-8 pt-6 border-t border-slate-100">
-                  {/* Biography */}
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-2 text-slate-900 font-black uppercase tracking-tighter text-sm">
-                      <Star size={16} className="text-blue-500 fill-blue-500" />
-                      <span>Biography</span>
+                  <p className="text-sm md:text-base text-slate-500 font-black italic tracking-tight uppercase px-4 leading-tight">
+                    {leader.position}
+                  </p>
+                  {leader.startYear && (
+                    <div className="pt-2">
+                       <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] bg-slate-50 inline-block px-3 py-1 rounded-lg border border-slate-100">
+                         Tenure: {leader.startYear} — {leader.endYear || 'Present'}
+                       </p>
                     </div>
-                    <p className="text-slate-600 leading-relaxed font-medium text-lg">
-                      {leader.bio}
-                    </p>
-                  </div>
-
-                  {/* Quote Box */}
-                  <div className="group/quote relative">
-                    <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-3xl blur opacity-10 group-hover/quote:opacity-20 transition duration-500" />
-                    <div className="relative p-8 bg-blue-50 rounded-3xl border border-blue-100 flex flex-col space-y-4">
-                      <Quote size={32} className="text-[#4279D2] opacity-30" />
-                      <p className="text-xl md:text-2xl font-black text-slate-800 leading-tight italic tracking-tight">
-                        "{leader.quote}"
-                      </p>
-                      <p className="text-[#4279D2] font-black text-sm uppercase tracking-widest">— {leader.quote_author}</p>
-                    </div>
-                  </div>
+                  )}
                 </div>
+
+                {/* Decorative Bottom Line */}
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-transparent via-blue-200 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
 
         {/* Leadership Philosophy Section - High Impact Box */}

@@ -25,6 +25,7 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
     news: "News & Article Portal",
     issuances: "Issuances Management Portal",
     employee: "Employee of the Month",
+    leaders: "Learning Leaders Manager",
     org: "Organization Charts"
   };
 
