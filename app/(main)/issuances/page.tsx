@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -14,10 +12,15 @@ import {
   Layers,
   ArrowRight,
   Sparkles,
-  Info
+  Info,
+  FileSearch
 } from "lucide-react";
+import { getIssuancesAction } from "@/app/actions/issuances";
 
-export default function IssuancesPage() {
+export default async function IssuancesPage() {
+  const result = await getIssuancesAction();
+  const issuances = result.success ? result.data || [] : [];
+
   return (
     <div className="w-full bg-[#f8fafc] min-h-screen font-sans selection:bg-blue-100 selection:text-blue-900 pb-32">
       
@@ -118,7 +121,7 @@ export default function IssuancesPage() {
                  </div>
                  <div>
                     <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tight leading-none">Latest Releases</h2>
-                    <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest mt-1">Updated as of April 2026</p>
+                    <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest mt-1">Updated as of {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
                  </div>
               </div>
               <button className="hidden md:flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-700 transition-all">
@@ -128,39 +131,53 @@ export default function IssuancesPage() {
            </div>
 
            <div className="divide-y divide-slate-100">
-              {[
-                { type: "Memoranda", num: "SDOIC-2024-005", title: "Guidelines on the Conclusion of School Year 2023-2024", date: "April 05, 2024" },
-                { type: "Advisory", num: "SDOIC-2024-012", title: "Suspension of Classes due to Extreme Weather Conditions", date: "April 03, 2024" },
-                { type: "Memoranda", num: "SDOIC-2024-004", title: "Internal Quality Audit for Division Functional Divisions", date: "April 01, 2024" },
-                { type: "Bulletin", num: "SDOIC-2024-001", title: "Official List of Registered Private Schools in Imus City", date: "March 28, 2024" },
-              ].map((doc, idx) => (
-                <div key={idx} className="p-8 hover:bg-slate-50 transition-colors flex flex-col md:flex-row md:items-center justify-between gap-8 group">
-                   <div className="flex items-start gap-6">
-                      <div className="w-16 h-16 bg-blue-50 text-blue-600 border border-blue-100 rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-all">
-                         <FileText size={32} />
-                      </div>
-                      <div className="space-y-1">
-                         <div className="flex items-center gap-3">
-                            <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest">{doc.type}</span>
-                            <div className="w-1 h-1 bg-slate-200 rounded-full" />
-                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{doc.num}</span>
-                         </div>
-                         <h3 className="text-lg font-black text-slate-900 group-hover:text-blue-600 transition-colors uppercase tracking-tight">{doc.title}</h3>
-                         <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Released: {doc.date}</p>
-                      </div>
-                   </div>
-                   
-                   <div className="flex items-center gap-4">
-                      <button className="flex-1 md:flex-none flex items-center justify-center gap-2 px-8 py-4 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-black transition-all shadow-xl shadow-slate-200">
-                         <Download size={16} />
-                         <span>Download PDF</span>
-                      </button>
-                      <button className="p-4 bg-slate-50 text-slate-400 rounded-2xl hover:bg-blue-50 hover:text-blue-600 transition-all border border-slate-100">
-                         <ChevronRight size={20} />
-                      </button>
-                   </div>
+              {issuances.length === 0 ? (
+                <div className="p-20 text-center space-y-4">
+                   <FileSearch size={48} className="mx-auto text-slate-200" strokeWidth={1} />
+                   <p className="text-slate-400 font-black uppercase tracking-[0.2em] text-[10px]">No official issuances found in the archive.</p>
                 </div>
-              ))}
+              ) : (
+                issuances.map((doc: any) => (
+                  <div key={doc.id} className="p-8 hover:bg-slate-50 transition-colors flex flex-col md:flex-row md:items-center justify-between gap-8 group">
+                     <div className="flex items-start gap-6">
+                        <div className="w-16 h-16 bg-blue-50 text-blue-600 border border-blue-100 rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-all">
+                           <FileText size={32} />
+                        </div>
+                        <div className="space-y-1">
+                           <div className="flex items-center gap-3">
+                              <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest">{doc.type}</span>
+                              <div className="w-1 h-1 bg-slate-200 rounded-full" />
+                              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{doc.number}</span>
+                           </div>
+                           <h3 className="text-lg font-black text-slate-900 group-hover:text-blue-600 transition-colors uppercase tracking-tight">{doc.title}</h3>
+                           <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Released: {doc.date}</p>
+                        </div>
+                     </div>
+                     
+                     <div className="flex items-center gap-4">
+                        {doc.fileUrl ? (
+                          <a 
+                            href={doc.fileUrl} 
+                            target="_blank" 
+                            rel="noreferrer"
+                            className="flex-1 md:flex-none flex items-center justify-center gap-2 px-8 py-4 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-black transition-all shadow-xl shadow-slate-200"
+                          >
+                            <Download size={16} />
+                            <span>Download PDF</span>
+                          </a>
+                        ) : (
+                          <button disabled className="flex-1 md:flex-none flex items-center justify-center gap-2 px-8 py-4 bg-slate-200 text-slate-400 rounded-2xl text-[10px] font-black uppercase tracking-widest cursor-not-allowed">
+                            <Download size={16} />
+                            <span>No File Linked</span>
+                          </button>
+                        )}
+                        <button className="p-4 bg-slate-50 text-slate-400 rounded-2xl hover:bg-blue-50 hover:text-blue-600 transition-all border border-slate-100">
+                           <ChevronRight size={20} />
+                        </button>
+                     </div>
+                  </div>
+                ))
+              )}
            </div>
 
            <div className="p-10 bg-slate-50/50 border-t border-slate-100 text-center">

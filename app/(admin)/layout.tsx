@@ -7,7 +7,8 @@ import {
   Trophy,
   Users,
   LogOut,
-  Building2
+  Building2,
+  FileText
 } from "lucide-react";
 import AdminHeader from "./AdminHeader";
 import { getSession } from "@/app/actions/auth";
@@ -44,6 +45,7 @@ export default async function AdminLayout({
             { id: "overview", label: "Dashboard Overview", icon: LayoutDashboard, href: "/dashboard" },
             { id: "carousel", label: "Hero Slider", icon: Layers, href: "/dashboard?tab=carousel" },
             { id: "news", label: "News & Updates", icon: Newspaper, href: "/dashboard?tab=news" },
+            { id: "issuances", label: "Issuances", icon: FileText, href: "/dashboard?tab=issuances" },
             { id: "employee", label: "Employee of the Month", icon: Trophy, href: "/dashboard?tab=employee" },
             { id: "org", label: "Org Charts", icon: Users, href: "/dashboard?tab=org" },
           ].map((item) => (

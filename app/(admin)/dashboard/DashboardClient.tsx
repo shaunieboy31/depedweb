@@ -17,16 +17,19 @@ import {
    Building2,
    Layers,
    FileText,
-   FileImage,
+   FileSearch,
    LogOut,
-   Shield
+   Shield,
+   Download,
+   FileArchive,
+   Search as SearchIcon
 } from "lucide-react";
-import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { getNewsAction, updateNewsAction, deleteNewsAction } from "@/app/actions/news";
 import { getCarouselSlidesAction, createCarouselSlideAction, deleteCarouselSlideAction } from "@/app/actions/carousel";
 import { getEmployeeHonorsAction, updateEmployeeHonorAction, deleteEmployeeHonorAction } from "@/app/actions/employee";
 import { getOrgChartsAction, updateOrgChartAction, deleteOrgChartAction } from "@/app/actions/org-chart";
+import { getIssuancesAction, updateIssuanceAction, deleteIssuanceAction } from "@/app/actions/issuances";
 import { logout } from "@/app/actions/auth";
 
 // Types
@@ -58,6 +61,16 @@ type CarouselSlide = {
    image: string;
 };
 
+type Issuance = {
+   id: string | number;
+   title: string;
+   number: string;
+   type: string;
+   category: string;
+   date: string;
+   fileUrl: string | null;
+};
+
 interface DashboardClientProps {
   user: {
     username: string;
@@ -68,12 +81,14 @@ interface DashboardClientProps {
 export default function DashboardClient({ user }: DashboardClientProps) {
    const searchParams = useSearchParams();
    const router = useRouter();
-   const activeTab = (searchParams.get("tab") || "overview") as "overview" | "employee" | "news" | "carousel" | "org";
+   const activeTab = (searchParams.get("tab") || "overview") as "overview" | "employee" | "news" | "carousel" | "org" | "issuances";
 
    const [news, setNews] = useState<NewsItem[]>([]);
    const [honors, setHonors] = useState<EmployeeWinner[]>([]);
    const [carousel, setCarousel] = useState<CarouselSlide[]>([]);
    const [orgCharts, setOrgCharts] = useState<OrgChartItem[]>([]);
+   const [issuances, setIssuances] = useState<Issuance[]>([]);
+   const [issuanceSearch, setIssuanceSearch] = useState("");
 
    const [isSaved, setIsSaved] = useState(false);
    const [isUpdating, setIsUpdating] = useState(false);
@@ -83,6 +98,7 @@ export default function DashboardClient({ user }: DashboardClientProps) {
    const employeeFileRef = useRef<HTMLInputElement>(null);
    const orgFileRef = useRef<HTMLInputElement>(null);
    const newsFileRef = useRef<HTMLInputElement>(null);
+   const issuanceFileRef = useRef<HTMLInputElement>(null);
 
    // --- LOAD & SAVE ---
    async function loadData() {
@@ -111,6 +127,11 @@ export default function DashboardClient({ user }: DashboardClientProps) {
       const orgResult = await getOrgChartsAction();
       if (orgResult.success && orgResult.data) {
          setOrgCharts(orgResult.data);
+      }
+
+      const issuanceResult = await getIssuancesAction();
+      if (issuanceResult.success && issuanceResult.data) {
+         setIssuances(issuanceResult.data);
       }
    }
 
@@ -269,6 +290,55 @@ export default function DashboardClient({ user }: DashboardClientProps) {
       else alert("Delete failed");
    };
 
+   // --- ISSUANCES ACTIONS ---
+   const [editingIssuance, setEditingIssuance] = useState<Issuance | null>(null);
+   const [issuanceUploadFile, setIssuanceUploadFile] = useState<File | null>(null);
+
+   const handleSaveIssuance = async (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!editingIssuance) return;
+      setIsUpdating(true);
+
+      const formData = new FormData();
+      if (editingIssuance.id && editingIssuance.id !== "new") {
+         formData.append("id", editingIssuance.id.toString());
+      }
+      formData.append("title", editingIssuance.title);
+      formData.append("number", editingIssuance.number);
+      formData.append("type", editingIssuance.type);
+      formData.append("category", editingIssuance.category);
+      formData.append("date", editingIssuance.date);
+      formData.append("year", editingIssuance.year || "");
+      formData.append("oldFileUrl", editingIssuance.fileUrl || "");
+
+      if (issuanceUploadFile) formData.append("file", issuanceUploadFile);
+
+      const result = await updateIssuanceAction(formData);
+      setIsUpdating(false);
+
+      if (result.success) {
+         setIsSaved(true);
+         setTimeout(() => setIsSaved(false), 2000);
+         setEditingIssuance(null);
+         setIssuanceUploadFile(null);
+         loadData();
+      } else {
+         alert("Failed: " + result.error);
+      }
+   };
+
+   const handleDeleteIssuance = async (id: number) => {
+      if (!confirm("Are you sure?")) return;
+      const result = await deleteIssuanceAction(id);
+      if (result.success) loadData();
+   };
+
+   const filteredIssuances = issuances.filter(item => 
+      item.number.toLowerCase().includes(issuanceSearch.toLowerCase()) || 
+      item.title.toLowerCase().includes(issuanceSearch.toLowerCase()) ||
+      item.type.toLowerCase().includes(issuanceSearch.toLowerCase())
+   );
+
    return (
       <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in duration-700">
          {/* Personalized Admin Header */}
@@ -288,25 +358,26 @@ export default function DashboardClient({ user }: DashboardClientProps) {
                      {activeTab === 'news' && "publish and archive institutional news updates."}
                      {activeTab === 'employee' && "recognize division monthly award winners."}
                      {activeTab === 'org' && "update departmental functional structures."}
+                     {activeTab === 'issuances' && "recall and update official division publications."}
                   </p>
                </div>
             </div>
             
             <div className="flex items-center gap-4">
-              {isSaved && (
-                 <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-600 rounded-xl border border-emerald-100 animate-in zoom-in-95">
-                    <CheckCircle2 size={16} />
-                    <span className="text-xs font-bold uppercase tracking-widest">Changes Synced</span>
-                 </div>
-              )}
-              <button 
-                onClick={handleLogout}
-                disabled={isLoggingOut}
-                className="flex items-center gap-2 px-5 py-3 bg-slate-900 hover:bg-black text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 disabled:opacity-50"
-              >
-                {isLoggingOut ? <RefreshCcw size={14} className="animate-spin" /> : <LogOut size={14} />}
-                <span>{isLoggingOut ? "Sign Out..." : "Sign Out"}</span>
-              </button>
+               {isSaved && (
+                  <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-600 rounded-xl border border-emerald-100 animate-in zoom-in-95">
+                     <CheckCircle2 size={16} />
+                     <span className="text-xs font-bold uppercase tracking-widest">Changes Synced</span>
+                  </div>
+               )}
+               <button 
+                 onClick={handleLogout}
+                 disabled={isLoggingOut}
+                 className="flex items-center gap-2 px-5 py-3 bg-slate-900 hover:bg-black text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 disabled:opacity-50"
+               >
+                 {isLoggingOut ? <RefreshCcw size={14} className="animate-spin" /> : <LogOut size={14} />}
+                 <span>{isLoggingOut ? "Sign Out..." : "Sign Out"}</span>
+               </button>
             </div>
          </div>
 
@@ -322,7 +393,7 @@ export default function DashboardClient({ user }: DashboardClientProps) {
                         <div className="space-y-4 max-w-2xl">
                            <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight">Division Console Status</h3>
                            <p className="text-slate-500 leading-relaxed font-medium">
-                               Greetings, {user.username}. You are currently managing the central command center. All updates performed here are synchronized in real-time across the division's public web portal.
+                                Greetings, {user.username}. You are currently managing the central command center. All updates performed here are synchronized in real-time across the division's public web portal.
                            </p>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -330,13 +401,13 @@ export default function DashboardClient({ user }: DashboardClientProps) {
                               <span className="block text-4xl font-black text-blue-700">{carousel.length}</span>
                               <span className="text-[10px] font-black uppercase text-blue-600 tracking-widest">Main Slides</span>
                            </div>
-                           <div className="p-8 bg-amber-50 rounded-[2rem] border border-amber-100 text-center space-y-2">
-                              <span className="block text-4xl font-black text-amber-700">{honors.length}</span>
-                              <span className="text-[10px] font-black uppercase text-amber-600 tracking-widest">Honorees</span>
-                           </div>
                            <div className="p-8 bg-emerald-50 rounded-[2rem] border border-emerald-100 text-center space-y-2">
                               <span className="block text-4xl font-black text-emerald-700">{news.length}</span>
                               <span className="text-[10px] font-black uppercase text-emerald-600 tracking-widest">Articles</span>
+                           </div>
+                           <div className="p-8 bg-indigo-50 rounded-[2rem] border border-indigo-100 text-center space-y-2">
+                              <span className="block text-4xl font-black text-indigo-700">{issuances.length}</span>
+                              <span className="text-[10px] font-black uppercase text-indigo-600 tracking-widest">Issuances</span>
                            </div>
                            <div className="p-8 bg-slate-50 rounded-[2rem] border border-slate-200 text-center space-y-2">
                               <span className="block text-4xl font-black text-slate-700">{orgCharts.length}</span>
@@ -345,6 +416,166 @@ export default function DashboardClient({ user }: DashboardClientProps) {
                         </div>
                      </div>
                   </div>
+               </div>
+            )}
+
+            {/* ISSUANCES MANAGER */}
+            {activeTab === "issuances" && (
+               <div className="space-y-8 animate-in slide-in-from-right-10 duration-500">
+                  {!editingIssuance ? (
+                     <div className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm space-y-10">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                           <div className="space-y-1">
+                              <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight">Official Issuances</h3>
+                              <p className="text-slate-400 text-xs font-bold uppercase tracking-widest italic">Recall by Number or Title</p>
+                           </div>
+                           <div className="flex items-center gap-4 flex-1 max-w-xl">
+                              <div className="relative flex-1 group">
+                                 <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-blue-500 transition-colors" size={18} />
+                                 <input 
+                                    className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all outline-none" 
+                                    placeholder="Enter Memoranda Number or Title to recall..." 
+                                    value={issuanceSearch}
+                                    onChange={(e) => setIssuanceSearch(e.target.value)}
+                                 />
+                              </div>
+                              <button
+                                 onClick={() => setEditingIssuance({ id: "new", title: "", number: "", type: "DIVISION MEMORANDA", category: "DIVISION", date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }), year: new Date().getFullYear().toString(), fileUrl: null })}
+                                 className="px-6 py-4 bg-blue-600 text-white rounded-2xl font-bold uppercase tracking-widest text-[10px] flex items-center gap-2 shadow-lg hover:bg-blue-700 active:scale-95 transition-all"
+                              >
+                                 <PlusCircle size={16} />
+                                 <span>New</span>
+                              </button>
+                           </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-4">
+                           {filteredIssuances.length === 0 ? (
+                              <div className="p-20 text-center space-y-4 border-2 border-dashed border-slate-100 rounded-[2rem]">
+                                 <FileSearch size={48} className="mx-auto text-slate-200" strokeWidth={1} />
+                                 <p className="text-slate-400 text-xs font-bold uppercase tracking-widest italic">No matching memoranda found in archive</p>
+                              </div>
+                           ) : (
+                              filteredIssuances.map(item => (
+                                 <div key={item.id} className="group flex items-center gap-6 p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-white hover:border-blue-100 transition-all">
+                                    <div className="w-16 h-16 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100 transition-colors group-hover:bg-blue-600 group-hover:text-white">
+                                       <FileText size={24} />
+                                    </div>
+                                    <div className="flex-1">
+                                       <div className="flex items-center gap-3">
+                                          <span className="text-[9px] font-black text-blue-600 uppercase tracking-widest">{item.type}</span>
+                                          <div className="w-1 h-1 bg-slate-300 rounded-full" />
+                                          <span className="text-[10px] font-black text-slate-900 bg-white px-2 py-0.5 rounded border border-slate-200 shadow-sm uppercase tracking-widest">{item.number}</span>
+                                          <div className="flex items-center gap-1.5 px-2 py-0.5 bg-blue-100/50 rounded text-blue-700 text-[9px] font-black uppercase tracking-widest border border-blue-200">
+                                            <span>Series</span>
+                                            <span>{item.year || 'N/A'}</span>
+                                          </div>
+                                       </div>
+                                       <h4 className="font-black text-slate-800 uppercase tracking-tight text-sm line-clamp-1 mt-1">{item.title}</h4>
+                                       <div className="flex items-center gap-3 mt-1">
+                                          <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{item.category} SCOPE</span>
+                                          <span className="text-[9px] font-bold text-slate-300 uppercase tracking-widest">•</span>
+                                          <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{item.date}</span>
+                                       </div>
+                                    </div>
+                                    <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                       {item.fileUrl && (
+                                          <a href={item.fileUrl} target="_blank" rel="noreferrer" className="p-3 bg-white text-emerald-600 rounded-xl border border-emerald-50 hover:bg-emerald-600 hover:text-white transition-all shadow-sm">
+                                             <Download size={16} />
+                                          </a>
+                                       )}
+                                       <button onClick={() => setEditingIssuance(item)} className="p-3 bg-white text-blue-600 rounded-xl border border-blue-50 hover:bg-blue-600 hover:text-white transition-all shadow-sm"><Save size={16} /></button>
+                                       <button onClick={() => handleDeleteIssuance(item.id as number)} className="p-3 bg-white text-rose-500 rounded-xl border border-rose-50 hover:bg-rose-500 hover:text-white transition-all shadow-sm"><Trash2 size={16} /></button>
+                                    </div>
+                                 </div>
+                              ))
+                           )}
+                        </div>
+                     </div>
+                  ) : (
+                     <div className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm space-y-10">
+                        <div className="flex items-center justify-between">
+                           <button onClick={() => setEditingIssuance(null)} className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 hover:text-slate-900 transition-colors flex items-center gap-2">
+                              <ChevronRight size={14} className="rotate-180" /> Back to Archive
+                           </button>
+                           <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight">Updating Memorandum Archive</h3>
+                        </div>
+
+                        <form onSubmit={handleSaveIssuance} className="space-y-10">
+                           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                              <div className="space-y-6">
+                                 <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Document Title</label>
+                                    <input required className="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 text-sm font-black" value={editingIssuance.title || ""} onChange={e => setEditingIssuance({ ...editingIssuance, title: e.target.value })} placeholder="e.g. GUIDELINES ON SCHOOL YEAR CONCLUSION" />
+                                 </div>
+                                 <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                       <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Reference No.</label>
+                                       <input required className="w-full p-4 bg-white rounded-xl border-2 border-blue-100 text-[11px] font-black uppercase ring-4 ring-blue-50" value={editingIssuance.number || ""} onChange={e => setEditingIssuance({ ...editingIssuance, number: e.target.value.toUpperCase() })} placeholder="e.g. SDOIC-2024-001" />
+                                       <p className="text-[9px] font-black text-blue-600 uppercase tracking-widest italic opacity-60">Primary Recall Key</p>
+                                    </div>
+                                    <div className="space-y-2">
+                                       <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Release Date</label>
+                                       <input required className="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 text-[10px] font-black uppercase" value={editingIssuance.date || ""} onChange={e => setEditingIssuance({ ...editingIssuance, date: e.target.value })} />
+                                    </div>
+                                 </div>
+                                 <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                       <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Document Type</label>
+                                       <select className="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 text-[10px] font-black uppercase" value={editingIssuance.type} onChange={e => setEditingIssuance({ ...editingIssuance, type: e.target.value })}>
+                                          <option value="DIVISION MEMORANDA">DIVISION MEMORANDA</option>
+                                          <option value="DEPED MEMORANDA">DEPED MEMORANDA</option>
+                                          <option value="DIVISION ADVISORIES">DIVISION ADVISORIES</option>
+                                          <option value="DIVISION BULLETIN">DIVISION BULLETIN</option>
+                                          <option value="NOTICE OF MEETING">NOTICE OF MEETING</option>
+                                          <option value="NOTICE OF DISTRIBUTION">NOTICE OF DISTRIBUTION</option>
+                                       </select>
+                                    </div>
+                                    <div className="space-y-2">
+                                       <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Series Year</label>
+                                       <input required className="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 text-[10px] font-black uppercase" value={editingIssuance.year || ""} onChange={e => setEditingIssuance({ ...editingIssuance, year: e.target.value })} placeholder="e.g. 2024" />
+                                    </div>
+                                    <div className="space-y-2">
+                                       <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Archival Category</label>
+                                       <select className="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 text-[10px] font-black uppercase" value={editingIssuance.category} onChange={e => setEditingIssuance({ ...editingIssuance, category: e.target.value })}>
+                                          <option value="DIVISION">DIVISION</option>
+                                          <option value="REGIONAL">REGIONAL</option>
+                                          <option value="NATIONAL">NATIONAL</option>
+                                       </select>
+                                    </div>
+                                 </div>
+                              </div>
+
+                              <div className="space-y-6">
+                                 <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Document File (PDF preferred)</label>
+                                 <div className="relative h-full bg-slate-50 rounded-[2.5rem] overflow-hidden border-2 border-dashed border-slate-200 group flex flex-col items-center justify-center p-10 text-center">
+                                    <FileArchive size={64} className="text-slate-200 mb-4" />
+                                    {issuanceUploadFile ? (
+                                       <div className="space-y-2">
+                                          <p className="text-sm font-black text-blue-600 uppercase">{issuanceUploadFile.name}</p>
+                                          <button type="button" onClick={() => setIssuanceUploadFile(null)} className="text-[10px] font-black text-rose-500 uppercase tracking-widest">Remove File</button>
+                                       </div>
+                                    ) : (
+                                       <div className="space-y-2">
+                                          {editingIssuance.fileUrl && <p className="text-[9px] font-black text-emerald-600 uppercase mb-4 tracking-widest flex items-center gap-2 justify-center"><CheckCircle2 size={12} /> Current File Linked</p>}
+                                          <button type="button" onClick={() => issuanceFileRef.current?.click()} className="px-8 py-4 bg-white text-slate-900 rounded-2xl font-black uppercase tracking-widest text-[10px] flex items-center gap-3 shadow-xl hover:bg-slate-900 hover:text-white transition-all"><Upload size={16} /> Select Document</button>
+                                          <p className="text-[9px] font-medium text-slate-400 uppercase tracking-widest mt-4 italic">Max file size: 10MB</p>
+                                       </div>
+                                    )}
+                                    <input type="file" ref={issuanceFileRef} className="hidden" accept=".pdf,.doc,.docx" onChange={e => {
+                                       const file = e.target.files?.[0];
+                                       if (file) setIssuanceUploadFile(file);
+                                    }} />
+                                 </div>
+                              </div>
+                           </div>
+
+                           <button type="submit" disabled={isUpdating} className="w-full py-6 bg-blue-600 text-white rounded-[2.5rem] font-black uppercase tracking-[0.3em] text-xs hover:bg-blue-700 transition-all flex items-center justify-center gap-4 shadow-xl shadow-blue-100 disabled:opacity-50">
+                              {isUpdating ? <RefreshCcw className="animate-spin" /> : <Save size={22} />} <span>Sync to Digital Archive</span>
+                           </button>
+                        </form>
+                     </div>
+                  )}
                </div>
             )}
 

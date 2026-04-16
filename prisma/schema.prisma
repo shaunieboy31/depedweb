@@ -62,3 +62,18 @@ model User {
 
   @@map("users")
 }
+
+model Issuance {
+  id        Int      @id @default(autoincrement())
+  title     String   @db.VarChar(512)
+  number    String   @db.VarChar(255)
+  type      String   @db.VarChar(100) // Memoranda, Advisory, Bulletin
+  category  String   @db.VarChar(100) // Division, Regional, National
+  date      String   @db.VarChar(100)
+  year      String?  @db.VarChar(10)  // Series Year (e.g. 2024)
+  fileUrl   String?  @db.VarChar(1024)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("issuances")
+}

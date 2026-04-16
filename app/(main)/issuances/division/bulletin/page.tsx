@@ -1,28 +1,20 @@
-"use client";
-
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
 import { 
-  FileText, 
-  Download, 
   Search, 
   Filter, 
-  Calendar,
-  Eye,
-  FileDown,
-  ArrowLeft,
-  Newspaper,
+  FileDown, 
+  ArrowLeft, 
+  Newspaper, 
   Inbox
 } from "lucide-react";
 import Link from "next/link";
+import { getIssuancesAction } from "@/app/actions/issuances";
+import PublicArchiveClient from "@/app/(main)/issuances/PublicArchiveClient";
 
-export default function DivisionBulletin() {
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const mockDocs = [
-    { id: 1, num: "DB No. 001, s. 2024", title: "OFFICIAL LIST OF REGISTERED PRIVATE SCHOOLS IN IMUS CITY FOR SY 2023-2024", date: "March 28, 2024", size: "1.5 MB" },
-    { id: 2, num: "DB No. 008, s. 2023", title: "RESULTS OF THE 2023 DIVISION SCHOOLS PRESS CONFERENCE", date: "December 15, 2023", size: "2.8 MB" },
-  ];
+export default async function DivisionBulletin() {
+  const result = await getIssuancesAction("DIVISION", "DIVISION BULLETIN");
+  const documents = result.success ? result.data || [] : [];
 
   return (
     <div className="w-full bg-[#f8fafc] min-h-screen font-sans selection:bg-blue-100 selection:text-blue-900 pb-32">
@@ -58,93 +50,15 @@ export default function DivisionBulletin() {
                  Official directories, election results, registered school listings, and formal division-wide publications.
               </p>
            </div>
-
-           <div className="relative group max-w-3xl">
-              <div className="absolute inset-y-0 left-6 flex items-center text-slate-400 group-focus-within:text-blue-400 transition-colors">
-                 <Search size={24} />
-              </div>
-              <input 
-                 type="text" 
-                 placeholder="Search Division Bulletins..."
-                 value={searchQuery}
-                 onChange={(e) => setSearchQuery(e.target.value)}
-                 className="w-full pl-16 pr-8 py-8 bg-white rounded-3xl text-slate-900 placeholder:text-slate-400 font-bold shadow-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 text-lg transition-all"
-              />
-           </div>
-        </div>
+            </div>
+         </div>
       </section>
 
-      {/* Result Grid */}
-      <div className="max-w-5xl mx-auto px-6 -mt-32 relative z-20 space-y-8">
-        
-        <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-4 border border-white shadow-lg flex flex-col sm:flex-row items-center justify-between gap-4">
-           <div className="flex items-center gap-4 text-slate-500">
-              <Filter size={18} />
-              <span className="text-[10px] font-black uppercase tracking-widest">Category:</span>
-              <div className="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-lg text-[10px] font-black uppercase tracking-widest">Formal Publications</div>
-           </div>
-           <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Archive Active</p>
-        </div>
-
-        {/* Modern Simplified Table */}
-        <div className="bg-white rounded-[2.5rem] border border-slate-200 shadow-2xl overflow-hidden animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-200">
-           <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                 <thead className="bg-[#032977] text-white">
-                    <tr>
-                       <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] first:pl-10">Bulletin Number</th>
-                       <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em]">Series</th>
-                       <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em]">Title</th>
-                       <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em]">File</th>
-                       <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] last:pr-10">Date Uploaded</th>
-                    </tr>
-                 </thead>
-                 <tbody className="divide-y divide-slate-100">
-                    {mockDocs.map((doc) => (
-                      <tr key={doc.id} className="group hover:bg-emerald-50/50 transition-all duration-300">
-                         <td className="px-8 py-8 first:pl-10">
-                            <span className="text-sm font-black text-slate-900 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200">
-                               {doc.num.split(',')[0].replace('DB No. ', '')}
-                            </span>
-                         </td>
-                         <td className="px-8 py-8 text-sm font-bold text-slate-500 uppercase italic">
-                            {doc.num.split('s. ')[1]}
-                         </td>
-                         <td className="px-8 py-8">
-                            <h3 className="text-base font-black text-slate-900 group-hover:text-emerald-700 transition-colors leading-snug uppercase tracking-tight">
-                               {doc.title}
-                            </h3>
-                         </td>
-                         <td className="px-8 py-8">
-                            <button className="flex items-center gap-3 px-6 py-3 bg-emerald-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-500/10 active:scale-95">
-                               <FileDown size={14} />
-                               <span>Download PDF</span>
-                            </button>
-                         </td>
-                         <td className="px-8 py-8 last:pr-10">
-                            <div className="flex flex-col">
-                               <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest">{doc.date}</span>
-                               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">00:00:00</span>
-                            </div>
-                         </td>
-                      </tr>
-                    ))}
-                 </tbody>
-              </table>
-           </div>
-        </div>
-
-        <div className="bg-slate-50/50 rounded-[3rem] p-16 border-2 border-dashed border-slate-200 text-center space-y-6">
-           <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto shadow-sm text-slate-200">
-              <Inbox size={40} />
-           </div>
-           <div className="space-y-2">
-              <h4 className="text-xl font-black text-slate-900 uppercase">Division Bulletin Archive</h4>
-              <p className="text-slate-500 text-sm font-medium">Formal division-wide registries and official publication results.</p>
-           </div>
-        </div>
-
-      </div>
+      <PublicArchiveClient 
+        initialDocuments={documents} 
+        typeLabel="Bulletin" 
+        categoryLabel="Bulletin" 
+      />
     </div>
   );
 }
