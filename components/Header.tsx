@@ -33,7 +33,25 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="w-full bg-white">
+    <header className="w-full bg-white font-sans">
+      {/* Top Utility Bar */}
+      <div className="w-full bg-[#032977] border-b border-white/5 py-1.5 px-10">
+        <div className="max-w-7xl mx-auto flex justify-between items-center text-[10px] font-black uppercase tracking-[0.1em] text-white">
+          <div className="opacity-90 italic">
+            "Tapat sa Paglilingkod, Angat sa Inobasyon, Puso sa Edukasyon"
+          </div>
+          <div className="flex items-center gap-6">
+            <Link href="/prime-hrm" className="hover:text-blue-200 transition-colors">PRIME-HRM</Link>
+            <div className="h-3 w-[1px] bg-white/20" />
+            <Link href="/newsletter" className="hover:text-blue-200 transition-colors">Newsletter</Link>
+            <div className="h-3 w-[1px] bg-white/20" />
+            <Link href="/careers" className="hover:text-blue-200 transition-colors">Careers</Link>
+            <div className="h-3 w-[1px] bg-white/20" />
+            <Link href="/login" className="font-black text-blue-100 hover:text-white transition-colors bg-white/10 px-3 py-1 rounded-md">Login</Link>
+          </div>
+        </div>
+      </div>
+      
       <div className="w-full bg-[#191970]">
         <div className="max-w-7xl mx-auto px-10 py-5">
           <div className="flex justify-between items-center">
@@ -86,27 +104,6 @@ export default function Header() {
                  </p>
                </div>
 
-               {/* Admin Quick Link */}
-               <Link 
-                 href="/dashboard" 
-                 className="p-3 bg-white/10 hover:bg-white/20 rounded-2xl transition-all border border-white/10 group shadow-lg"
-                 title="Admin Command Center"
-               >
-                 <svg 
-                   xmlns="http://www.w3.org/2000/svg" 
-                   width="20" 
-                   height="20" 
-                   viewBox="0 0 24 24" 
-                   fill="none" 
-                   stroke="currentColor" 
-                   strokeWidth="2" 
-                   strokeLinecap="round" 
-                   strokeLinejoin="round" 
-                   className="text-blue-200 group-hover:text-white transition-colors"
-                 >
-                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
-                 </svg>
-               </Link>
              </div>
           </div>
         </div>
