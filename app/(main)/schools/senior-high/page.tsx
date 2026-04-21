@@ -14,6 +14,7 @@ import {
   CheckCircle2,
   Trophy,
   RefreshCcw,
+  Layers,
   School as SchoolIcon,
   GraduationCap
 } from "lucide-react";
