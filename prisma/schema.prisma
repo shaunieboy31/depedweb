@@ -90,3 +90,19 @@ model Leader {
 
   @@map("leaders")
 }
+
+model School {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(255)
+  logo      String?  @db.VarChar(1024)
+  banner    String?  @db.VarChar(1024)
+  location  String   @db.VarChar(512)
+  category  String   @db.VarChar(100) // ELEMENTARY, JHS, SHS, INTEGRATED
+  cluster   String?  @db.VarChar(100)
+  contact   String?  @db.VarChar(100)
+  type      String   @db.VarChar(50)  // PUBLIC or PRIVATE
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("schools")
+}

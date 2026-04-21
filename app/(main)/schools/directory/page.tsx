@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { 
   Building2, 
@@ -10,27 +10,45 @@ import {
   Search, 
   ChevronRight, 
   GraduationCap, 
-  School,
+  School as SchoolIcon,
   Sparkles,
   Trophy,
-  Info
+  Info,
+  RefreshCcw
 } from "lucide-react";
+import { getSchoolsAction } from "@/app/actions/schools";
+
+type School = {
+   id: number;
+   name: string;
+   logo: string | null;
+   banner: string | null;
+   location: string;
+   category: string;
+   cluster: string | null;
+   contact: string | null;
+   type: string;
+};
 
 export default function SchoolDirectory() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [schools, setSchools] = useState<School[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const schools = [
-    { name: 'Imus National High School', type: 'Secondary', level: 'Junior / Senior High', district: 'District I', contact: '(046) 111-2222', email: 'inhs@deped.gov.ph', color: 'blue' },
-    { name: 'Imus Central Elementary School', type: 'Primary', level: 'Elementary', district: 'District I', contact: '(046) 111-3333', email: 'ices@deped.gov.ph', color: 'blue' },
-    { name: 'Imus East National High School', type: 'Secondary', level: 'Junior / Senior High', district: 'District II', contact: '(046) 111-4444', email: 'iens@deped.gov.ph', color: 'amber' },
-    { name: 'Imus West Elementary School', type: 'Primary', level: 'Elementary', district: 'District III', contact: '(046) 111-5555', email: 'iwes@deped.gov.ph', color: 'emerald' },
-    { name: 'Imus North High School', type: 'Secondary', level: 'Junior / Senior High', district: 'District I', contact: '(046) 111-6666', email: 'inhs@deped.gov.ph', color: 'blue' },
-    { name: 'Imus South Elementary School', type: 'Primary', level: 'Elementary', district: 'District II', contact: '(046) 111-7777', email: 'ises@deped.gov.ph', color: 'amber' },
-  ];
+  useEffect(() => {
+    async function loadSchools() {
+      const result = await getSchoolsAction();
+      if (result.success && result.data) {
+        setSchools(result.data);
+      }
+      setIsLoading(false);
+    }
+    loadSchools();
+  }, []);
 
   const filteredSchools = schools.filter(s => 
     s.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    s.district.toLowerCase().includes(searchTerm.toLowerCase())
+    (s.cluster && s.cluster.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   return (
@@ -58,7 +76,7 @@ export default function SchoolDirectory() {
              School <span className="text-blue-400">Directory</span>
           </h1>
           <p className="text-slate-300 font-medium italic text-sm md:text-base max-w-xl mx-auto">
-             A complete registry of public learning centers under the Schools Division Office of Imus City.
+             A complete registry of learning centers under the Schools Division Office of Imus City.
           </p>
         </div>
       </section>
@@ -72,7 +90,7 @@ export default function SchoolDirectory() {
               <Search size={20} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors" />
               <input 
                 type="text" 
-                placeholder="Search school name or district..."
+                placeholder="Search school name or cluster..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-14 pr-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold placeholder:text-slate-400 outline-none focus:ring-4 focus:ring-blue-500/10 focus:bg-white transition-all"
@@ -88,54 +106,78 @@ export default function SchoolDirectory() {
 
         {/* Directory Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-           {filteredSchools.length > 0 ? (
-              filteredSchools.map((school, idx) => (
-                <div key={idx} className="group bg-white rounded-[2.5rem] border border-slate-200 shadow-sm hover:shadow-2xl hover:-translate-y-2 hover:border-blue-100 transition-all duration-500 overflow-hidden flex flex-col p-8 pt-10">
-                   {/* District Tag */}
-                   <div className="flex items-center justify-between mb-8">
-                      <div className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border ${
-                         school.color === 'blue' ? 'bg-blue-50 text-blue-600 border-blue-100' : 
-                         school.color === 'amber' ? 'bg-amber-50 text-amber-600 border-amber-100' : 
-                         'bg-emerald-50 text-emerald-600 border-emerald-100'
-                      }`}>
-                         {school.district}
-                      </div>
-                      <div className="p-2.5 bg-slate-50 text-slate-400 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-all duration-500">
-                         <School size={18} />
-                      </div>
-                   </div>
-
-                   {/* School Info */}
-                   <div className="flex-1 space-y-4">
-                      <h3 className="text-xl font-black text-slate-900 leading-tight uppercase tracking-tight group-hover:text-blue-600 transition-colors">
-                         {school.name}
-                      </h3>
-                      <div className="flex items-center gap-2 text-slate-500 text-[10px] font-black uppercase tracking-widest">
-                         <GraduationCap size={14} className="text-blue-500" />
-                         <span>{school.level}</span>
-                      </div>
-                   </div>
-
-                   {/* Quick Contacts */}
-                   <div className="mt-10 pt-8 border-t border-slate-50 space-y-4">
-                      <div className="flex items-center gap-4 group/contact">
-                         <div className="w-8 h-8 bg-slate-50 rounded-lg flex items-center justify-center text-slate-400 group-hover/contact:bg-blue-50 group-hover/contact:text-blue-600 transition-colors">
-                            <Phone size={14} />
+           {isLoading ? (
+              <div className="col-span-full py-32 text-center space-y-6">
+                 <RefreshCcw size={48} className="mx-auto text-blue-600 animate-spin" />
+                 <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Synchronizing Directory...</p>
+              </div>
+           ) : filteredSchools.length > 0 ? (
+              filteredSchools.map((school) => (
+                <div key={school.id} className="group bg-white rounded-[2.5rem] border border-slate-200 shadow-sm hover:shadow-2xl hover:-translate-y-2 hover:border-blue-100 transition-all duration-500 overflow-hidden flex flex-col">
+                   {/* School Banner Preview */}
+                   <div className="h-48 relative overflow-hidden">
+                      <img 
+                        src={school.banner || "/images/newbuilding.webp"} 
+                        alt={school.name}
+                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 brightness-90 group-hover:brightness-100"
+                      />
+                      <div className="absolute top-4 left-4">
+                         <div className={`px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest border border-white/20 backdrop-blur-md shadow-lg ${
+                            school.type === 'PRIVATE' ? 'bg-amber-600/90 text-white' : 'bg-blue-600/90 text-white'
+                         }`}>
+                            {school.type}
                          </div>
-                         <p className="text-xs font-bold text-slate-600 tracking-tight">{school.contact}</p>
-                      </div>
-                      <div className="flex items-center gap-4 group/contact">
-                         <div className="w-8 h-8 bg-slate-50 rounded-lg flex items-center justify-center text-slate-400 group-hover/contact:bg-blue-50 group-hover/contact:text-blue-600 transition-colors">
-                            <Mail size={14} />
-                         </div>
-                         <p className="text-xs font-bold text-slate-600 tracking-tight lowercase line-clamp-1">{school.email}</p>
                       </div>
                    </div>
 
-                   <button className="mt-8 w-full py-4 bg-slate-50 text-slate-400 rounded-2xl text-[9px] font-black uppercase tracking-widest group-hover:bg-blue-600 group-hover:text-white transition-all duration-500 flex items-center justify-center gap-2">
-                      <span>Inquire More</span>
-                      <ChevronRight size={12} />
-                   </button>
+                   <div className="p-8 pt-0 flex flex-col flex-1 relative">
+                      {/* Overlapping Institutional Logo */}
+                      <div className="relative -mt-12 ml-4 mb-6 z-10">
+                         <div className="w-24 h-24 rounded-full bg-white shadow-2xl border border-slate-100 overflow-hidden group-hover:scale-105 transition-transform duration-500">
+                            <img src={school.logo || "/images/leader-placeholder.webp"} alt="" className="w-full h-full object-cover rounded-full" />
+                         </div>
+                      </div>
+
+                      {/* Cluster Tag */}
+                      <div className="flex items-center justify-between mb-6">
+                         <div className="px-3 py-1 bg-slate-50 border border-slate-100 rounded-full text-[8px] font-black text-slate-400 uppercase tracking-widest">
+                            {school.cluster || 'Division Center'}
+                         </div>
+                         <div className="p-2 bg-blue-50 text-blue-600 rounded-lg">
+                            <SchoolIcon size={16} />
+                         </div>
+                      </div>
+
+                      {/* School Info */}
+                      <div className="flex-1 space-y-3">
+                         <h3 className="text-lg font-black text-slate-900 leading-tight uppercase tracking-tight group-hover:text-blue-600 transition-colors">
+                            {school.name}
+                         </h3>
+                         <div className="flex items-start gap-2 text-slate-500 text-[9px] font-bold uppercase tracking-widest leading-relaxed">
+                            <MapPin size={14} className="text-blue-500 shrink-0" />
+                            <span className="line-clamp-2">{school.location}</span>
+                         </div>
+                      </div>
+
+                      {/* Details & Action */}
+                      <div className="mt-8 pt-8 border-t border-slate-50 space-y-6">
+                         <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                               < GraduationCap size={14} className="text-blue-600" />
+                               <span className="text-[9px] font-black text-slate-900 uppercase tracking-widest">{school.category}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                               <Phone size={14} className="text-blue-600" />
+                               <span className="text-[9px] font-black text-slate-900 uppercase tracking-widest">{school.contact || 'N/A'}</span>
+                            </div>
+                         </div>
+
+                         <button className="w-full py-4 bg-slate-50 text-slate-400 rounded-2xl text-[9px] font-black uppercase tracking-widest group-hover:bg-blue-600 group-hover:text-white transition-all duration-500 flex items-center justify-center gap-2">
+                            <span>View Full Profile</span>
+                            <ChevronRight size={12} />
+                         </button>
+                      </div>
+                   </div>
                 </div>
               ))
            ) : (
@@ -143,7 +185,7 @@ export default function SchoolDirectory() {
                  <Search size={64} className="mx-auto text-slate-200" strokeWidth={1} />
                  <div className="space-y-2">
                     <p className="text-lg font-black text-slate-900 uppercase">No Schools Found</p>
-                    <p className="text-slate-400 font-medium text-sm">Try refining your search term or district filter.</p>
+                    <p className="text-slate-400 font-medium text-sm">Try refining your search term or cluster filter.</p>
                  </div>
               </div>
            )}

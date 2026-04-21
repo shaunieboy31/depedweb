@@ -32,6 +32,7 @@ import { getEmployeeHonorsAction, updateEmployeeHonorAction, deleteEmployeeHonor
 import { getOrgChartsAction, updateOrgChartAction, deleteOrgChartAction } from "@/app/actions/org-chart";
 import { getIssuancesAction, updateIssuanceAction, deleteIssuanceAction } from "@/app/actions/issuances";
 import { getLeadersAction, updateLeaderAction, deleteLeaderAction } from "@/app/actions/leaders";
+import { getSchoolsAction, updateSchoolAction, deleteSchoolAction } from "@/app/actions/schools";
 import { logout } from "@/app/actions/auth";
 
 // Types
@@ -78,7 +79,20 @@ type Issuance = {
    type: string;
    category: string;
    date: string;
+   year?: string;
    fileUrl: string | null;
+};
+
+type School = {
+   id: string | number;
+   name: string;
+   logo: string | null;
+   banner: string | null;
+   location: string;
+   category: string;
+   cluster: string | null;
+   contact: string | null;
+   type: string;
 };
 
 interface DashboardClientProps {
@@ -91,7 +105,7 @@ interface DashboardClientProps {
 export default function DashboardClient({ user }: DashboardClientProps) {
    const searchParams = useSearchParams();
    const router = useRouter();
-   const activeTab = (searchParams.get("tab") || "overview") as "overview" | "employee" | "news" | "carousel" | "org" | "issuances" | "leaders";
+   const activeTab = (searchParams.get("tab") || "overview") as "overview" | "employee" | "news" | "carousel" | "org" | "issuances" | "leaders" | "schools";
 
    const [news, setNews] = useState<NewsItem[]>([]);
    const [honors, setHonors] = useState<EmployeeWinner[]>([]);
@@ -99,6 +113,7 @@ export default function DashboardClient({ user }: DashboardClientProps) {
    const [orgCharts, setOrgCharts] = useState<OrgChartItem[]>([]);
    const [issuances, setIssuances] = useState<Issuance[]>([]);
    const [leaders, setLeaders] = useState<Leader[]>([]);
+   const [schools, setSchools] = useState<School[]>([]);
    const [issuanceSearch, setIssuanceSearch] = useState("");
 
    const [isSaved, setIsSaved] = useState(false);
@@ -111,6 +126,8 @@ export default function DashboardClient({ user }: DashboardClientProps) {
    const newsFileRef = useRef<HTMLInputElement>(null);
    const issuanceFileRef = useRef<HTMLInputElement>(null);
    const leaderFileRef = useRef<HTMLInputElement>(null);
+   const schoolLogoRef = useRef<HTMLInputElement>(null);
+   const schoolBannerRef = useRef<HTMLInputElement>(null);
 
    // --- LOAD & SAVE ---
    async function loadData() {
@@ -149,6 +166,11 @@ export default function DashboardClient({ user }: DashboardClientProps) {
       const leadersResult = await getLeadersAction();
       if (leadersResult.success && leadersResult.data) {
          setLeaders(leadersResult.data);
+      }
+
+      const schoolsResult = await getSchoolsAction();
+      if (schoolsResult.success && schoolsResult.data) {
+         setSchools(schoolsResult.data);
       }
    }
 
@@ -398,6 +420,53 @@ export default function DashboardClient({ user }: DashboardClientProps) {
       else alert("Delete failed");
    };
 
+   // --- SCHOOLS ACTIONS ---
+   const [editingSchool, setEditingSchool] = useState<School | null>(null);
+   const [schoolLogoFile, setSchoolLogoFile] = useState<File | null>(null);
+   const [schoolBannerFile, setSchoolBannerFile] = useState<File | null>(null);
+
+   const handleSaveSchool = async (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!editingSchool) return;
+      setIsUpdating(true);
+
+      const formData = new FormData();
+      if (editingSchool.id && editingSchool.id !== "new") {
+         formData.append("id", editingSchool.id.toString());
+      }
+      formData.append("name", editingSchool.name);
+      formData.append("location", editingSchool.location);
+      formData.append("category", editingSchool.category);
+      formData.append("cluster", editingSchool.cluster || "");
+      formData.append("contact", editingSchool.contact || "");
+      formData.append("type", editingSchool.type);
+      formData.append("oldLogoPath", editingSchool.logo || "");
+      formData.append("oldBannerPath", editingSchool.banner || "");
+
+      if (schoolLogoFile) formData.append("logo", schoolLogoFile);
+      if (schoolBannerFile) formData.append("banner", schoolBannerFile);
+
+      const result = await updateSchoolAction(formData);
+      setIsUpdating(false);
+
+      if (result.success) {
+         setIsSaved(true);
+         setTimeout(() => setIsSaved(false), 2000);
+         setEditingSchool(null);
+         setSchoolLogoFile(null);
+         setSchoolBannerFile(null);
+         loadData();
+      } else {
+         alert("Failed: " + result.error);
+      }
+   };
+
+   const handleDeleteSchool = async (id: number) => {
+      if (!confirm("Are you sure? This will remove the school and its associated media.")) return;
+      const result = await deleteSchoolAction(id);
+      if (result.success) loadData();
+   };
+
    return (
       <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in duration-700">
          {/* Personalized Admin Header */}
@@ -419,6 +488,7 @@ export default function DashboardClient({ user }: DashboardClientProps) {
                      {activeTab === 'org' && "update departmental functional structures."}
                      {activeTab === 'issuances' && "recall and update official division publications."}
                      {activeTab === 'leaders' && "manage profiles of SDO Imus City visionary leaders."}
+                     {activeTab === 'schools' && "manage profiles of SDO Imus City schools."}
                   </p>
                </div>
             </div>
@@ -988,7 +1058,167 @@ export default function DashboardClient({ user }: DashboardClientProps) {
                 </div>
              )}
 
-            {/* LEADERS MANAGER */}
+            {/* SCHOOLS MANAGER */}
+            {activeTab === "schools" && (
+               <div className="space-y-8 animate-in slide-in-from-right-10 duration-500">
+                  {!editingSchool ? (
+                     <div className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm space-y-10">
+                        <div className="flex items-center justify-between">
+                           <div className="space-y-1">
+                              <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight">Educational Network</h3>
+                              <p className="text-slate-400 text-xs font-bold uppercase tracking-widest italic">Directory of Learning Centers</p>
+                           </div>
+                           <button
+                              onClick={() => setEditingSchool({ id: "new", name: "", location: "", category: "ELEMENTARY", type: "PUBLIC", cluster: "", contact: "", logo: null, banner: null })}
+                              className="px-6 py-3 bg-blue-600 text-white rounded-xl font-bold uppercase tracking-widest text-[10px] flex items-center gap-2 shadow-lg hover:bg-blue-700 transition-all"
+                           >
+                              <PlusCircle size={16} />
+                              <span>Register School</span>
+                           </button>
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-4">
+                           {schools.length === 0 ? (
+                              <div className="p-20 text-center space-y-4 border-2 border-dashed border-slate-100 rounded-[2rem]">
+                                 <Building2 size={48} className="mx-auto text-slate-200" strokeWidth={1} />
+                                 <p className="text-slate-400 text-xs font-bold uppercase">No educational institutions registered</p>
+                              </div>
+                           ) : (
+                              schools.map(sch => (
+                                 <div key={sch.id} className="group flex items-center gap-6 p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-white hover:border-blue-100 transition-all">
+                                    <div className="w-16 h-16 rounded-xl overflow-hidden bg-white border border-slate-100 shadow-sm">
+                                       <img src={sch.logo || "/images/leader-placeholder.webp"} className="w-full h-full object-cover" alt="" />
+                                    </div>
+                                    <div className="flex-1">
+                                       <div className="flex items-center gap-3">
+                                          <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded border ${sch.type === 'PRIVATE' ? 'bg-amber-50 text-amber-600 border-amber-100' : 'bg-blue-50 text-blue-600 border-blue-100'}`}>
+                                             {sch.type}
+                                          </span>
+                                          <div className="w-1 h-1 bg-slate-200 rounded-full" />
+                                          <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{sch.category}</span>
+                                          <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">• {sch.cluster || 'NO CLUSTER'}</span>
+                                       </div>
+                                       <h4 className="font-black text-slate-800 uppercase tracking-tight text-sm mt-1">{sch.name}</h4>
+                                       <p className="text-[10px] font-medium text-slate-400 line-clamp-1">{sch.location}</p>
+                                    </div>
+                                    <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                       <button onClick={() => setEditingSchool(sch)} className="p-3 bg-white text-blue-600 rounded-xl border border-blue-50 hover:bg-blue-600 hover:text-white transition-all shadow-sm"><Save size={16} /></button>
+                                       <button onClick={() => handleDeleteSchool(sch.id as number)} className="p-3 bg-white text-rose-500 rounded-xl border border-rose-50 hover:bg-rose-500 hover:text-white transition-all shadow-sm"><Trash2 size={16} /></button>
+                                    </div>
+                                 </div>
+                              ))
+                           )}
+                        </div>
+                     </div>
+                  ) : (
+                     <div className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm space-y-10">
+                        <div className="flex items-center justify-between">
+                           <button onClick={() => setEditingSchool(null)} className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 hover:text-slate-900 transition-colors flex items-center gap-2">
+                              <ChevronRight size={14} className="rotate-180" /> Back to Directory
+                           </button>
+                           <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight">Institutional Profile Update</h3>
+                        </div>
+
+                        <form onSubmit={handleSaveSchool} className="space-y-12">
+                           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10">
+                              
+                              {/* Left Column - Details (Spans 7) */}
+                              <div className="lg:col-span-7 space-y-8">
+                                 <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">Official School Name</label>
+                                    <input required className="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 text-sm font-black focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all border-none outline-none" 
+                                       value={editingSchool.name} onChange={e => setEditingSchool({ ...editingSchool, name: e.target.value })} placeholder="e.g. Imus Central Elementary School" />
+                                 </div>
+
+                                 <div className="grid grid-cols-2 gap-6">
+                                    <div className="space-y-2">
+                                       <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">Institution Type</label>
+                                       <select className="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 text-[10px] font-black uppercase border-none outline-none" 
+                                          value={editingSchool.type} onChange={e => setEditingSchool({ ...editingSchool, type: e.target.value })}>
+                                          <option value="PUBLIC">PUBLIC</option>
+                                          <option value="PRIVATE">PRIVATE</option>
+                                       </select>
+                                    </div>
+                                    <div className="space-y-2">
+                                       <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">Academic Level</label>
+                                       <select className="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 text-[10px] font-black uppercase border-none outline-none" 
+                                          value={editingSchool.category} onChange={e => setEditingSchool({ ...editingSchool, category: e.target.value })}>
+                                          <option value="ELEMENTARY">ELEMENTARY</option>
+                                          <option value="JHS">JUNIOR HIGH</option>
+                                          <option value="SHS">SENIOR HIGH</option>
+                                          <option value="INTEGRATED">INTEGRATED</option>
+                                       </select>
+                                    </div>
+                                 </div>
+
+                                 <div className="grid grid-cols-2 gap-6">
+                                    <div className="space-y-2">
+                                       <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">Assigned Cluster</label>
+                                       <input className="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 text-sm font-black focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all border-none outline-none" 
+                                          value={editingSchool.cluster || ""} onChange={e => setEditingSchool({ ...editingSchool, cluster: e.target.value.toUpperCase() })} placeholder="e.g. CLUSTER I" />
+                                    </div>
+                                    <div className="space-y-2">
+                                       <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">Contact Details</label>
+                                       <input className="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 text-sm font-black focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all border-none outline-none" 
+                                          value={editingSchool.contact || ""} onChange={e => setEditingSchool({ ...editingSchool, contact: e.target.value })} placeholder="e.g. (046) 123-4567" />
+                                    </div>
+                                 </div>
+
+                                 <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">Precise Location Address</label>
+                                    <textarea required rows={3} className="w-full p-4 bg-slate-50 rounded-2xl border border-slate-100 text-sm font-medium leading-relaxed resize-none border-none outline-none" 
+                                       value={editingSchool.location} onChange={e => setEditingSchool({ ...editingSchool, location: e.target.value })} placeholder="Enter formal address..." />
+                                 </div>
+                              </div>
+
+                              {/* Right Column - Media (Spans 5) */}
+                              <div className="lg:col-span-5 space-y-8">
+                                 {/* Logo Selector */}
+                                 <div className="space-y-3">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2 italic">School Logo / Profile (1:1)</label>
+                                    <div className="relative aspect-square w-40 bg-slate-50 rounded-3xl overflow-hidden border-2 border-dashed border-slate-200 group mx-auto md:mx-0 ring-4 ring-offset-4 ring-blue-50">
+                                       {editingSchool.logo ? <img src={editingSchool.logo} className="w-full h-full object-cover" alt="" /> : <div className="absolute inset-0 flex items-center justify-center text-slate-300"><Building2 size={40} /></div>}
+                                       <div className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                          <button type="button" onClick={() => schoolLogoRef.current?.click()} className="p-3 bg-white text-slate-900 rounded-xl font-bold uppercase shadow-xl"><Upload size={18} /></button>
+                                       </div>
+                                       <input type="file" ref={schoolLogoRef} className="hidden" accept="image/*" onChange={e => {
+                                          const file = e.target.files?.[0];
+                                          if (file) {
+                                             setEditingSchool({ ...editingSchool, logo: URL.createObjectURL(file) });
+                                             setSchoolLogoFile(file);
+                                          }
+                                       }} />
+                                    </div>
+                                 </div>
+
+                                 {/* Banner Selector */}
+                                 <div className="space-y-3">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2 italic">Feature Banner / Preview (16:9)</label>
+                                    <div className="relative aspect-video bg-slate-50 rounded-[2rem] overflow-hidden border-2 border-dashed border-slate-200 group ring-4 ring-offset-4 ring-indigo-50">
+                                       {editingSchool.banner ? <img src={editingSchool.banner} className="w-full h-full object-cover" alt="" /> : <div className="absolute inset-0 flex items-center justify-center text-slate-300"><ImageIcon size={48} /></div>}
+                                       <div className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                          <button type="button" onClick={() => schoolBannerRef.current?.click()} className="px-6 py-3 bg-white text-slate-900 rounded-2xl font-black uppercase tracking-widest text-[10px] flex items-center gap-3"><Upload size={14} /> Select Banner</button>
+                                       </div>
+                                       <input type="file" ref={schoolBannerRef} className="hidden" accept="image/*" onChange={e => {
+                                          const file = e.target.files?.[0];
+                                          if (file) {
+                                             setEditingSchool({ ...editingSchool, banner: URL.createObjectURL(file) });
+                                             setSchoolBannerFile(file);
+                                          }
+                                       }} />
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+
+                           <button type="submit" disabled={isUpdating} className="w-full py-6 bg-slate-900 text-white rounded-[2.5rem] font-black uppercase tracking-[0.4em] text-[10px] hover:bg-black transition-all flex items-center justify-center gap-4 shadow-2xl shadow-slate-200 disabled:opacity-50">
+                              {isUpdating ? <RefreshCcw className="animate-spin" /> : <Save size={20} />} <span>Sync School Profile</span>
+                           </button>
+                        </form>
+                     </div>
+                  )}
+               </div>
+            )}
             {activeTab === "leaders" && (
                <div className="space-y-8 animate-in slide-in-from-right-10 duration-500">
                   {!editingLeader ? (

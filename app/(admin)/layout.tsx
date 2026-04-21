@@ -48,7 +48,8 @@ export default async function AdminLayout({
             { id: "news", label: "News & Updates", icon: Newspaper, href: "/dashboard?tab=news" },
             { id: "issuances", label: "Issuances", icon: FileText, href: "/dashboard?tab=issuances" },
             { id: "employee", label: "Employee of the Month", icon: Trophy, href: "/dashboard?tab=employee" },
-            { id: "leaders", label: "Learning Leaders", icon: Star, href: "/dashboard?tab=leaders" },
+            {id: "leaders", label: "Learning Leaders", icon: Star, href: "/dashboard?tab=leaders" },
+            { id: "schools", label: "Educational Network", icon: Building2, href: "/dashboard?tab=schools" },
             { id: "org", label: "Org Charts", icon: Users, href: "/dashboard?tab=org" },
           ].map((item) => (
             <Link
