@@ -1,15 +1,12 @@
 "use server";
 
-import prisma from "@/lib/prisma";
-import { writeFile } from "fs/promises";
-import { join } from "path";
 import { revalidatePath } from "next/cache";
+import { NewsService, NewsData } from "@/lib/services/news.service";
+import { FileService } from "@/lib/services/file.service";
 
 export async function getNewsAction() {
   try {
-    const news = await prisma.news.findMany({
-      orderBy: { id: "asc" }
-    });
+    const news = await NewsService.getAll();
     return { success: true, data: news };
   } catch (error) {
     console.error("Failed to fetch news:", error);
@@ -30,43 +27,16 @@ export async function updateNewsAction(formData: FormData) {
 
     // Handle image upload if a new file is provided
     if (imageFile && imageFile.size > 0 && typeof imageFile !== "string") {
-      const bytes = await imageFile.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-
-      // Create a unique filename
-      const filename = `${Date.now()}-${imageFile.name.replace(/\s+/g, "-")}`;
-      const path = join(process.cwd(), "public/uploads", filename);
-      
-      await writeFile(path, buffer);
-      imagePath = `/uploads/${filename}`;
+      imagePath = await FileService.upload(imageFile);
     }
 
-    // Upsert the news entry using the provided id (as number)
     const updateId = parseInt(formData.get("id") as string);
+    const newsData: NewsData = { title, excerpt, date, category, image: imagePath };
 
     if (isNaN(updateId)) {
-      // If no ID is provided, create a new one
-      await prisma.news.create({
-        data: {
-          title,
-          excerpt,
-          date,
-          category,
-          image: imagePath,
-        },
-      });
+      await NewsService.create(newsData);
     } else {
-      // If an ID exists, update the specific record
-      await prisma.news.update({
-        where: { id: updateId },
-        data: {
-          title,
-          excerpt,
-          date,
-          category,
-          image: imagePath,
-        },
-      });
+      await NewsService.update(updateId, newsData);
     }
 
     revalidatePath("/");
@@ -81,9 +51,7 @@ export async function updateNewsAction(formData: FormData) {
 
 export async function deleteNewsAction(id: number) {
   try {
-    await prisma.news.delete({
-      where: { id },
-    });
+    await NewsService.delete(id);
     
     revalidatePath("/");
     revalidatePath("/dashboard");

@@ -1,15 +1,12 @@
 "use server";
 
-import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-import fs from "fs/promises";
-import path from "path";
+import { EmployeeService, HonorData } from "@/lib/services/employee.service";
+import { FileService } from "@/lib/services/file.service";
 
 export async function getEmployeeHonorsAction() {
   try {
-    const honors = await prisma.employeeHonor.findMany({
-      orderBy: { createdAt: "desc" },
-    });
+    const honors = await EmployeeService.getHonors();
     return { success: true, data: honors };
   } catch (error) {
     console.error("Failed to fetch employee honors:", error);
@@ -27,29 +24,16 @@ export async function updateEmployeeHonorAction(formData: FormData) {
 
     let imagePath = oldImagePath || null;
 
-    if (imageFile && imageFile.name !== "undefined") {
-      const uploadDir = path.join(process.cwd(), "public", "uploads");
-      try {
-        await fs.access(uploadDir);
-      } catch {
-        await fs.mkdir(uploadDir, { recursive: true });
-      }
-
-      const filename = `${Date.now()}-honor-${imageFile.name.replace(/\s+/g, "-")}`;
-      const buffer = Buffer.from(await imageFile.arrayBuffer());
-      await fs.writeFile(path.join(uploadDir, filename), buffer);
-      imagePath = `/uploads/${filename}`;
+    if (imageFile && imageFile.size > 0 && typeof imageFile !== "string") {
+      imagePath = await FileService.upload(imageFile);
     }
 
+    const honorData: HonorData = { month, year, image: imagePath };
+
     if (id) {
-      await prisma.employeeHonor.update({
-        where: { id },
-        data: { month, year, image: imagePath },
-      });
+      await EmployeeService.updateHonor(id, honorData);
     } else {
-      await prisma.employeeHonor.create({
-        data: { month, year, image: imagePath },
-      });
+      await EmployeeService.createHonor(honorData);
     }
 
     revalidatePath("/");
@@ -65,9 +49,7 @@ export async function updateEmployeeHonorAction(formData: FormData) {
 
 export async function deleteEmployeeHonorAction(id: number) {
   try {
-    await prisma.employeeHonor.delete({
-      where: { id },
-    });
+    await EmployeeService.deleteHonor(id);
     
     revalidatePath("/");
     revalidatePath("/about-us/employee-of-month");

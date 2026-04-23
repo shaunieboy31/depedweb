@@ -1,24 +1,12 @@
 "use server";
 
-import prisma from "@/lib/prisma";
-import { writeFile, mkdir } from "fs/promises";
-import { join } from "path";
 import { revalidatePath } from "next/cache";
+import { IssuanceService, IssuanceData } from "@/lib/services/issuance.service";
+import { FileService } from "@/lib/services/file.service";
 
 export async function getIssuancesAction(category?: string, type?: string) {
   try {
-    const where: any = {};
-    if (category) where.category = category;
-    if (type) where.type = type;
-
-    const issuances = await prisma.issuance.findMany({
-      where,
-      orderBy: [
-        { year: "desc" },
-        { number: "desc" },
-        { createdAt: "desc" }
-      ]
-    });
+    const issuances = await IssuanceService.getAll({ category, type });
     return { success: true, data: issuances };
   } catch (error) {
     console.error("Failed to fetch issuances:", error);
@@ -39,57 +27,27 @@ export async function updateIssuanceAction(formData: FormData) {
 
     let fileUrl = oldFileUrl;
 
-    // Ensure upload directory exists
-    const uploadDir = join(process.cwd(), "public/uploads");
-    try {
-      await mkdir(uploadDir, { recursive: true });
-    } catch (e) {
-      // Ignored if exists
-    }
-
     // Handle document upload if a new file is provided
     if (docFile && docFile.size > 0 && typeof docFile !== "string") {
-      const bytes = await docFile.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-
-      // Create a unique filename
-      const filename = `${Date.now()}-${docFile.name.replace(/\s+/g, "-")}`;
-      const path = join(uploadDir, filename);
-      
-      await writeFile(path, buffer);
-      fileUrl = `/uploads/${filename}`;
+      fileUrl = await FileService.upload(docFile);
     }
 
     const idStr = formData.get("id") as string;
     const updateId = idStr ? parseInt(idStr) : NaN;
+    const issuanceData: IssuanceData = {
+      title,
+      number,
+      type,
+      category,
+      date,
+      year,
+      fileUrl,
+    };
 
     if (isNaN(updateId)) {
-      // Create new issuance
-      await prisma.issuance.create({
-        data: {
-          title,
-          number,
-          type,
-          category,
-          date,
-          year,
-          fileUrl,
-        },
-      });
+      await IssuanceService.create(issuanceData);
     } else {
-      // Update existing record
-      await prisma.issuance.update({
-        where: { id: updateId },
-        data: {
-          title,
-          number,
-          type,
-          category,
-          date,
-          year,
-          fileUrl,
-        },
-      });
+      await IssuanceService.update(updateId, issuanceData);
     }
 
     revalidatePath("/issuances");
@@ -104,9 +62,7 @@ export async function updateIssuanceAction(formData: FormData) {
 
 export async function deleteIssuanceAction(id: number) {
   try {
-    await prisma.issuance.delete({
-      where: { id },
-    });
+    await IssuanceService.delete(id);
     
     revalidatePath("/issuances");
     revalidatePath("/dashboard");

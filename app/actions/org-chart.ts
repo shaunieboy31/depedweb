@@ -1,18 +1,15 @@
 "use server";
 
-import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-import fs from "fs/promises";
-import path from "path";
+import { OrgChartService, OrgChartData } from "@/lib/services/org-chart.service";
+import { FileService } from "@/lib/services/file.service";
 
 /**
  * Fetch all Org Charts sorted by sortOrder
  */
 export async function getOrgChartsAction() {
   try {
-    const charts = await prisma.orgChart.findMany({
-      orderBy: { sortOrder: "asc" },
-    });
+    const charts = await OrgChartService.getAll();
     return { success: true, data: charts };
   } catch (error) {
     console.error("Error fetching org charts:", error);
@@ -33,43 +30,17 @@ export async function updateOrgChartAction(formData: FormData) {
 
     let imagePath = oldImagePath || null;
 
-    // Handle Image Upload if a new file is provided
-    if (imageFile && imageFile.name !== "undefined" && imageFile.size > 0) {
-      const uploadDir = path.join(process.cwd(), "public", "uploads", "org");
-
-      // Ensure directory exists
-      try {
-        await fs.access(uploadDir);
-      } catch {
-        await fs.mkdir(uploadDir, { recursive: true });
-      }
-
-      const filename = `${Date.now()}-org-${imageFile.name.replace(/\s+/g, "-")}`;
-      const buffer = Buffer.from(await imageFile.arrayBuffer());
-      await fs.writeFile(path.join(uploadDir, filename), buffer);
-
-      imagePath = `/uploads/org/${filename}`;
-
-      // Clean up old image if it exists and we're replacing it
-      if (oldImagePath && oldImagePath.startsWith("/uploads/org/")) {
-        const oldFullPath = path.join(process.cwd(), "public", oldImagePath);
-        try {
-          await fs.unlink(oldFullPath);
-        } catch (e) {
-          console.warn("Could not delete old org chart image:", e);
-        }
-      }
+    // Handle Image Upload via centralized FileService
+    if (imageFile && imageFile.size > 0 && typeof imageFile !== "string") {
+      imagePath = await FileService.upload(imageFile);
     }
 
+    const orgData: OrgChartData = { department, image: imagePath, sortOrder };
+
     if (id) {
-      await prisma.orgChart.update({
-        where: { id },
-        data: { department, image: imagePath, sortOrder },
-      });
+      await OrgChartService.update(id, orgData);
     } else {
-      await prisma.orgChart.create({
-        data: { department, image: imagePath, sortOrder },
-      });
+      await OrgChartService.create(orgData);
     }
 
     revalidatePath("/about-us/organizational-structure");
@@ -86,18 +57,7 @@ export async function updateOrgChartAction(formData: FormData) {
  */
 export async function deleteOrgChartAction(id: number) {
   try {
-    const chart = await prisma.orgChart.findUnique({ where: { id } });
-
-    if (chart?.image && chart.image.startsWith("/uploads/org/")) {
-      const fullPath = path.join(process.cwd(), "public", chart.image);
-      try {
-        await fs.unlink(fullPath);
-      } catch (e) {
-        console.warn("Could not delete org chart image file:", e);
-      }
-    }
-
-    await prisma.orgChart.delete({ where: { id } });
+    await OrgChartService.delete(id);
 
     revalidatePath("/about-us/organizational-structure");
     revalidatePath("/dashboard");

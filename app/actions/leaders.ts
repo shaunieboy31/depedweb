@@ -1,15 +1,13 @@
 "use server";
 
-import prisma from "@/lib/prisma";
-import { writeFile } from "fs/promises";
-import { join } from "path";
 import { revalidatePath } from "next/cache";
+import { LeaderService, LeaderData } from "@/lib/services/leader.service";
+import { FileService } from "@/lib/services/file.service";
 
 export async function getLeadersAction() {
   try {
-    const leaders = await prisma.leader.findMany({
-      orderBy: { id: "asc" }
-    });
+    const leaders = await LeaderService.getAll();
+    // Return sanitized data
     return { success: true, data: JSON.parse(JSON.stringify(leaders)) };
   } catch (error) {
     console.error("Failed to fetch leaders:", error);
@@ -30,43 +28,23 @@ export async function updateLeaderAction(formData: FormData) {
 
     // Handle image upload if a new file is provided
     if (imageFile && imageFile.size > 0 && typeof imageFile !== "string") {
-      const bytes = await imageFile.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-
-      // Create a unique filename
-      const filename = `leader-${Date.now()}-${imageFile.name.replace(/\s+/g, "-")}`;
-      const path = join(process.cwd(), "public/uploads", filename);
-      
-      await writeFile(path, buffer);
-      imagePath = `/uploads/${filename}`;
+      imagePath = await FileService.upload(imageFile);
     }
 
     const idStr = formData.get("id") as string;
     const updateId = idStr ? parseInt(idStr) : NaN;
+    const leaderData: LeaderData = {
+      name,
+      position,
+      startYear,
+      endYear,
+      image: imagePath,
+    };
 
     if (isNaN(updateId)) {
-      // Create new record
-      await prisma.leader.create({
-        data: {
-          name,
-          position,
-          startYear,
-          endYear,
-          image: imagePath,
-        },
-      });
+      await LeaderService.create(leaderData);
     } else {
-      // Update existing record
-      await prisma.leader.update({
-        where: { id: updateId },
-        data: {
-          name,
-          position,
-          startYear,
-          endYear,
-          image: imagePath,
-        },
-      });
+      await LeaderService.update(updateId, leaderData);
     }
 
     revalidatePath("/about-us/learning-leaders");
@@ -81,9 +59,7 @@ export async function updateLeaderAction(formData: FormData) {
 
 export async function deleteLeaderAction(id: number) {
   try {
-    await prisma.leader.delete({
-      where: { id },
-    });
+    await LeaderService.delete(id);
     
     revalidatePath("/about-us/learning-leaders");
     revalidatePath("/dashboard");
