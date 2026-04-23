@@ -23,7 +23,8 @@ import {
    Download,
    FileArchive,
    Search as SearchIcon,
-   Star
+   Star,
+   SquarePen
 } from "lucide-react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { getNewsAction, updateNewsAction, deleteNewsAction } from "@/app/actions/news";
@@ -34,6 +35,22 @@ import { getIssuancesAction, updateIssuanceAction, deleteIssuanceAction } from "
 import { getLeadersAction, updateLeaderAction, deleteLeaderAction } from "@/app/actions/leaders";
 import { getSchoolsAction, updateSchoolAction, deleteSchoolAction } from "@/app/actions/schools";
 import { logout } from "@/app/actions/auth";
+import { Badge } from "@/components/ui/badge";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 // Types
 type Leader = {
@@ -128,6 +145,35 @@ export default function DashboardClient({ user }: DashboardClientProps) {
    const leaderFileRef = useRef<HTMLInputElement>(null);
    const schoolLogoRef = useRef<HTMLInputElement>(null);
    const schoolBannerRef = useRef<HTMLInputElement>(null);
+
+   // --- ALERT DIALOG STATE ---
+   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+   const [deleteTarget, setDeleteTarget] = useState<{ id: any; type: string } | null>(null);
+
+   const confirmDelete = (id: any, type: string) => {
+      setDeleteTarget({ id, type });
+      setIsDeleteDialogOpen(true);
+   };
+
+   const executeDelete = async () => {
+      if (!deleteTarget) return;
+      const { id, type } = deleteTarget;
+      
+      let result;
+      switch (type) {
+         case 'news': result = await deleteNewsAction(parseInt(id)); break;
+         case 'honor': result = await deleteEmployeeHonorAction(id); break;
+         case 'org': result = await deleteOrgChartAction(id); break;
+         case 'carousel': result = await deleteCarouselSlideAction(id); break;
+         case 'issuance': result = await deleteIssuanceAction(id); break;
+         case 'leader': result = await deleteLeaderAction(id); break;
+         case 'school': result = await deleteSchoolAction(id); break;
+      }
+
+      if (result?.success) loadData();
+      setIsDeleteDialogOpen(false);
+      setDeleteTarget(null);
+   };
 
    // --- LOAD & SAVE ---
    async function loadData() {
@@ -478,7 +524,7 @@ export default function DashboardClient({ user }: DashboardClientProps) {
                <div className="space-y-0.5">
                   <div className="flex items-center gap-3">
                      <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tight">Welcome, {user.username}</h2>
-                     <span className="px-3 py-1 bg-blue-100 text-blue-700 text-[10px] font-black uppercase tracking-widest rounded-full">{user.role}</span>
+                     <Badge className="bg-blue-100 text-blue-700 text-[10px] font-black uppercase tracking-widest rounded-full hover:bg-blue-100 border-none">{user.role}</Badge>
                   </div>
                   <p className="text-slate-500 font-medium lowercase italic opacity-80">
                      {activeTab === 'overview' && "system health and quick statistics."}
@@ -614,12 +660,27 @@ export default function DashboardClient({ user }: DashboardClientProps) {
                                     </div>
                                     <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                        {item.fileUrl && (
-                                          <a href={item.fileUrl} target="_blank" rel="noreferrer" className="p-3 bg-white text-emerald-600 rounded-xl border border-emerald-50 hover:bg-emerald-600 hover:text-white transition-all shadow-sm">
-                                             <Download size={16} />
-                                          </a>
+                                          <Tooltip>
+                                             <TooltipTrigger asChild>
+                                                <a href={item.fileUrl} target="_blank" rel="noreferrer" className="p-3 bg-white text-emerald-600 rounded-xl border border-emerald-50 hover:bg-emerald-600 hover:text-white transition-all shadow-sm">
+                                                   <Download size={16} />
+                                                </a>
+                                             </TooltipTrigger>
+                                             <TooltipContent className="bg-slate-900 text-white border-none text-[10px] font-black uppercase tracking-widest mb-2">View Document</TooltipContent>
+                                          </Tooltip>
                                        )}
-                                       <button onClick={() => setEditingIssuance(item)} className="p-3 bg-white text-blue-600 rounded-xl border border-blue-50 hover:bg-blue-600 hover:text-white transition-all shadow-sm"><Save size={16} /></button>
-                                       <button onClick={() => handleDeleteIssuance(item.id as number)} className="p-3 bg-white text-rose-500 rounded-xl border border-rose-50 hover:bg-rose-500 hover:text-white transition-all shadow-sm"><Trash2 size={16} /></button>
+                                       <Tooltip>
+                                          <TooltipTrigger asChild>
+                                             <button onClick={() => setEditingIssuance(item)} className="p-3 bg-white text-blue-600 rounded-xl border border-blue-50 hover:bg-blue-600 hover:text-white transition-all shadow-sm"><SquarePen size={16} /></button>
+                                          </TooltipTrigger>
+                                          <TooltipContent className="bg-slate-900 text-white border-none text-[10px] font-black uppercase tracking-widest mb-2">Edit Entry</TooltipContent>
+                                       </Tooltip>
+                                       <Tooltip>
+                                          <TooltipTrigger asChild>
+                                             <button onClick={() => confirmDelete(item.id, 'issuance')} className="p-3 bg-white text-rose-500 rounded-xl border border-rose-50 hover:bg-rose-500 hover:text-white transition-all shadow-sm"><Trash2 size={16} /></button>
+                                          </TooltipTrigger>
+                                          <TooltipContent className="bg-slate-900 text-white border-none text-[10px] font-black uppercase tracking-widest mb-2 text-rose-400">Delete Permanently</TooltipContent>
+                                       </Tooltip>
                                     </div>
                                  </div>
                               ))
@@ -803,7 +864,7 @@ export default function DashboardClient({ user }: DashboardClientProps) {
                                        <p className="text-xs font-black text-blue-600 uppercase tracking-widest">{winner.year}</p>
                                     </div>
                                     <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-all">
-                                       <button onClick={() => setEditingHonor(winner)} className="p-3 bg-white text-blue-600 rounded-xl hover:bg-blue-600 hover:text-white transition-all shadow-xl"><Save size={16} /></button>
+                                       <button onClick={() => setEditingHonor(winner)} className="p-3 bg-white text-blue-600 rounded-xl hover:bg-blue-600 hover:text-white transition-all shadow-xl"><SquarePen size={16} /></button>
                                        <button onClick={() => handleDeleteHonor(winner.id as number)} className="p-3 bg-white text-rose-500 rounded-xl hover:bg-rose-500 hover:text-white transition-all shadow-xl"><Trash2 size={16} /></button>
                                     </div>
                                  </div>
@@ -897,7 +958,7 @@ export default function DashboardClient({ user }: DashboardClientProps) {
                                        </div>
                                     </div>
                                     <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                       <button onClick={() => setEditingNews(item)} className="p-3 bg-white text-blue-600 rounded-xl border border-blue-50 hover:bg-blue-600 hover:text-white transition-all shadow-sm"><Save size={16} /></button>
+                                       <button onClick={() => setEditingNews(item)} className="p-3 bg-white text-blue-600 rounded-xl border border-blue-50 hover:bg-blue-600 hover:text-white transition-all shadow-sm"><SquarePen size={16} /></button>
                                        <button onClick={() => handleDeleteNews(item.id)} className="p-3 bg-white text-rose-500 rounded-xl border border-rose-50 hover:bg-rose-500 hover:text-white transition-all shadow-sm"><Trash2 size={16} /></button>
                                     </div>
                                  </div>
@@ -1001,7 +1062,7 @@ export default function DashboardClient({ user }: DashboardClientProps) {
                                        <p className="text-[9px] font-black text-blue-600 uppercase tracking-widest">Order: {ch.sortOrder}</p>
                                     </div>
                                     <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                       <button onClick={() => setEditingOrgItem(ch)} className="p-3 bg-white text-blue-600 rounded-xl border border-blue-50 hover:bg-blue-600 hover:text-white transition-all shadow-sm"><Save size={16} /></button>
+                                       <button onClick={() => setEditingOrgItem(ch)} className="p-3 bg-white text-blue-600 rounded-xl border border-blue-50 hover:bg-blue-600 hover:text-white transition-all shadow-sm"><SquarePen size={16} /></button>
                                        <button onClick={() => handleDeleteOrgChart(ch.id as number)} className="p-3 bg-white text-rose-500 rounded-xl border border-rose-50 hover:bg-rose-500 hover:text-white transition-all shadow-sm"><Trash2 size={16} /></button>
                                     </div>
                                  </div>
@@ -1102,7 +1163,7 @@ export default function DashboardClient({ user }: DashboardClientProps) {
                                        <p className="text-[10px] font-medium text-slate-400 line-clamp-1">{sch.location}</p>
                                     </div>
                                     <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                       <button onClick={() => setEditingSchool(sch)} className="p-3 bg-white text-blue-600 rounded-xl border border-blue-50 hover:bg-blue-600 hover:text-white transition-all shadow-sm"><Save size={16} /></button>
+                                       <button onClick={() => setEditingSchool(sch)} className="p-3 bg-white text-blue-600 rounded-xl border border-blue-50 hover:bg-blue-600 hover:text-white transition-all shadow-sm"><SquarePen size={16} /></button>
                                        <button onClick={() => handleDeleteSchool(sch.id as number)} className="p-3 bg-white text-rose-500 rounded-xl border border-rose-50 hover:bg-rose-500 hover:text-white transition-all shadow-sm"><Trash2 size={16} /></button>
                                     </div>
                                  </div>
@@ -1259,7 +1320,7 @@ export default function DashboardClient({ user }: DashboardClientProps) {
                                        )}
                                     </div>
                                     <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                       <button onClick={() => setEditingLeader(le)} className="p-3 bg-white text-blue-600 rounded-xl border border-blue-50 hover:bg-blue-600 hover:text-white transition-all shadow-sm"><Save size={16} /></button>
+                                       <button onClick={() => setEditingLeader(le)} className="p-3 bg-white text-blue-600 rounded-xl border border-blue-50 hover:bg-blue-600 hover:text-white transition-all shadow-sm"><SquarePen size={16} /></button>
                                        <button onClick={() => handleDeleteLeader(le.id as number)} className="p-3 bg-white text-rose-500 rounded-xl border border-rose-50 hover:bg-rose-500 hover:text-white transition-all shadow-sm"><Trash2 size={16} /></button>
                                     </div>
                                  </div>
@@ -1327,6 +1388,24 @@ export default function DashboardClient({ user }: DashboardClientProps) {
                </div>
             )}
          </div>
+
+         <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+            <AlertDialogContent className="bg-white rounded-[2rem] border-none shadow-2xl p-8">
+               <AlertDialogHeader className="space-y-4">
+                  <div className="w-16 h-16 bg-rose-50 rounded-2xl flex items-center justify-center text-rose-500 mb-2">
+                     <Trash2 size={32} />
+                  </div>
+                  <AlertDialogTitle className="text-2xl font-black text-slate-900 uppercase tracking-tight">Confirm Deletion</AlertDialogTitle>
+                  <AlertDialogDescription className="text-slate-500 font-medium">
+                     This action is permanent and cannot be undone. Are you absolutely certain you want to remove this record from the division archive?
+                  </AlertDialogDescription>
+               </AlertDialogHeader>
+               <AlertDialogFooter className="mt-8 gap-4">
+                  <AlertDialogCancel className="rounded-xl border-slate-200 text-xs font-black uppercase tracking-widest py-6">Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={executeDelete} className="rounded-xl bg-rose-500 hover:bg-rose-600 text-white text-xs font-black uppercase tracking-widest py-6">Proceed with Deletion</AlertDialogAction>
+               </AlertDialogFooter>
+            </AlertDialogContent>
+         </AlertDialog>
       </div>
    );
 }

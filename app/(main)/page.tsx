@@ -5,7 +5,7 @@ import { NewsUpdates } from "./Home-Page/NewsUpdates";
 export default function Home() {
   return (
     <div className="w-full bg-white min-h-screen">
-      <div className="max-w-7xl mx-auto px-6 md:px-12 py-16 space-y-32 mb-32">
+      <main className="grid-main section-container mb-32">
         {/* Hero / Carousel Section */}
         <section className="relative z-10">
           <HomeCarousel />
@@ -20,7 +20,7 @@ export default function Home() {
         <section>
           <AboutSection />
         </section>
-      </div>
+      </main>
     </div>
   );
 }

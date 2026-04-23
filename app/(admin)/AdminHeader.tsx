@@ -5,8 +5,9 @@ import { useSearchParams } from "next/navigation";
 import {
   Bell,
   Search,
-  User
 } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 
 interface AdminHeaderProps {
   user: {
@@ -63,12 +64,15 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
         <div className="flex items-center gap-4 pl-2 group cursor-pointer">
           <div className="text-right hidden sm:block">
             <p className="text-xs font-black text-slate-900 uppercase tracking-tight">{user.username}</p>
-            <p className="text-[9px] font-bold text-emerald-500 uppercase tracking-[0.1em]">Cloud Sync Active</p>
+            <Badge variant="outline" className="text-[9px] font-bold text-emerald-500 uppercase tracking-[0.1em] border-emerald-100 bg-emerald-50/50">Cloud Sync Active</Badge>
           </div>
           <div className="relative">
-            <div className="w-12 h-12 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center text-white font-black shadow-lg shadow-blue-200 border-2 border-white transition-transform group-hover:scale-105">
-              <User size={20} />
-            </div>
+            <Avatar className="w-12 h-12 rounded-2xl shadow-lg shadow-blue-200 border-2 border-white transition-transform group-hover:scale-105">
+              <AvatarImage src="" />
+              <AvatarFallback className="bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-black">
+                {user.username.substring(0, 2).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
             <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-white shadow-sm" />
           </div>
         </div>
