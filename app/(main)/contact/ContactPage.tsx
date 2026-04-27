@@ -14,8 +14,9 @@ import {
   Globe,
   ArrowRight
 } from 'lucide-react';
+import { ContactData } from '@/lib/services/contact.service';
 
-export default function ContactPage() {
+export default function ContactPage({ contactInfo }: { contactInfo: ContactData }) {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -79,25 +80,25 @@ export default function ContactPage() {
             { 
               title: "Our Location", 
               icon: <MapPin className="text-blue-600" />, 
-              desc: "Toclong I-C, Imus City, Cavite, 4103",
+              desc: contactInfo.location,
               color: "bg-blue-50"
             },
             { 
               title: "Call Details", 
               icon: <Phone className="text-emerald-600" />, 
-              desc: "(046) 419-8450 local 204 or 227",
+              desc: contactInfo.phone,
               color: "bg-emerald-50"
             },
             { 
               title: "Email Support", 
               icon: <Mail className="text-amber-600" />, 
-              desc: "sgod.imus@deped.gov.ph",
+              desc: contactInfo.email,
               color: "bg-amber-50"
             },
             { 
               title: "Office Hours", 
               icon: <Clock className="text-rose-600" />, 
-              desc: "Mon - Fri: 8:00 AM - 5:00 PM",
+              desc: contactInfo.officeHours,
               color: "bg-rose-50"
             }
           ].map((item, idx) => (
@@ -133,23 +134,25 @@ export default function ContactPage() {
               />
               <div className="absolute bottom-6 left-6 right-6 p-6 bg-white/80 backdrop-blur-md rounded-2xl border border-white/50 shadow-xl opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 pointer-events-none">
                  <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-1">HQ Address</p>
-                 <p className="text-slate-900 font-bold text-sm">Toclong I-C, Imus City, Cavite</p>
+                 <p className="text-slate-900 font-bold text-sm">{contactInfo.location}</p>
               </div>
             </div>
             
             {/* Social Links */}
             <div className="pt-8 border-t border-slate-200">
-               <h4 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-6">Stay Connected</h4>
+                <h4 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-6">Stay Connected</h4>
                <div className="flex flex-wrap gap-4">
                   {[
-                    { name: 'Facebook', icon: <Facebook size={18} />, color: 'hover:bg-[#1877F2]' },
-                    { name: 'Twitter', icon: <Twitter size={18} />, color: 'hover:bg-[#1DA1F2]' },
-                    { name: 'YouTube', icon: <Youtube size={18} />, color: 'hover:bg-[#FF0000]' },
-                    { name: 'Website', icon: <Globe size={18} />, color: 'hover:bg-blue-600' },
+                    ...(contactInfo.facebook ? [{ name: 'Facebook', icon: <Facebook size={18} />, color: 'hover:bg-[#1877F2]', link: contactInfo.facebook }] : []),
+                    ...(contactInfo.twitter ? [{ name: 'Twitter', icon: <Twitter size={18} />, color: 'hover:bg-[#1DA1F2]', link: contactInfo.twitter }] : []),
+                    ...(contactInfo.youtube ? [{ name: 'YouTube', icon: <Youtube size={18} />, color: 'hover:bg-[#FF0000]', link: contactInfo.youtube }] : []),
+                    ...(contactInfo.website ? [{ name: 'Website', icon: <Globe size={18} />, color: 'hover:bg-blue-600', link: contactInfo.website }] : []),
                   ].map((social) => (
                     <a 
                       key={social.name} 
-                      href="#" 
+                      href={social.link} 
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className={`flex items-center gap-3 px-6 py-3 bg-white border border-slate-100 rounded-full text-slate-600 font-bold text-sm shadow-sm transition-all hover:text-white ${social.color} hover:border-transparent hover:-translate-y-1 hover:shadow-lg`}
                     >
                       {social.icon}

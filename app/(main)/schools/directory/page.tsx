@@ -17,6 +17,8 @@ import {
   RefreshCcw
 } from "lucide-react";
 import { getSchoolsAction } from "@/app/actions/schools";
+import { getContactInfoAction } from "@/app/actions/contact";
+import { ContactData } from "@/lib/services/contact.service";
 
 type School = {
    id: number;
@@ -34,16 +36,21 @@ export default function SchoolDirectory() {
   const [searchTerm, setSearchTerm] = useState("");
   const [schools, setSchools] = useState<School[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [contactInfo, setContactInfo] = useState<ContactData | null>(null);
 
   useEffect(() => {
-    async function loadSchools() {
+    async function loadData() {
       const result = await getSchoolsAction();
       if (result.success && result.data) {
         setSchools(result.data);
       }
+      const contactResult = await getContactInfoAction();
+      if (contactResult.success && contactResult.data) {
+         setContactInfo(contactResult.data as ContactData);
+      }
       setIsLoading(false);
     }
-    loadSchools();
+    loadData();
   }, []);
 
   const filteredSchools = schools.filter(s => 
@@ -212,7 +219,7 @@ export default function SchoolDirectory() {
                     </div>
                     <div className="space-y-1">
                        <p className="text-[10px] font-black uppercase tracking-widest text-blue-300">Hotline</p>
-                       <p className="text-white font-bold">(046) 419-8450</p>
+                       <p className="text-white font-bold">{contactInfo?.phone || '(046) 419-8450'}</p>
                     </div>
                  </div>
                  <div className="p-8 bg-white/10 backdrop-blur-md rounded-3xl border border-white/10 space-y-4">
@@ -221,7 +228,7 @@ export default function SchoolDirectory() {
                     </div>
                     <div className="space-y-1">
                        <p className="text-[10px] font-black uppercase tracking-widest text-blue-300">Email Support</p>
-                       <p className="text-white font-bold">sgod.imus@deped</p>
+                       <p className="text-white font-bold">{contactInfo?.email || 'sgod.imus@deped.gov.ph'}</p>
                     </div>
                  </div>
               </div>

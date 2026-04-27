@@ -106,3 +106,18 @@ model School {
 
   @@map("schools")
 }
+
+model ContactInfo {
+  id           Int      @id @default(autoincrement())
+  location     String   @db.VarChar(512)
+  phone        String   @db.VarChar(255)
+  email        String   @db.VarChar(255)
+  officeHours  String   @db.VarChar(255)
+  facebook     String?  @db.VarChar(255)
+  twitter      String?  @db.VarChar(255)
+  youtube      String?  @db.VarChar(255)
+  website      String?  @db.VarChar(255)
+  updatedAt    DateTime @updatedAt
+
+  @@map("contact_info")
+}

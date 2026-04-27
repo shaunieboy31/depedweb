@@ -34,6 +34,7 @@ import { getOrgChartsAction, updateOrgChartAction, deleteOrgChartAction } from "
 import { getIssuancesAction, updateIssuanceAction, deleteIssuanceAction } from "@/app/actions/issuances";
 import { getLeadersAction, updateLeaderAction, deleteLeaderAction } from "@/app/actions/leaders";
 import { getSchoolsAction, updateSchoolAction, deleteSchoolAction } from "@/app/actions/schools";
+import { getContactInfoAction, updateContactInfoAction } from "@/app/actions/contact";
 import { logout } from "@/app/actions/auth";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -112,6 +113,17 @@ type School = {
    type: string;
 };
 
+type ContactData = {
+  location: string;
+  phone: string;
+  email: string;
+  officeHours: string;
+  facebook?: string | null;
+  twitter?: string | null;
+  youtube?: string | null;
+  website?: string | null;
+};
+
 interface DashboardClientProps {
   user: {
     username: string;
@@ -122,7 +134,7 @@ interface DashboardClientProps {
 export default function DashboardClient({ user }: DashboardClientProps) {
    const searchParams = useSearchParams();
    const router = useRouter();
-   const activeTab = (searchParams.get("tab") || "overview") as "overview" | "employee" | "news" | "carousel" | "org" | "issuances" | "leaders" | "schools";
+   const activeTab = (searchParams.get("tab") || "overview") as "overview" | "employee" | "news" | "carousel" | "org" | "issuances" | "leaders" | "schools" | "contact";
 
    const [news, setNews] = useState<NewsItem[]>([]);
    const [honors, setHonors] = useState<EmployeeWinner[]>([]);
@@ -131,6 +143,7 @@ export default function DashboardClient({ user }: DashboardClientProps) {
    const [issuances, setIssuances] = useState<Issuance[]>([]);
    const [leaders, setLeaders] = useState<Leader[]>([]);
    const [schools, setSchools] = useState<School[]>([]);
+   const [contactInfo, setContactInfo] = useState<ContactData | null>(null);
    const [issuanceSearch, setIssuanceSearch] = useState("");
 
    const [isSaved, setIsSaved] = useState(false);
@@ -217,6 +230,11 @@ export default function DashboardClient({ user }: DashboardClientProps) {
       const schoolsResult = await getSchoolsAction();
       if (schoolsResult.success && schoolsResult.data) {
          setSchools(schoolsResult.data);
+      }
+
+      const contactResult = await getContactInfoAction();
+      if (contactResult.success && contactResult.data) {
+         setContactInfo(contactResult.data as ContactData);
       }
    }
 
@@ -513,6 +531,35 @@ export default function DashboardClient({ user }: DashboardClientProps) {
       if (result.success) loadData();
    };
 
+   // --- CONTACT INFO ACTIONS ---
+   const handleSaveContactInfo = async (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!contactInfo) return;
+      setIsUpdating(true);
+
+      const formData = new FormData();
+      formData.append("location", contactInfo.location);
+      formData.append("phone", contactInfo.phone);
+      formData.append("email", contactInfo.email);
+      formData.append("officeHours", contactInfo.officeHours);
+      formData.append("facebook", contactInfo.facebook || "");
+      formData.append("twitter", contactInfo.twitter || "");
+      formData.append("youtube", contactInfo.youtube || "");
+      formData.append("website", contactInfo.website || "");
+
+      const result = await updateContactInfoAction(formData);
+      setIsUpdating(false);
+
+      if (result.success) {
+         setIsSaved(true);
+         setTimeout(() => setIsSaved(false), 2000);
+         loadData();
+      } else {
+         alert("Failed: " + result.error);
+      }
+   };
+
+
    return (
       <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in duration-700">
          {/* Personalized Admin Header */}
@@ -535,6 +582,7 @@ export default function DashboardClient({ user }: DashboardClientProps) {
                      {activeTab === 'issuances' && "recall and update official division publications."}
                      {activeTab === 'leaders' && "manage profiles of SDO Imus City visionary leaders."}
                      {activeTab === 'schools' && "manage profiles of SDO Imus City schools."}
+                     {activeTab === 'contact' && "update official contact information and social media links."}
                   </p>
                </div>
             </div>
@@ -572,7 +620,7 @@ export default function DashboardClient({ user }: DashboardClientProps) {
                                 Greetings, {user.username}. You are currently managing the central command center. All updates performed here are synchronized in real-time across the division's public web portal.
                            </p>
                         </div>
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
                            <div className="p-8 bg-blue-50 rounded-[2rem] border border-blue-100 text-center space-y-2">
                               <span className="block text-4xl font-black text-blue-700">{carousel.length}</span>
                               <span className="text-[10px] font-black uppercase text-blue-600 tracking-widest">Main Slides</span>
@@ -592,6 +640,10 @@ export default function DashboardClient({ user }: DashboardClientProps) {
                            <div className="p-8 bg-amber-50 rounded-[2rem] border border-amber-100 text-center space-y-2">
                               <span className="block text-4xl font-black text-amber-700">{leaders.length}</span>
                               <span className="text-[10px] font-black uppercase text-amber-600 tracking-widest">Leaders</span>
+                           </div>
+                           <div className="p-8 bg-rose-50 rounded-[2rem] border border-rose-100 text-center space-y-2">
+                              <span className="block text-4xl font-black text-rose-700">{schools.length}</span>
+                              <span className="text-[10px] font-black uppercase text-rose-600 tracking-widest">Schools</span>
                            </div>
                         </div>
                      </div>
@@ -1385,6 +1437,70 @@ export default function DashboardClient({ user }: DashboardClientProps) {
                         </form>
                      </div>
                   )}
+               </div>
+            )}
+            {activeTab === "contact" && (
+               <div className="space-y-8 animate-in slide-in-from-right-10 duration-500">
+                  <div className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm space-y-10">
+                     <div className="space-y-1">
+                        <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight">Contact Information</h3>
+                        <p className="text-slate-400 text-xs font-bold uppercase tracking-widest italic">Global Office Contact Details</p>
+                     </div>
+
+                     {contactInfo ? (
+                        <form onSubmit={handleSaveContactInfo} className="space-y-10">
+                           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                              <div className="space-y-6">
+                                 <h4 className="font-black text-slate-800 uppercase tracking-widest border-b border-slate-100 pb-2">Primary Details</h4>
+                                 <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Headquarters Location</label>
+                                    <input required className="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 text-sm font-black" value={contactInfo.location} onChange={e => setContactInfo({ ...contactInfo, location: e.target.value })} placeholder="e.g. Toclong I-C, Imus City..." />
+                                 </div>
+                                 <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Call Details</label>
+                                    <input required className="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 text-sm font-black" value={contactInfo.phone} onChange={e => setContactInfo({ ...contactInfo, phone: e.target.value })} placeholder="e.g. (046) 419-8450 local 204" />
+                                 </div>
+                                 <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Email Support</label>
+                                    <input required type="email" className="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 text-sm font-black" value={contactInfo.email} onChange={e => setContactInfo({ ...contactInfo, email: e.target.value })} placeholder="e.g. sgod.imus@deped.gov.ph" />
+                                 </div>
+                                 <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Office Hours</label>
+                                    <input required className="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 text-sm font-black" value={contactInfo.officeHours} onChange={e => setContactInfo({ ...contactInfo, officeHours: e.target.value })} placeholder="e.g. Mon - Fri: 8:00 AM - 5:00 PM" />
+                                 </div>
+                              </div>
+
+                              <div className="space-y-6">
+                                 <h4 className="font-black text-slate-800 uppercase tracking-widest border-b border-slate-100 pb-2">Social Links (Optional)</h4>
+                                 <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Facebook URL</label>
+                                    <input className="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 text-sm font-black" value={contactInfo.facebook || ""} onChange={e => setContactInfo({ ...contactInfo, facebook: e.target.value })} placeholder="https://facebook.com/..." />
+                                 </div>
+                                 <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Twitter URL</label>
+                                    <input className="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 text-sm font-black" value={contactInfo.twitter || ""} onChange={e => setContactInfo({ ...contactInfo, twitter: e.target.value })} placeholder="https://twitter.com/..." />
+                                 </div>
+                                 <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">YouTube Channel URL</label>
+                                    <input className="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 text-sm font-black" value={contactInfo.youtube || ""} onChange={e => setContactInfo({ ...contactInfo, youtube: e.target.value })} placeholder="https://youtube.com/..." />
+                                 </div>
+                                 <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Website URL</label>
+                                    <input className="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 text-sm font-black" value={contactInfo.website || ""} onChange={e => setContactInfo({ ...contactInfo, website: e.target.value })} placeholder="https://..." />
+                                 </div>
+                              </div>
+                           </div>
+
+                           <button type="submit" disabled={isUpdating} className="w-full py-5 bg-blue-600 text-white rounded-[2rem] font-black uppercase tracking-[0.2em] text-xs hover:bg-blue-700 transition-all flex items-center justify-center gap-3 shadow-xl disabled:opacity-50">
+                              {isUpdating ? <RefreshCcw className="animate-spin" /> : <Save size={20} />} <span>Sync Contact Information</span>
+                           </button>
+                        </form>
+                     ) : (
+                        <div className="p-10 flex justify-center">
+                           <RefreshCcw className="animate-spin text-blue-600" size={32} />
+                        </div>
+                     )}
+                  </div>
                </div>
             )}
          </div>

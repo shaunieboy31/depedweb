@@ -4,7 +4,9 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 
-export default function Header() {
+import { ContactData } from "@/lib/services/contact.service";
+
+export default function Header({ contactInfo }: { contactInfo: ContactData }) {
   const [currentTime, setCurrentTime] = React.useState("");
   const [mounted, setMounted] = React.useState(false);
 
@@ -84,7 +86,7 @@ export default function Header() {
                   SCHOOLS DIVISION OFFICE OF IMUS CITY
                 </h1>
                 <p className="text-xs mt-1 leading-tight opacity-90">
-                  Satorre St. Toclong I-C, Imus, City Cavite, 4103 Philippines
+                  {contactInfo.location}
                 </p>
               </div>
             </Link>
