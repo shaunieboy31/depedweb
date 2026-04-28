@@ -3,7 +3,7 @@ import { Eye, Target, History } from "lucide-react";
 
 export function VisionMission() {
   return (
-    <div className="space-y-32">
+    <div className="space-y-12">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
         {/* Vision */}
         <div className="space-y-6">
@@ -43,7 +43,7 @@ export function VisionMission() {
       </div>
 
       {/* Mandate */}
-      <div className="space-y-8 bg-slate-50 p-12 rounded-2xl border border-slate-100">
+      <div className="space-y-6 bg-slate-50 p-10 rounded-2xl border border-slate-100">
         <div className="flex items-center gap-4 text-[#191970]">
           <History size={32} />
           <h3 className="text-2xl font-black uppercase tracking-tight">Mandate</h3>

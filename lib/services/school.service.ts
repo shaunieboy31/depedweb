@@ -18,6 +18,20 @@ export class SchoolService {
     });
   }
 
+  static async getSchoolStats() {
+    const allSchools = await prisma.school.findMany();
+    
+    return {
+      total: allSchools.length,
+      public: allSchools.filter(s => s.type === "PUBLIC").length,
+      private: allSchools.filter(s => s.type === "PRIVATE").length,
+      elementary: allSchools.filter(s => s.category.toUpperCase() === "ELEMENTARY").length,
+      juniorHigh: allSchools.filter(s => s.category.toUpperCase() === "JHS").length,
+      seniorHigh: allSchools.filter(s => s.category.toUpperCase() === "SHS").length,
+      integrated: allSchools.filter(s => s.category.toUpperCase() === "INTEGRATED").length,
+    };
+  }
+
   static async getById(id: number) {
     return await prisma.school.findUnique({
       where: { id },

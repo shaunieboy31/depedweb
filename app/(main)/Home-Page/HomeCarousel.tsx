@@ -43,7 +43,7 @@ export function HomeCarousel() {
   }
 
   return (
-    <div className="relative w-full bg-white mb-16">
+    <div className="relative w-full bg-white">
       {/* Main Carousel Container */}
       <div className="relative w-full aspect-video min-h-[300px] overflow-hidden group rounded-2xl bg-slate-50">
         {slides.length === 0 ? (

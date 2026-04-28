@@ -8,7 +8,7 @@ import { InstitutionalMedia } from "./components/InstitutionalMedia";
 
 export function AboutSection() {
   return (
-    <div className="py-24 space-y-32">
+    <div className="pt-4 pb-8 space-y-12">
       <AboutOverview />
       <VisionMission />
       <QualityPolicy />

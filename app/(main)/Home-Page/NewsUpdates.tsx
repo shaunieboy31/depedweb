@@ -30,7 +30,7 @@ export function NewsUpdates() {
   }, []);
 
   return (
-    <div className="py-12 bg-white relative group">
+    <div className="pt-4 pb-4 bg-white relative group">
       {/* Header */}
       <div className="flex items-center justify-between mb-8 border-b border-slate-100 pb-4">
         <div className="space-y-1">

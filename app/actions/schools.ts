@@ -6,10 +6,21 @@ import { FileService } from "@/lib/services/file.service";
 
 export async function getSchoolsAction() {
   try {
-    const schools = await SchoolService.getAll();
-    return { success: true, data: schools };
-  } catch (error: any) {
-    return { success: false, error: error.message };
+    const data = await SchoolService.getAll();
+    return { success: true, data };
+  } catch (error) {
+    console.error("Failed to fetch schools:", error);
+    return { success: false, error: "Database fetch failed" };
+  }
+}
+
+export async function getSchoolStatsAction() {
+  try {
+    const data = await SchoolService.getSchoolStats();
+    return { success: true, data };
+  } catch (error) {
+    console.error("Failed to fetch school stats:", error);
+    return { success: false, error: "Database fetch failed" };
   }
 }
 
