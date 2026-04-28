@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function AboutIndex() {
   return (
-    <div className="max-w-7xl mx-auto px-4 py-16">
+    <div className="max-w-7xl mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold text-gray-900 mb-4">About Us</h1>
       <p className="text-gray-700 mb-8">
         The Schools Division Office of Imus City — links to the History,

@@ -72,10 +72,10 @@ export default function ContactPage({ contactInfo }: { contactInfo: ContactData 
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-6 py-24 -mt-20 relative z-20">
+      <div className="max-w-7xl mx-auto px-6 py-12 -mt-20 relative z-20">
         
         {/* Contact info Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-24">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           {[
             { 
               title: "Our Location", 
@@ -244,7 +244,7 @@ export default function ContactPage({ contactInfo }: { contactInfo: ContactData 
         </div>
 
         {/* Division Core Values Footer / Motto */}
-        <div className="mt-40 text-center space-y-4">
+        <div className="mt-20 text-center space-y-4">
            <p className="text-[10px] font-black text-blue-600 uppercase tracking-[0.5em]">SDO Imus City</p>
            <h2 className="text-2xl font-black text-slate-900 uppercase">Integrity ● Excellence ● Service</h2>
         </div>

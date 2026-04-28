@@ -42,7 +42,7 @@ export default function ProgramsPage() {
   ];
 
   return (
-    <div className="w-full bg-[#f8fafc] min-h-screen font-sans selection:bg-blue-100 selection:text-blue-900 pb-32">
+    <div className="w-full bg-[#f8fafc] min-h-screen font-sans selection:bg-blue-100 selection:text-blue-900 pb-16">
       
       {/* Hero Section */}
       <section className="relative h-[400px] md:h-[500px] w-full flex items-center justify-center overflow-hidden">
@@ -74,7 +74,7 @@ export default function ProgramsPage() {
       </section>
 
       {/* Main Content Area */}
-      <div className="max-w-7xl mx-auto px-6 md:px-12 py-24">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 py-12">
         
         {/* Program Categories Grid */}
         <div className="flex flex-col items-center text-center mb-16 px-4">
@@ -82,7 +82,7 @@ export default function ProgramsPage() {
            <div className="h-1.5 w-20 bg-blue-500 mx-auto" />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-32">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           {programs.map((program) => (
             <div 
               key={program.id}
@@ -106,7 +106,7 @@ export default function ProgramsPage() {
         </div>
 
         {/* Philosophy Impact Box */}
-        <div className="bg-[#0f172a] rounded-[3rem] p-12 md:p-20 text-white relative overflow-hidden shadow-2xl">
+        <div className="bg-[#0f172a] rounded-[3rem] p-8 md:p-12 text-white relative overflow-hidden shadow-2xl">
            <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
               <Lightbulb size={400} />
            </div>

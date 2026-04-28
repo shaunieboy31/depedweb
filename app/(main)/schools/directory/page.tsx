@@ -59,7 +59,7 @@ export default function SchoolDirectory() {
   );
 
   return (
-    <div className="w-full bg-[#f8fafc] min-h-screen font-sans selection:bg-blue-100 selection:text-blue-900 pb-32">
+    <div className="w-full bg-[#f8fafc] min-h-screen font-sans selection:bg-blue-100 selection:text-blue-900 pb-16">
       
       {/* Sub-Page Hero */}
       <section className="relative h-[300px] md:h-[400px] w-full flex items-center justify-center overflow-hidden">
@@ -92,7 +92,7 @@ export default function SchoolDirectory() {
       <div className="max-w-7xl mx-auto px-6 md:px-12 -mt-12 relative z-20">
         
         {/* Search & Stats Bar */}
-        <div className="bg-white rounded-3xl shadow-xl border border-slate-200 p-4 md:p-6 mb-12 flex flex-col md:flex-row items-center gap-6 ring-1 ring-black/5">
+        <div className="bg-white rounded-3xl shadow-xl border border-slate-200 p-4 md:p-6 mb-6 flex flex-col md:flex-row items-center gap-6 ring-1 ring-black/5">
            <div className="relative flex-1 w-full group">
               <Search size={20} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors" />
               <input 
@@ -199,7 +199,7 @@ export default function SchoolDirectory() {
         </div>
 
         {/* Support Section */}
-        <div className="mt-24 p-12 md:p-16 bg-blue-900 rounded-[3.5rem] relative overflow-hidden group shadow-2xl">
+        <div className="mt-12 p-8 md:p-10 bg-blue-900 rounded-[3.5rem] relative overflow-hidden group shadow-2xl">
            <div className="absolute top-0 right-0 p-12 opacity-10 group-hover:scale-125 transition-transform duration-1000">
               <Info size={180} className="text-white" />
            </div>

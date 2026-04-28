@@ -25,7 +25,7 @@ export default function NewsPage() {
   return (
     <div className="w-full bg-slate-50/30 min-h-screen pb-20">
       {/* Header Section */}
-      <section className="bg-white border-b border-slate-100 py-16 md:py-24">
+      <section className="bg-white border-b border-slate-100 py-12 md:py-16">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
            <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
               <div className="space-y-4">
@@ -45,7 +45,7 @@ export default function NewsPage() {
       </section>
 
       {/* Main Content / Grid */}
-      <section className="max-w-7xl mx-auto px-6 md:px-12 py-16">
+      <section className="max-w-7xl mx-auto px-6 md:px-12 py-10">
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
              {[1,2,3,4,5,6].map(i => (
@@ -63,7 +63,7 @@ export default function NewsPage() {
              </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {news.map((item) => (
               <article 
                 key={item.id} 
@@ -163,8 +163,8 @@ export default function NewsPage() {
       )}
 
       {/* Footer CTA */}
-      <section className="max-w-7xl mx-auto px-6 md:px-12 pt-20">
-         <div className="bg-blue-600 rounded-[3rem] p-12 md:p-20 text-center relative overflow-hidden group">
+      <section className="max-w-7xl mx-auto px-6 md:px-12 pt-10">
+         <div className="bg-blue-600 rounded-[3rem] p-8 md:p-12 text-center relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-20 opacity-10 group-hover:scale-110 transition-transform duration-1000">
                <Newspaper size={300} />
             </div>

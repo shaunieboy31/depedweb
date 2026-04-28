@@ -119,7 +119,7 @@ export default function OnlineServices() {
   ];
 
   return (
-    <div className="w-full bg-[#f8fafc] min-h-screen font-sans selection:bg-cyan-100 selection:text-cyan-900 pb-32">
+    <div className="w-full bg-[#f8fafc] min-h-screen font-sans selection:bg-cyan-100 selection:text-cyan-900 pb-16">
       
       {/* Hero Section */}
       <section className="relative h-[400px] md:h-[500px] w-full flex items-center justify-center overflow-hidden">
@@ -151,7 +151,7 @@ export default function OnlineServices() {
       </section>
 
       {/* Main Content Area */}
-      <div className="max-w-7xl mx-auto px-6 md:px-12 py-24">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 py-12">
         
         {/* Services Grid */}
         <div className="flex flex-col items-center text-center mb-16 px-4">
@@ -159,7 +159,7 @@ export default function OnlineServices() {
            <div className="h-1.5 w-20 bg-cyan-500 mx-auto" />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-32">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           {services.map((service, index) => (
             <a 
               key={index}
@@ -183,7 +183,7 @@ export default function OnlineServices() {
         </div>
 
         {/* Benefits Impact Box */}
-        <div className="bg-[#083344] rounded-[3rem] p-12 md:p-20 text-white relative overflow-hidden shadow-2xl mb-32">
+        <div className="bg-[#083344] rounded-[3rem] p-8 md:p-12 text-white relative overflow-hidden shadow-2xl mb-16">
            <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
               <Monitor size={400} />
            </div>
@@ -219,7 +219,7 @@ export default function OnlineServices() {
         </div>
 
         {/* Support Section */}
-        <div className="max-w-5xl mx-auto bg-white rounded-[3rem] p-12 md:p-16 border border-slate-100 shadow-xl overflow-hidden relative">
+        <div className="max-w-5xl mx-auto bg-white rounded-[3rem] p-8 md:p-10 border border-slate-100 shadow-xl overflow-hidden relative">
            <div className="absolute bottom-0 right-0 p-8 opacity-5">
               <ShieldCheck size={150} />
            </div>

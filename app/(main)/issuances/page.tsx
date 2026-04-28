@@ -16,11 +16,11 @@ export default async function IssuancesPage() {
   const issuances = result.success ? (result.data || []).slice(0, 5) : [];
 
   return (
-    <div className="w-full bg-[#f8fafc] min-h-screen font-sans selection:bg-blue-100 selection:text-blue-900 pb-32">
+    <div className="w-full bg-[#f8fafc] min-h-screen font-sans selection:bg-blue-100 selection:text-blue-900 pb-16">
       
       <IssuanceHero />
 
-      <div className="max-w-7xl mx-auto px-6 md:px-12 -mt-16 relative z-20 space-y-20">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 -mt-16 relative z-20 space-y-12">
         
         {/* Navigation Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -53,7 +53,7 @@ export default async function IssuancesPage() {
         <LatestReleases issuances={issuances} />
 
         {/* Support Section */}
-        <div className="bg-blue-900 rounded-[3.5rem] p-10 md:p-16 text-white relative overflow-hidden group shadow-2xl">
+        <div className="bg-blue-900 rounded-[3.5rem] p-8 md:p-10 text-white relative overflow-hidden group shadow-2xl">
            <div className="absolute top-0 right-0 p-12 opacity-10 group-hover:scale-125 transition-transform duration-1000">
               <Info size={150} />
            </div>
@@ -82,7 +82,7 @@ export default async function IssuancesPage() {
         </div>
       </div>
 
-      <div className="w-full h-24 bg-gradient-to-t from-slate-200/50 to-transparent pt-32" />
+      <div className="w-full h-24 bg-gradient-to-t from-slate-200/50 to-transparent pt-16" />
     </div>
   );
 }

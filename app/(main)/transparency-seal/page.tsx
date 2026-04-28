@@ -11,8 +11,8 @@ import {
 
 export default function TransparencySealPage() {
   return (
-    <div className="bg-[#f9f9f9] min-h-screen py-10 font-sans text-[14px] leading-relaxed">
-      <div className="max-w-5xl mx-auto bg-white p-8 md:p-12 shadow-sm border border-gray-200">
+    <div className="bg-[#f9f9f9] min-h-screen py-6 font-sans text-[14px] leading-relaxed">
+      <div className="max-w-5xl mx-auto bg-white p-6 md:p-8 shadow-sm border border-gray-200">
 
         {/* Header Section */}
         <div className="text-center space-y-6">
@@ -26,7 +26,7 @@ export default function TransparencySealPage() {
         </div>
 
         {/* Legal Basis Section */}
-        <section className="bg-[#ECEFF1]/50 p-8 md:p-12 rounded-3xl border border-slate-200 shadow-sm relative overflow-hidden group">
+        <section className="bg-[#ECEFF1]/50 p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm relative overflow-hidden group">
           <div className="flex flex-col md:flex-row gap-10 items-start relative z-10">
             {/* Logo on Left (as per screenshot) */}
             <div className="flex-shrink-0 pt-2">
@@ -78,9 +78,9 @@ export default function TransparencySealPage() {
         </section>
 
         {/* Compliance Sections Grid */}
-        <div className="space-y-10">
+        <div className="space-y-6">
           
-          <div className="flex items-center justify-between py-6 border-b border-slate-100 mb-4">
+          <div className="flex items-center justify-between py-4 border-b border-slate-100 mb-4">
              <div className="flex items-center gap-4">
                 <div className="p-3 bg-blue-600 text-white rounded-2xl shadow-lg shadow-blue-100">
                    <LayoutGrid size={24} />
@@ -307,7 +307,7 @@ export default function TransparencySealPage() {
         </div>
 
         {/* Closing Compliance Info */}
-        <div className="pt-20 border-t border-slate-200 text-center">
+        <div className="pt-10 border-t border-slate-200 text-center">
           <p className="text-slate-400 text-xs font-bold uppercase tracking-widest leading-relaxed">
             Official Website of Schools Division Office (SDO) Imus City | All Rights Reserved
           </p>
