@@ -40,7 +40,7 @@ export default function Header({ contactInfo }: { contactInfo: ContactData }) {
       <div className="w-full bg-[#032977] border-b border-white/5 py-1.5 px-10">
         <div className="max-w-7xl mx-auto flex justify-between items-center text-[10px] font-black uppercase tracking-[0.1em] text-white">
           <div className="opacity-90 italic">
-            "Tapat sa Paglilingkod, Angat sa Inobasyon, Puso sa Edukasyon"
+            "Sa IMUS, Angat ka!"
           </div>
           <div className="flex items-center gap-6">
             <Link href="/prime-hrm" className="hover:text-blue-200 transition-colors">PRIME-HRM</Link>
@@ -53,13 +53,13 @@ export default function Header({ contactInfo }: { contactInfo: ContactData }) {
           </div>
         </div>
       </div>
-      
+
       <div className="w-full bg-[#191970]">
         <div className="max-w-7xl mx-auto px-10 py-5">
           <div className="flex justify-between items-center">
             {/* Logo and Department Info */}
-            <Link 
-              href="/" 
+            <Link
+              href="/"
               className="flex gap-4 items-center flex-1 hover:opacity-90 transition-opacity"
               style={{ fontFamily: "Times New Roman, serif" }}
             >
@@ -91,22 +91,22 @@ export default function Header({ contactInfo }: { contactInfo: ContactData }) {
               </div>
             </Link>
 
-             {/* Right Side - Date/Time & Admin Access */}
-             <div className="flex items-center gap-6">
-               <div
-                 className="text-right text-sm font-medium"
-                 style={{ fontFamily: "serif" }}
-               >
-                 <p className="text-gray-100 opacity-90 text-[10px] uppercase tracking-widest">Philippine Standard Time:</p>
-                 <p
-                   className="text-gray-100 font-bold"
-                   suppressHydrationWarning
-                 >
-                   {mounted ? currentTime : null}
-                 </p>
-               </div>
+            {/* Right Side - Date/Time & Admin Access */}
+            <div className="flex items-center gap-6">
+              <div
+                className="text-right text-sm font-medium"
+                style={{ fontFamily: "serif" }}
+              >
+                <p className="text-gray-100 opacity-90 text-[10px] uppercase tracking-widest">Philippine Standard Time:</p>
+                <p
+                  className="text-gray-100 font-bold"
+                  suppressHydrationWarning
+                >
+                  {mounted ? currentTime : null}
+                </p>
+              </div>
 
-             </div>
+            </div>
           </div>
         </div>
       </div>
