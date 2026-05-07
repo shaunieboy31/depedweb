@@ -121,3 +121,17 @@ model ContactInfo {
 
   @@map("contact_info")
 }
+
+model TransparencySeal {
+  id          Int      @id @default(autoincrement())
+  category    String   @db.VarChar(100) // e.g. "1.A", "2.A.1", "5.A"
+  title       String   @db.VarChar(512)
+  url         String   @db.VarChar(1024)
+  isExternal  Boolean  @default(false)
+  year        String?  @db.VarChar(10)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("transparency_seal")
+}

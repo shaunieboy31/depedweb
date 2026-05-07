@@ -10,7 +10,8 @@ import {
   Building2,
   FileText,
   Star,
-  MapPin
+  MapPin,
+  Shield
 } from "lucide-react";
 import AdminHeader from "./AdminHeader";
 import { getSession } from "@/app/actions/auth";
@@ -52,6 +53,7 @@ export default async function AdminLayout({
             {id: "leaders", label: "Learning Leaders", icon: Star, href: "/dashboard?tab=leaders" },
             { id: "schools", label: "Educational Network", icon: Building2, href: "/dashboard?tab=schools" },
             { id: "org", label: "Org Charts", icon: Users, href: "/dashboard?tab=org" },
+            { id: "transparency", label: "Transparency Seal", icon: Shield, href: "/dashboard?tab=transparency" },
             { id: "contact", label: "Contact Info", icon: MapPin, href: "/dashboard?tab=contact" },
           ].map((item) => (
             <Link

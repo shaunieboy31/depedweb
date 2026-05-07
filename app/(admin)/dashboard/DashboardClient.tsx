@@ -35,6 +35,7 @@ import { getIssuancesAction, updateIssuanceAction, deleteIssuanceAction } from "
 import { getLeadersAction, updateLeaderAction, deleteLeaderAction } from "@/app/actions/leaders";
 import { getSchoolsAction, updateSchoolAction, deleteSchoolAction } from "@/app/actions/schools";
 import { getContactInfoAction, updateContactInfoAction } from "@/app/actions/contact";
+import { getTransparencyItemsAction, updateTransparencyItemAction, deleteTransparencyItemAction } from "@/app/actions/transparency";
 import { logout } from "@/app/actions/auth";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -124,6 +125,16 @@ type ContactData = {
   website?: string | null;
 };
 
+type TransparencyItem = {
+  id: number;
+  category: string;
+  title: string;
+  url: string;
+  isExternal: boolean;
+  year: string | null;
+  order: number;
+};
+
 interface DashboardClientProps {
   user: {
     username: string;
@@ -134,7 +145,7 @@ interface DashboardClientProps {
 export default function DashboardClient({ user }: DashboardClientProps) {
    const searchParams = useSearchParams();
    const router = useRouter();
-   const activeTab = (searchParams.get("tab") || "overview") as "overview" | "employee" | "news" | "carousel" | "org" | "issuances" | "leaders" | "schools" | "contact";
+   const activeTab = (searchParams.get("tab") || "overview") as "overview" | "employee" | "news" | "carousel" | "org" | "issuances" | "leaders" | "schools" | "contact" | "transparency";
 
    const [news, setNews] = useState<NewsItem[]>([]);
    const [honors, setHonors] = useState<EmployeeWinner[]>([]);
@@ -143,6 +154,7 @@ export default function DashboardClient({ user }: DashboardClientProps) {
    const [issuances, setIssuances] = useState<Issuance[]>([]);
    const [leaders, setLeaders] = useState<Leader[]>([]);
    const [schools, setSchools] = useState<School[]>([]);
+   const [transparencyItems, setTransparencyItems] = useState<TransparencyItem[]>([]);
    const [contactInfo, setContactInfo] = useState<ContactData | null>(null);
    const [issuanceSearch, setIssuanceSearch] = useState("");
 
@@ -181,6 +193,7 @@ export default function DashboardClient({ user }: DashboardClientProps) {
          case 'issuance': result = await deleteIssuanceAction(id); break;
          case 'leader': result = await deleteLeaderAction(id); break;
          case 'school': result = await deleteSchoolAction(id); break;
+         case 'transparency': result = await deleteTransparencyItemAction(id); break;
       }
 
       if (result?.success) loadData();
@@ -235,6 +248,11 @@ export default function DashboardClient({ user }: DashboardClientProps) {
       const contactResult = await getContactInfoAction();
       if (contactResult.success && contactResult.data) {
          setContactInfo(contactResult.data as ContactData);
+      }
+
+      const transparencyResult = await getTransparencyItemsAction();
+      if (transparencyResult.success && transparencyResult.data) {
+         setTransparencyItems(transparencyResult.data);
       }
    }
 
@@ -560,6 +578,39 @@ export default function DashboardClient({ user }: DashboardClientProps) {
    };
 
 
+   // --- TRANSPARENCY ACTIONS ---
+   const [editingTransparency, setEditingTransparency] = useState<TransparencyItem | null>(null);
+
+   const handleSaveTransparency = async (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!editingTransparency) return;
+      setIsUpdating(true);
+
+      const formData = new FormData();
+      if (editingTransparency.id && editingTransparency.id !== 0) {
+         formData.append("id", editingTransparency.id.toString());
+      }
+      formData.append("category", editingTransparency.category);
+      formData.append("title", editingTransparency.title);
+      formData.append("url", editingTransparency.url);
+      formData.append("isExternal", editingTransparency.isExternal.toString());
+      formData.append("year", editingTransparency.year || "");
+      formData.append("order", editingTransparency.order.toString());
+
+      const result = await updateTransparencyItemAction(formData);
+      setIsUpdating(false);
+
+      if (result.success) {
+         setIsSaved(true);
+         setTimeout(() => setIsSaved(false), 2000);
+         setEditingTransparency(null);
+         loadData();
+      } else {
+         alert("Failed: " + result.error);
+      }
+   };
+
+
    return (
       <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in duration-700">
          {/* Personalized Admin Header */}
@@ -582,6 +633,7 @@ export default function DashboardClient({ user }: DashboardClientProps) {
                      {activeTab === 'issuances' && "recall and update official division publications."}
                      {activeTab === 'leaders' && "manage profiles of SDO Imus City visionary leaders."}
                      {activeTab === 'schools' && "manage profiles of SDO Imus City schools."}
+                     {activeTab === 'transparency' && "manage compliance documents and transparency seal links."}
                      {activeTab === 'contact' && "update official contact information and social media links."}
                   </p>
                </div>
@@ -1433,6 +1485,126 @@ export default function DashboardClient({ user }: DashboardClientProps) {
 
                            <button type="submit" disabled={isUpdating} className="w-full py-5 bg-blue-600 text-white rounded-[2rem] font-black uppercase tracking-[0.2em] text-xs hover:bg-blue-700 transition-all flex items-center justify-center gap-3 shadow-xl disabled:opacity-50">
                               {isUpdating ? <RefreshCcw className="animate-spin" /> : <Save size={20} />} <span>Sync Leadership Profile</span>
+                           </button>
+                        </form>
+                     </div>
+                  )}
+               </div>
+            )}
+            {activeTab === "transparency" && (
+               <div className="space-y-8 animate-in slide-in-from-right-10 duration-500">
+                  {!editingTransparency ? (
+                     <div className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm space-y-10">
+                        <div className="flex items-center justify-between">
+                           <div className="space-y-1">
+                              <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight">Transparency Seal Items</h3>
+                              <p className="text-slate-400 text-xs font-bold uppercase tracking-widest italic">Document Links and Compliance Registry</p>
+                           </div>
+                           <button
+                              onClick={() => setEditingTransparency({ id: 0, category: "1.A", title: "", url: "", isExternal: true, year: "", order: 0 })}
+                              className="px-6 py-3 bg-blue-600 text-white rounded-xl font-bold uppercase tracking-widest text-[10px] flex items-center gap-2 shadow-lg hover:bg-blue-700 transition-all"
+                           >
+                              <PlusCircle size={16} />
+                              <span>Add New Item</span>
+                           </button>
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-4">
+                           {transparencyItems.length === 0 ? (
+                              <div className="p-20 text-center space-y-4 border-2 border-dashed border-slate-100 rounded-[2rem]">
+                                 <Shield size={48} className="mx-auto text-slate-200" strokeWidth={1} />
+                                 <p className="text-slate-400 text-xs font-bold uppercase">No transparency items found</p>
+                              </div>
+                           ) : (
+                              transparencyItems
+                                .sort((a, b) => {
+                                   // Sort by Category first
+                                   if (a.category !== b.category) {
+                                      return a.category.localeCompare(b.category);
+                                   }
+                                   // Then by Year Descending
+                                   if (a.year && b.year) {
+                                      return parseInt(b.year) - parseInt(a.year);
+                                   }
+                                   if (a.year && !b.year) return -1;
+                                   if (!a.year && b.year) return 1;
+                                   // Then by Order
+                                   return a.order - b.order;
+                                })
+                                .map(item => (
+                                 <div key={item.id} className="group flex items-center gap-6 p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-white hover:border-blue-100 transition-all">
+                                    <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100 transition-colors group-hover:bg-blue-600 group-hover:text-white">
+                                       <FileText size={20} />
+                                    </div>
+                                    <div className="flex-1">
+                                       <div className="flex items-center gap-3">
+                                          <Badge variant="outline" className="text-[9px] font-black uppercase tracking-widest bg-white">{item.category}</Badge>
+                                          {item.year && <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">• {item.year}</span>}
+                                       </div>
+                                       <h4 className="font-black text-slate-800 uppercase tracking-tight text-sm mt-1">{item.title}</h4>
+                                       <p className="text-[10px] font-medium text-slate-400 line-clamp-1">{item.url}</p>
+                                    </div>
+                                    <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                       <button onClick={() => setEditingTransparency(item)} className="p-3 bg-white text-blue-600 rounded-xl border border-blue-50 hover:bg-blue-600 hover:text-white transition-all shadow-sm"><SquarePen size={16} /></button>
+                                       <button onClick={() => confirmDelete(item.id, 'transparency')} className="p-3 bg-white text-rose-500 rounded-xl border border-rose-50 hover:bg-rose-500 hover:text-white transition-all shadow-sm"><Trash2 size={16} /></button>
+                                    </div>
+                                 </div>
+                              ))
+                           )}
+                        </div>
+                     </div>
+                  ) : (
+                     <div className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm space-y-10">
+                        <div className="flex items-center justify-between">
+                           <button onClick={() => setEditingTransparency(null)} className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 hover:text-slate-900 transition-colors flex items-center gap-2">
+                              <ChevronRight size={14} className="rotate-180" /> Back to List
+                           </button>
+                           <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight">Document Item Update</h3>
+                        </div>
+
+                        <form onSubmit={handleSaveTransparency} className="space-y-10">
+                           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                              <div className="space-y-6">
+                                 <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Document Title</label>
+                                    <input required className="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 text-sm font-black" 
+                                       value={editingTransparency.title} onChange={e => setEditingTransparency({ ...editingTransparency, title: e.target.value })} placeholder="e.g. FY 2023 Annual Report" />
+                                 </div>
+                                 <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Link URL</label>
+                                    <input required className="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 text-sm font-medium" 
+                                       value={editingTransparency.url} onChange={e => setEditingTransparency({ ...editingTransparency, url: e.target.value })} placeholder="https://..." />
+                                 </div>
+                                 <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                       <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Section Category</label>
+                                       <input required className="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 text-sm font-black uppercase" 
+                                          value={editingTransparency.category} onChange={e => setEditingTransparency({ ...editingTransparency, category: e.target.value.toUpperCase() })} placeholder="e.g. 1.A, 2.B, 5.A" />
+                                    </div>
+                                    <div className="space-y-2">
+                                       <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Report Year (Optional)</label>
+                                       <input className="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 text-sm font-black" 
+                                          value={editingTransparency.year || ""} onChange={e => setEditingTransparency({ ...editingTransparency, year: e.target.value })} placeholder="e.g. 2023" />
+                                    </div>
+                                 </div>
+                              </div>
+
+                              <div className="space-y-6">
+                                 <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Sort Order</label>
+                                    <input type="number" className="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 text-sm font-black" 
+                                       value={editingTransparency.order} onChange={e => setEditingTransparency({ ...editingTransparency, order: parseInt(e.target.value) })} />
+                                 </div>
+                                 <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100 mt-8">
+                                    <input type="checkbox" id="isExternal" className="w-5 h-5 rounded border-slate-300" 
+                                       checked={editingTransparency.isExternal} onChange={e => setEditingTransparency({ ...editingTransparency, isExternal: e.target.checked })} />
+                                    <label htmlFor="isExternal" className="text-xs font-black uppercase tracking-widest text-slate-700 cursor-pointer">Opens in New Tab (External Link)</label>
+                                 </div>
+                              </div>
+                           </div>
+
+                           <button type="submit" disabled={isUpdating} className="w-full py-5 bg-blue-600 text-white rounded-[2rem] font-black uppercase tracking-[0.2em] text-xs hover:bg-blue-700 transition-all flex items-center justify-center gap-3 shadow-xl disabled:opacity-50">
+                              {isUpdating ? <RefreshCcw className="animate-spin" /> : <Save size={20} />} <span>Sync Transparency Link</span>
                            </button>
                         </form>
                      </div>
