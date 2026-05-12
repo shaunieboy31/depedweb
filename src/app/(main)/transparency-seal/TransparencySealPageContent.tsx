@@ -48,8 +48,20 @@ interface TransparencySealPageContentProps {
 }
 
 export default function TransparencySealPageContent({ items }: TransparencySealPageContentProps) {
+  const [searchQuery, setSearchQuery] = React.useState("");
+
+  const filteredItems = React.useMemo(() => {
+    if (!searchQuery.trim()) return items;
+    const query = searchQuery.toLowerCase();
+    return items.filter(item => 
+      item.title.toLowerCase().includes(query) || 
+      item.category.toLowerCase().includes(query) ||
+      (item.year && item.year.includes(query))
+    );
+  }, [items, searchQuery]);
+
   const getItemsByCategory = (category: string) => {
-    return items
+    return filteredItems
       .filter(item => item.category === category)
       .sort((a, b) => {
         // 1. Sort by Year Descending
@@ -75,8 +87,8 @@ export default function TransparencySealPageContent({ items }: TransparencySealP
   };
 
   const getExtraCategories = (prefix: string, excluded: string[]) => {
-    const cats = Array.from(new Set(items.map(i => i.category)))
-      .filter(c => c.startsWith(prefix + '.') && !excluded.includes(c))
+    const cats = Array.from(new Set(filteredItems.map(i => i.category)))
+      .filter(c => (c === prefix || c.startsWith(prefix + '.')) && !excluded.includes(c))
       .sort();
     return cats;
   };
@@ -114,10 +126,79 @@ export default function TransparencySealPageContent({ items }: TransparencySealP
           <p className="text-slate-500 font-bold uppercase tracking-widest text-xs md:text-sm max-w-2xl mx-auto leading-relaxed">
             Compliance with Section 93 (Transparency Seal) of the General Appropriations Act of FY 2012
           </p>
+
+          {/* Search Bar */}
+          <div className="relative max-w-xl mx-auto pt-6 group">
+             <div className="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none text-slate-400 group-focus-within:text-blue-500 transition-colors">
+                <LayoutGrid size={20} />
+             </div>
+             <input 
+                type="text"
+                placeholder="Search compliance documents, years, or categories..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-16 pr-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all font-medium text-slate-900 shadow-sm"
+             />
+             {searchQuery && (
+                <button 
+                  onClick={() => setSearchQuery("")}
+                  className="absolute inset-y-0 right-0 pr-6 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
+                >
+                   <span className="text-[10px] font-black uppercase tracking-widest bg-slate-200 px-2 py-0.5 rounded-lg">Clear</span>
+                </button>
+             )}
+          </div>
+          {/* Section Quick Navigation */}
+          <div className="sticky top-4 z-40 bg-white/80 backdrop-blur-xl border border-slate-200 p-2 rounded-2xl shadow-xl shadow-slate-200/50 flex flex-wrap justify-center gap-1 sm:gap-2 animate-in fade-in slide-in-from-top-4 duration-1000 delay-300">
+            {['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'].map((num, idx) => (
+              <button 
+                key={num}
+                onClick={() => {
+                   const el = document.getElementById(`section-${idx + 1}`);
+                   if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }}
+                className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-xl text-[10px] sm:text-xs font-black text-slate-400 hover:bg-blue-600 hover:text-white transition-all active:scale-95"
+              >
+                {num}
+              </button>
+            ))}
+          </div>
         </div>
       </section>
 
       <div className="max-w-5xl mx-auto px-6 space-y-8">
+        
+        {searchQuery && (
+           <div className="flex items-center justify-between bg-blue-50/50 border border-blue-100 p-6 rounded-[2rem] animate-in zoom-in duration-500">
+              <div className="flex items-center gap-4 text-blue-700">
+                 <div className="p-2 bg-blue-100 rounded-xl">
+                    <LayoutGrid size={20} />
+                 </div>
+                 <div>
+                    <p className="text-xs font-black uppercase tracking-widest">Search Results</p>
+                    <p className="text-sm font-bold">Found {filteredItems.length} documents matching "{searchQuery}"</p>
+                 </div>
+              </div>
+              <button 
+                onClick={() => setSearchQuery("")}
+                className="px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200"
+              >
+                Reset
+              </button>
+           </div>
+        )}
+
+        {filteredItems.length === 0 && searchQuery && (
+           <div className="text-center py-20 space-y-6 bg-white border border-dashed border-slate-200 rounded-[3rem]">
+              <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto border border-slate-100">
+                 <ShieldCheck size={40} className="text-slate-200" />
+              </div>
+              <div className="space-y-2">
+                 <p className="text-lg font-black text-slate-900 uppercase italic">No Matches Found</p>
+                 <p className="text-sm text-slate-400 font-medium">Try searching for a different keyword, year, or section.</p>
+              </div>
+           </div>
+        )}
         
         {/* Legal Basis Card */}
         <Card className="border-slate-200 shadow-xl shadow-slate-200/50 rounded-[2.5rem] overflow-hidden bg-white">
@@ -414,8 +495,11 @@ function ComplianceItem({
   description?: string;
   children: React.ReactNode;
 }) {
+  // Extract number for ID (e.g., section-1)
+  const id = value; 
+  
   return (
-    <AccordionItem value={value} className="bg-white border border-slate-200 rounded-[2rem] px-8 shadow-sm hover:shadow-md transition-shadow">
+    <AccordionItem id={id} value={value} className="bg-white border border-slate-200 rounded-[2rem] px-8 shadow-sm hover:shadow-md transition-shadow scroll-mt-24">
       <AccordionTrigger className="hover:no-underline py-8">
         <div className="flex items-start gap-6 text-left">
           <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center shrink-0 border border-slate-100">
